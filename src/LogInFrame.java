@@ -8,6 +8,8 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class LogInFrame extends JFrame {
 
@@ -56,6 +58,13 @@ public class LogInFrame extends JFrame {
 		contentPane.add(passLabel);
 		
 		JButton logBtn = new JButton("Log In");
+		logBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainMenuFrame mainFrame = new MainMenuFrame();
+				mainFrame.setVisible(true);
+				dispose();
+			}
+		});
 		logBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		logBtn.setBounds(236, 216, 95, 33);
 		contentPane.add(logBtn);
