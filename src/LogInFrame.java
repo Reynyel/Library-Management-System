@@ -59,8 +59,12 @@ public class LogInFrame extends JFrame {
 		
 		JButton logBtn = new JButton("Log In");
 		logBtn.addActionListener(new ActionListener() {
+			/*
+			 * Invoked when the log in button is clicked.
+			 * Creates and shows the MainMenuFrame while
+			 * disposing the LogInFrame*/
 			public void actionPerformed(ActionEvent e) {
-				MainMenuFrame mainFrame = new MainMenuFrame();
+				MainMenuFrame mainFrame = new MainMenuFrame(); 
 				mainFrame.setVisible(true);
 				dispose();
 			}
