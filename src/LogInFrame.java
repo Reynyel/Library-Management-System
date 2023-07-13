@@ -83,5 +83,23 @@ public class LogInFrame extends JFrame {
 		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		passwordTxt.setBounds(208, 175, 212, 20);
 		contentPane.add(passwordTxt);
+		
+		JButton btnHidden = new JButton("");
+		btnHidden.addActionListener(new ActionListener() {
+			/*
+			 * A hidden button that will
+			 * show the main menu frame
+			 * when clicked*/
+			public void actionPerformed(ActionEvent e) {
+				MainMenuFrame mainFrame = new MainMenuFrame();
+				mainFrame.setVisible(true);
+				dispose();
+			}
+		});
+		btnHidden.setBounds(430, 176, 15, 14);
+		btnHidden.setOpaque(false);
+		btnHidden.setContentAreaFilled(false);
+		btnHidden.setBorderPainted(false);
+		contentPane.add(btnHidden);
 	}
 }

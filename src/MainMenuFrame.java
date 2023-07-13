@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
 
 public class MainMenuFrame extends JFrame {
 
@@ -36,6 +37,21 @@ public class MainMenuFrame extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		JButton btnRegisterBooks = new JButton("Register Books");
+		btnRegisterBooks.setBounds(193, 139, 148, 108);
+		contentPane.add(btnRegisterBooks);
+		
+		JButton btnSearchBooks = new JButton("Search Books");
+		btnSearchBooks.setBounds(406, 139, 148, 108);
+		contentPane.add(btnSearchBooks);
+		
+		JButton btnRegisterUser = new JButton("Register Users");
+		btnRegisterUser.setBounds(193, 312, 148, 108);
+		contentPane.add(btnRegisterUser);
+		
+		JButton btnLogOut = new JButton("Log out");
+		btnLogOut.setBounds(10, 527, 93, 33);
+		contentPane.add(btnLogOut);
 	}
-
 }
