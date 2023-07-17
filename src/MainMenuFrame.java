@@ -6,6 +6,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.Color;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class MainMenuFrame extends JFrame {
 
@@ -62,5 +64,10 @@ public class MainMenuFrame extends JFrame {
 		JButton btnReport = new JButton("Report");
 		btnReport.setBounds(551, 312, 148, 108);
 		contentPane.add(btnReport);
+		
+		JLabel lblNewLabel = new JLabel("Register Books");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel.setBounds(223, 257, 107, 14);
+		contentPane.add(lblNewLabel);
 	}
 }

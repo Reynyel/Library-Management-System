@@ -50,12 +50,12 @@ public class LogInFrame extends JFrame {
 		
 		JLabel userLabel = new JLabel("Username");
 		userLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		userLabel.setBounds(129, 131, 75, 14);
+		userLabel.setBounds(118, 131, 75, 14);
 		contentPane.add(userLabel);
 		
 		JLabel passLabel = new JLabel("Password");
 		passLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		passLabel.setBounds(127, 172, 75, 14);
+		passLabel.setBounds(117, 171, 75, 14);
 		contentPane.add(passLabel);
 		
 		JButton logBtn = new JButton("Log In");
@@ -73,19 +73,19 @@ public class LogInFrame extends JFrame {
 			}
 		});
 		logBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		logBtn.setBounds(233, 208, 95, 33);
+		logBtn.setBounds(248, 211, 95, 33);
 		logBtn.setBorderPainted(false);
 		contentPane.add(logBtn);
 		
 		usernameTxt = new JTextField();
 		usernameTxt.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		usernameTxt.setBounds(214, 130, 212, 20);
+		usernameTxt.setBounds(203, 130, 212, 20);
 		contentPane.add(usernameTxt);
 		usernameTxt.setColumns(10);
 		
 		passwordTxt = new JPasswordField();
 		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		passwordTxt.setBounds(212, 171, 212, 20);
+		passwordTxt.setBounds(202, 170, 212, 20);
 		contentPane.add(passwordTxt);
 		
 		JButton btnHidden = new JButton("");
