@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 public class LogInFrame extends JFrame {
 
@@ -40,7 +41,7 @@ public class LogInFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 581, 393);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setLayout(null); //sets layout to absolute
 		this.setTitle("LogIn"); //Sets title for this frame
 		this.setResizable(false);
@@ -49,15 +50,17 @@ public class LogInFrame extends JFrame {
 		
 		JLabel userLabel = new JLabel("Username");
 		userLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		userLabel.setBounds(123, 142, 75, 14);
+		userLabel.setBounds(129, 131, 75, 14);
 		contentPane.add(userLabel);
 		
 		JLabel passLabel = new JLabel("Password");
 		passLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		passLabel.setBounds(123, 176, 75, 14);
+		passLabel.setBounds(127, 172, 75, 14);
 		contentPane.add(passLabel);
 		
 		JButton logBtn = new JButton("Log In");
+		logBtn.setForeground(new Color(255, 255, 255));
+		logBtn.setBackground(new Color(157, 179, 227));
 		logBtn.addActionListener(new ActionListener() {
 			/*
 			 * Invoked when the log in button is clicked.
@@ -70,18 +73,19 @@ public class LogInFrame extends JFrame {
 			}
 		});
 		logBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		logBtn.setBounds(236, 216, 95, 33);
+		logBtn.setBounds(233, 208, 95, 33);
+		logBtn.setBorderPainted(false);
 		contentPane.add(logBtn);
 		
 		usernameTxt = new JTextField();
 		usernameTxt.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		usernameTxt.setBounds(208, 141, 212, 20);
+		usernameTxt.setBounds(214, 130, 212, 20);
 		contentPane.add(usernameTxt);
 		usernameTxt.setColumns(10);
 		
 		passwordTxt = new JPasswordField();
 		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		passwordTxt.setBounds(208, 175, 212, 20);
+		passwordTxt.setBounds(212, 171, 212, 20);
 		contentPane.add(passwordTxt);
 		
 		JButton btnHidden = new JButton("");
