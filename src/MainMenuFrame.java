@@ -8,6 +8,8 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainMenuFrame extends JFrame {
 
@@ -44,6 +46,13 @@ public class MainMenuFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnRegisterBooks = new JButton("Register Books");
+		btnRegisterBooks.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegisterBooksFrame registerFrame = new RegisterBooksFrame();
+				registerFrame.setVisible(true);
+				dispose();
+			}
+		});
 		btnRegisterBooks.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\book1.jpg"));
 		btnRegisterBooks.setBounds(193, 139, 168, 108);
 		btnRegisterBooks.setBorderPainted(false);
@@ -58,6 +67,13 @@ public class MainMenuFrame extends JFrame {
 		contentPane.add(btnRegisterUser);
 		
 		JButton btnLogOut = new JButton("Log out");
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LogInFrame logInFrame = new LogInFrame();
+				logInFrame.setVisible(true);
+				dispose();
+			}
+		});
 		btnLogOut.setBounds(10, 527, 93, 33);
 		contentPane.add(btnLogOut);
 		

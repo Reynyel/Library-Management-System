@@ -78,13 +78,13 @@ public class LogInFrame extends JFrame {
 		contentPane.add(logBtn);
 		
 		usernameTxt = new JTextField();
-		usernameTxt.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		usernameTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		usernameTxt.setBounds(203, 130, 212, 20);
 		contentPane.add(usernameTxt);
 		usernameTxt.setColumns(10);
 		
 		passwordTxt = new JPasswordField();
-		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		passwordTxt.setBounds(202, 170, 212, 20);
 		contentPane.add(passwordTxt);
 		
