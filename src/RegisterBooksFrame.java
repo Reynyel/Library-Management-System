@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 public class RegisterBooksFrame extends JFrame {
 
@@ -17,8 +18,8 @@ public class RegisterBooksFrame extends JFrame {
 	private JTextField txtTitle;
 	private JTextField txrtAuthor;
 	private JTextField textISBN;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtPublisher;
+	private JTextField txtLanguage;
 
 	/**
 	 * Launch the application.
@@ -88,22 +89,22 @@ public class RegisterBooksFrame extends JFrame {
 		lblPublisher.setBounds(10, 164, 80, 14);
 		contentPane.add(lblPublisher);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		textField.setColumns(10);
-		textField.setBounds(92, 163, 629, 20);
-		contentPane.add(textField);
+		txtPublisher = new JTextField();
+		txtPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtPublisher.setColumns(10);
+		txtPublisher.setBounds(92, 163, 629, 20);
+		contentPane.add(txtPublisher);
 		
 		JLabel lblLanguage = new JLabel("Language");
 		lblLanguage.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblLanguage.setBounds(10, 199, 80, 14);
 		contentPane.add(lblLanguage);
 		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		textField_1.setColumns(10);
-		textField_1.setBounds(92, 198, 97, 20);
-		contentPane.add(textField_1);
+		txtLanguage = new JTextField();
+		txtLanguage.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtLanguage.setColumns(10);
+		txtLanguage.setBounds(92, 198, 97, 20);
+		contentPane.add(txtLanguage);
 		
 		JButton btnBack = new JButton("Back");
 		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -119,5 +120,22 @@ public class RegisterBooksFrame extends JFrame {
 		btnBack.setBorderPainted(false);
 		btnBack.setBounds(10, 583, 93, 33);
 		contentPane.add(btnBack);
+		
+		JLabel lblSubject = new JLabel("Subject");
+		lblSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblSubject.setBounds(10, 233, 80, 14);
+		contentPane.add(lblSubject);
+		
+		JComboBox comboBoxSubject = new JComboBox();
+		comboBoxSubject.setBackground(new Color(255, 255, 255));
+		comboBoxSubject.addItem("Choose a subject");
+		comboBoxSubject.addItem("Subject 1");
+		comboBoxSubject.addItem("Subject 2");
+		comboBoxSubject.addItem("Subject 3");
+		comboBoxSubject.addItem("Subject 4");
+		comboBoxSubject.addItem("Subject 5");
+		comboBoxSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		comboBoxSubject.setBounds(92, 231, 186, 22);
+		contentPane.add(comboBoxSubject);
 	}
 }
