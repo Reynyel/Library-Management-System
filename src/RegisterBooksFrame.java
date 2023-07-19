@@ -7,6 +7,9 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RegisterBooksFrame extends JFrame {
 
@@ -101,5 +104,20 @@ public class RegisterBooksFrame extends JFrame {
 		textField_1.setColumns(10);
 		textField_1.setBounds(92, 198, 97, 20);
 		contentPane.add(textField_1);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnBack.setForeground(new Color(255, 255, 255));
+		btnBack.setBackground(new Color(157, 179, 227));
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainMenuFrame menu = new MainMenuFrame();
+				menu.setVisible(true);
+				dispose();
+			}
+		});
+		btnBack.setBorderPainted(false);
+		btnBack.setBounds(10, 583, 93, 33);
+		contentPane.add(btnBack);
 	}
 }
