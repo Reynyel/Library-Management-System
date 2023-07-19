@@ -67,6 +67,9 @@ public class MainMenuFrame extends JFrame {
 		contentPane.add(btnRegisterUser);
 		
 		JButton btnLogOut = new JButton("Log out");
+		btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnLogOut.setBackground(new Color(157, 179, 227));
+		btnLogOut.setForeground(new Color(255, 255, 255));
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LogInFrame logInFrame = new LogInFrame();
@@ -74,6 +77,7 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
+		btnLogOut.setBorderPainted(false);
 		btnLogOut.setBounds(10, 527, 93, 33);
 		contentPane.add(btnLogOut);
 		
