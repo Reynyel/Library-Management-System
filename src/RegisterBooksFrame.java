@@ -5,19 +5,27 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
+
+
 
 public class RegisterBooksFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtTitle;
-	private JTextField txrtAuthor;
-	private JTextField textISBN;
+	private JTextField txtAuthor;
+	private JTextField txtISBN;
 	private JTextField txtPublisher;
 	private JTextField txtLanguage;
 
@@ -41,6 +49,7 @@ public class RegisterBooksFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public RegisterBooksFrame() {
+		setTitle("Register Books");
 		setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 953, 666);
@@ -67,22 +76,22 @@ public class RegisterBooksFrame extends JFrame {
 		lblAuthors.setBounds(10, 100, 80, 14);
 		contentPane.add(lblAuthors);
 		
-		txrtAuthor = new JTextField();
-		txrtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txrtAuthor.setColumns(10);
-		txrtAuthor.setBounds(92, 99, 629, 20);
-		contentPane.add(txrtAuthor);
+		txtAuthor = new JTextField();
+		txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtAuthor.setColumns(10);
+		txtAuthor.setBounds(92, 99, 629, 20);
+		contentPane.add(txtAuthor);
 		
 		JLabel lblIsbn = new JLabel("ISBN");
 		lblIsbn.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblIsbn.setBounds(10, 133, 80, 14);
 		contentPane.add(lblIsbn);
 		
-		textISBN = new JTextField();
-		textISBN.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		textISBN.setColumns(10);
-		textISBN.setBounds(92, 130, 629, 20);
-		contentPane.add(textISBN);
+		txtISBN = new JTextField();
+		txtISBN.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtISBN.setColumns(10);
+		txtISBN.setBounds(92, 130, 629, 20);
+		contentPane.add(txtISBN);
 		
 		JLabel lblPublisher = new JLabel("Publisher");
 		lblPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -137,5 +146,60 @@ public class RegisterBooksFrame extends JFrame {
 		comboBoxSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		comboBoxSubject.setBounds(92, 231, 186, 22);
 		contentPane.add(comboBoxSubject);
+		
+		
+		
+		JButton btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					
+					 // Load the JDBC driver (version 4.0 or later)
+					try {
+						Class.forName("com.mysql.jdbc.Driver");
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			        
+					Connection conn;
+					try {
+						conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+						Statement stmt = conn.createStatement();
+						System.out.println("Connected");
+						//Get the inputs
+						String title = txtTitle.getText();
+						String author = txtAuthor.getText();
+						String isbn = txtISBN.getText();
+						String publisher = txtPublisher.getText();
+						String language = txtLanguage.getText();
+						String subject = comboBoxSubject.getSelectedItem().toString();
+						
+						
+						//Build query
+						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject)" + 
+						"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "')";	
+						
+						//Execute query
+						stmt.executeUpdate(sql);
+						JOptionPane.showMessageDialog(rootPane, "Execution Successful");
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						System.out.println("Oof there's an error");
+						e1.printStackTrace();
+					}          				
+										
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnRegister.setForeground(Color.WHITE);
+		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnRegister.setBorderPainted(false);
+		btnRegister.setBackground(new Color(157, 179, 227));
+		btnRegister.setBounds(628, 318, 93, 33);
+		contentPane.add(btnRegister);
 	}
 }
