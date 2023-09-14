@@ -37,7 +37,7 @@ public class MainMenuFrame extends JFrame {
 	public MainMenuFrame() {
 		setTitle("Main Menu");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 979, 610);
+		setBounds(100, 100, 1100, 711);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -54,16 +54,26 @@ public class MainMenuFrame extends JFrame {
 			}
 		});
 		btnRegisterBooks.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\book1.jpg"));
-		btnRegisterBooks.setBounds(193, 139, 168, 108);
+		btnRegisterBooks.setBounds(262, 150, 168, 108);
 		btnRegisterBooks.setBorderPainted(false);
 		contentPane.add(btnRegisterBooks);
 		
 		JButton btnSearchBooks = new JButton("Search Books");
-		btnSearchBooks.setBounds(551, 139, 148, 108);
+		btnSearchBooks.setBounds(663, 150, 148, 108);
 		contentPane.add(btnSearchBooks);
 		
 		JButton btnRegisterUser = new JButton("Register Users");
-		btnRegisterUser.setBounds(193, 312, 148, 108);
+		btnRegisterUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegisterUser registerUser = new RegisterUser();
+				registerUser.setVisible(true);
+				dispose();
+			}
+		});
+		btnRegisterUser.setBackground(new Color(255, 255, 255));
+		btnRegisterUser.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\user (2).png"));
+		btnRegisterUser.setBorderPainted(false);
+		btnRegisterUser.setBounds(262, 332, 157, 152);
 		contentPane.add(btnRegisterUser);
 		
 		JButton btnLogOut = new JButton("Log out");
@@ -78,16 +88,21 @@ public class MainMenuFrame extends JFrame {
 			}
 		});
 		btnLogOut.setBorderPainted(false);
-		btnLogOut.setBounds(10, 527, 93, 33);
+		btnLogOut.setBounds(10, 628, 93, 33);
 		contentPane.add(btnLogOut);
 		
 		JButton btnReport = new JButton("Report");
-		btnReport.setBounds(551, 312, 148, 108);
+		btnReport.setBounds(663, 354, 148, 108);
 		contentPane.add(btnReport);
 		
 		JLabel lblNewLabel = new JLabel("Register Books");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(223, 257, 107, 14);
+		lblNewLabel.setBounds(284, 267, 107, 14);
 		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Register User");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_1.setBounds(284, 520, 115, 14);
+		contentPane.add(lblNewLabel_1);
 	}
 }

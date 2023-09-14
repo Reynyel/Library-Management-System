@@ -182,7 +182,7 @@ public class RegisterBooksFrame extends JFrame {
 						
 						//Execute query
 						stmt.executeUpdate(sql);
-						JOptionPane.showMessageDialog(rootPane, "Execution Successful");
+						JOptionPane.showMessageDialog(rootPane, "Book Registered");
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						System.out.println("Oof there's an error");
