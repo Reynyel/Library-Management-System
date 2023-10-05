@@ -59,14 +59,21 @@ public class MainMenuFrame extends JFrame {
 		contentPane.add(btnRegisterBooks);
 		
 		JButton btnSearchBooks = new JButton("Search Books");
+		btnSearchBooks.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SearchBooks searchBooks = new SearchBooks();
+				searchBooks.setVisible(true);
+				dispose();
+			}
+		});
 		btnSearchBooks.setBounds(663, 150, 148, 108);
 		contentPane.add(btnSearchBooks);
 		
 		JButton btnRegisterUser = new JButton("Register Users");
 		btnRegisterUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegisterUser registerUser = new RegisterUser();
-				registerUser.setVisible(true);
+				UserTypeFrame user = new UserTypeFrame();
+				user.setVisible(true);
 				dispose();
 			}
 		});

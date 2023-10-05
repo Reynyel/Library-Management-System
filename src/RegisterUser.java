@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 public class RegisterUser extends JFrame {
 
@@ -18,7 +19,6 @@ public class RegisterUser extends JFrame {
 	private JTextField txtFirstName;
 	private JTextField txtMiddleName;
 	private JTextField txtStudentNum;
-	private JTextField txtGrade;
 	private JTextField txtSection;
 
 	/**
@@ -53,25 +53,25 @@ public class RegisterUser extends JFrame {
 		
 		JLabel lblLastName = new JLabel("Last Name");
 		lblLastName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblLastName.setBounds(38, 87, 77, 14);
+		lblLastName.setBounds(38, 126, 77, 14);
 		contentPane.add(lblLastName);
 		
 		JLabel lblFirstName = new JLabel("First Name");
 		lblFirstName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblFirstName.setBounds(38, 126, 77, 14);
+		lblFirstName.setBounds(38, 165, 77, 14);
 		contentPane.add(lblFirstName);
 		
 		JLabel lblMiddleName = new JLabel("Middle Name");
 		lblMiddleName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblMiddleName.setBounds(38, 163, 108, 14);
+		lblMiddleName.setBounds(38, 202, 108, 14);
 		contentPane.add(lblMiddleName);
 		
 		JLabel lblStudentNo = new JLabel("Student No.");
 		lblStudentNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStudentNo.setBounds(38, 204, 108, 14);
+		lblStudentNo.setBounds(38, 85, 108, 14);
 		contentPane.add(lblStudentNo);
 		
-		JLabel lblGrade = new JLabel("Grade");
+		JLabel lblGrade = new JLabel("Level");
 		lblGrade.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblGrade.setBounds(38, 244, 77, 14);
 		contentPane.add(lblGrade);
@@ -84,32 +84,26 @@ public class RegisterUser extends JFrame {
 		txtLastName = new JTextField();
 		txtLastName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtLastName.setColumns(10);
-		txtLastName.setBounds(125, 86, 629, 20);
+		txtLastName.setBounds(125, 125, 629, 20);
 		contentPane.add(txtLastName);
 		
 		txtFirstName = new JTextField();
 		txtFirstName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtFirstName.setColumns(10);
-		txtFirstName.setBounds(125, 125, 629, 20);
+		txtFirstName.setBounds(125, 164, 629, 20);
 		contentPane.add(txtFirstName);
 		
 		txtMiddleName = new JTextField();
 		txtMiddleName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtMiddleName.setColumns(10);
-		txtMiddleName.setBounds(125, 162, 629, 20);
+		txtMiddleName.setBounds(125, 201, 629, 20);
 		contentPane.add(txtMiddleName);
 		
 		txtStudentNum = new JTextField();
 		txtStudentNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtStudentNum.setColumns(10);
-		txtStudentNum.setBounds(125, 203, 217, 20);
+		txtStudentNum.setBounds(125, 84, 217, 20);
 		contentPane.add(txtStudentNum);
-		
-		txtGrade = new JTextField();
-		txtGrade.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtGrade.setColumns(10);
-		txtGrade.setBounds(125, 243, 36, 20);
-		contentPane.add(txtGrade);
 		
 		txtSection = new JTextField();
 		txtSection.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -139,5 +133,16 @@ public class RegisterUser extends JFrame {
 		btnBack.setBackground(new Color(157, 179, 227));
 		btnBack.setBounds(10, 583, 93, 33);
 		contentPane.add(btnBack);
+		
+		JComboBox gradeComboBox = new JComboBox();
+		gradeComboBox.setBounds(125, 242, 43, 22);
+		gradeComboBox.setBackground(new Color(255, 255, 255));
+		int[] level = new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
+		
+	
+		for(int i = 1; i <= level.length; i++) {
+			gradeComboBox.addItem(i);			
+		}
+		contentPane.add(gradeComboBox);
 	}
 }

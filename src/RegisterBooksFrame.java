@@ -137,12 +137,19 @@ public class RegisterBooksFrame extends JFrame {
 		
 		JComboBox comboBoxSubject = new JComboBox();
 		comboBoxSubject.setBackground(new Color(255, 255, 255));
+		
 		comboBoxSubject.addItem("Choose a subject");
-		comboBoxSubject.addItem("Subject 1");
-		comboBoxSubject.addItem("Subject 2");
-		comboBoxSubject.addItem("Subject 3");
-		comboBoxSubject.addItem("Subject 4");
-		comboBoxSubject.addItem("Subject 5");
+		
+		/*This array is temporary
+		 * It only serves as a placeholder
+		 * for actual subject names
+		 * Will be removed once the subject names are added*/
+		String[] subject = {"Subject 1", "Subject 2", "Subject 3", "Subject 4", "Subject 5"};
+		
+		for(int i=0; i <= subject.length; i++) {
+			comboBoxSubject.addItem("Subject " + i);
+		}
+		
 		comboBoxSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		comboBoxSubject.setBounds(92, 231, 186, 22);
 		contentPane.add(comboBoxSubject);
