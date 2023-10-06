@@ -28,6 +28,8 @@ public class RegisterBooksFrame extends JFrame {
 	private JTextField txtISBN;
 	private JTextField txtPublisher;
 	private JTextField txtLanguage;
+	private JTextField txtBookNo;
+	private JTextField txtQuantity;
 
 	/**
 	 * Launch the application.
@@ -62,57 +64,57 @@ public class RegisterBooksFrame extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Book Title");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(10, 64, 80, 14);
+		lblNewLabel.setBounds(10, 110, 80, 14);
 		contentPane.add(lblNewLabel);
 		
 		txtTitle = new JTextField();
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtTitle.setBounds(92, 63, 629, 20);
+		txtTitle.setBounds(92, 109, 629, 20);
 		contentPane.add(txtTitle);
 		txtTitle.setColumns(10);
 		
 		JLabel lblAuthors = new JLabel("Author(s)");
 		lblAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAuthors.setBounds(10, 100, 80, 14);
+		lblAuthors.setBounds(10, 146, 80, 14);
 		contentPane.add(lblAuthors);
 		
 		txtAuthor = new JTextField();
 		txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtAuthor.setColumns(10);
-		txtAuthor.setBounds(92, 99, 629, 20);
+		txtAuthor.setBounds(92, 145, 629, 20);
 		contentPane.add(txtAuthor);
 		
 		JLabel lblIsbn = new JLabel("ISBN");
 		lblIsbn.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblIsbn.setBounds(10, 133, 80, 14);
+		lblIsbn.setBounds(10, 179, 80, 14);
 		contentPane.add(lblIsbn);
 		
 		txtISBN = new JTextField();
 		txtISBN.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtISBN.setColumns(10);
-		txtISBN.setBounds(92, 130, 629, 20);
+		txtISBN.setBounds(92, 176, 629, 20);
 		contentPane.add(txtISBN);
 		
 		JLabel lblPublisher = new JLabel("Publisher");
 		lblPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPublisher.setBounds(10, 164, 80, 14);
+		lblPublisher.setBounds(10, 210, 80, 14);
 		contentPane.add(lblPublisher);
 		
 		txtPublisher = new JTextField();
 		txtPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtPublisher.setColumns(10);
-		txtPublisher.setBounds(92, 163, 629, 20);
+		txtPublisher.setBounds(92, 209, 629, 20);
 		contentPane.add(txtPublisher);
 		
 		JLabel lblLanguage = new JLabel("Language");
 		lblLanguage.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblLanguage.setBounds(10, 199, 80, 14);
+		lblLanguage.setBounds(10, 272, 80, 14);
 		contentPane.add(lblLanguage);
 		
 		txtLanguage = new JTextField();
 		txtLanguage.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtLanguage.setColumns(10);
-		txtLanguage.setBounds(92, 198, 97, 20);
+		txtLanguage.setBounds(92, 271, 97, 20);
 		contentPane.add(txtLanguage);
 		
 		JButton btnBack = new JButton("Back");
@@ -132,7 +134,7 @@ public class RegisterBooksFrame extends JFrame {
 		
 		JLabel lblSubject = new JLabel("Subject");
 		lblSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblSubject.setBounds(10, 233, 80, 14);
+		lblSubject.setBounds(10, 306, 80, 14);
 		contentPane.add(lblSubject);
 		
 		JComboBox comboBoxSubject = new JComboBox();
@@ -143,7 +145,7 @@ public class RegisterBooksFrame extends JFrame {
 		/*This array is temporary
 		 * It only serves as a placeholder
 		 * for actual subject names
-		 * Will be removed once the subject names are added*/
+		 * Will be remove once the subject names are added*/
 		String[] subject = {"Subject 1", "Subject 2", "Subject 3", "Subject 4", "Subject 5"};
 		
 		for(int i=0; i <= subject.length; i++) {
@@ -151,7 +153,7 @@ public class RegisterBooksFrame extends JFrame {
 		}
 		
 		comboBoxSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		comboBoxSubject.setBounds(92, 231, 186, 22);
+		comboBoxSubject.setBounds(92, 304, 186, 22);
 		contentPane.add(comboBoxSubject);
 		
 		
@@ -206,7 +208,29 @@ public class RegisterBooksFrame extends JFrame {
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
 		btnRegister.setBackground(new Color(157, 179, 227));
-		btnRegister.setBounds(628, 318, 93, 33);
+		btnRegister.setBounds(628, 354, 93, 33);
 		contentPane.add(btnRegister);
+		
+		JLabel lblBookNo = new JLabel("Book Number");
+		lblBookNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblBookNo.setBounds(10, 71, 115, 14);
+		contentPane.add(lblBookNo);
+		
+		txtBookNo = new JTextField();
+		txtBookNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtBookNo.setColumns(10);
+		txtBookNo.setBounds(105, 70, 616, 20);
+		contentPane.add(txtBookNo);
+		
+		JLabel lblQuantity = new JLabel("Quantity");
+		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblQuantity.setBounds(10, 242, 80, 14);
+		contentPane.add(lblQuantity);
+		
+		txtQuantity = new JTextField();
+		txtQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtQuantity.setColumns(10);
+		txtQuantity.setBounds(92, 241, 97, 20);
+		contentPane.add(txtQuantity);
 	}
 }

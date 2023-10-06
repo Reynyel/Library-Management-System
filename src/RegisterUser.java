@@ -9,6 +9,7 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 
@@ -19,7 +20,11 @@ public class RegisterUser extends JFrame {
 	private JTextField txtFirstName;
 	private JTextField txtMiddleName;
 	private JTextField txtStudentNum;
-	private JTextField txtSection;
+	
+	private JComboBox gradeComboBox;
+	private JComboBox sectionComboBox;
+	
+	private StudentSections section;
 
 	/**
 	 * Launch the application.
@@ -105,12 +110,6 @@ public class RegisterUser extends JFrame {
 		txtStudentNum.setBounds(125, 84, 217, 20);
 		contentPane.add(txtStudentNum);
 		
-		txtSection = new JTextField();
-		txtSection.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtSection.setColumns(10);
-		txtSection.setBounds(125, 284, 136, 20);
-		contentPane.add(txtSection);
-		
 		JButton btnRegister = new JButton("Register");
 		btnRegister.setForeground(Color.WHITE);
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -134,15 +133,51 @@ public class RegisterUser extends JFrame {
 		btnBack.setBounds(10, 583, 93, 33);
 		contentPane.add(btnBack);
 		
-		JComboBox gradeComboBox = new JComboBox();
+		gradeComboBox = new JComboBox();
+		gradeComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateSectionComboBox();
+			}
+		});
 		gradeComboBox.setBounds(125, 242, 43, 22);
 		gradeComboBox.setBackground(new Color(255, 255, 255));
-		int[] level = new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
 		
+		section = new StudentSections();
+		
+		sectionComboBox = new JComboBox();
+		sectionComboBox.setBounds(125, 283, 108, 22);
+		contentPane.add(sectionComboBox);
+		
+		int[] level = new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
 	
-		for(int i = 1; i <= level.length; i++) {
-			gradeComboBox.addItem(i);			
+		try {
+			for(int i = 1; i <= level.length; i++) {
+				gradeComboBox.addItem(i);
+				/*This needs to automatically add the section names
+				 * based on grade level
+				 * Still not finished
+				 * No longer returns array out of index exception*/
+
+			}
+			
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		contentPane.add(gradeComboBox);
+		
+		
+	}
+	
+	public void updateSectionComboBox() {
+		int selectedGrade = (int) gradeComboBox.getSelectedItem();
+		String[] sectionsForGrade = section.getSectionsForGrade(selectedGrade);
+		
+		sectionComboBox.removeAllItems();
+		
+		for(String sectionName : sectionsForGrade) {
+			sectionComboBox.addItem(sectionName);
+		}
 	}
 }
