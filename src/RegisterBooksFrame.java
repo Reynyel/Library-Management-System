@@ -30,6 +30,7 @@ public class RegisterBooksFrame extends JFrame {
 	private JTextField txtLanguage;
 	private JTextField txtBookNo;
 	private JTextField txtQuantity;
+	private JComboBox comboBoxSubject;
 
 	/**
 	 * Launch the application.
@@ -137,7 +138,7 @@ public class RegisterBooksFrame extends JFrame {
 		lblSubject.setBounds(10, 306, 80, 14);
 		contentPane.add(lblSubject);
 		
-		JComboBox comboBoxSubject = new JComboBox();
+		comboBoxSubject = new JComboBox();
 		comboBoxSubject.setBackground(new Color(255, 255, 255));
 		
 		
@@ -145,71 +146,27 @@ public class RegisterBooksFrame extends JFrame {
 		 * It only serves as a placeholder
 		 * for actual subject names
 		 * Will be remove once the subject names are added*/
-		String[] subject = {"General Information", "Philosophy & Psychology", "Religion",
+		String[] subjects = {"General Information", "Philosophy & Psychology", "Religion",
 				"Social Sciences", "Language", "Science", "Technology", "Arts & Recreation",
 				"Literature", "History & Geography"};
 		
-		for(String s : subject) {
+		for(String s : subjects) {
 			comboBoxSubject.addItem(s);
 		}
 		
 		comboBoxSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		comboBoxSubject.setBounds(92, 304, 186, 22);
 		contentPane.add(comboBoxSubject);
-		
-		
+			
 		
 		JButton btnRegister = new JButton("Register");
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					
-					 // Load the JDBC driver (version 4.0 or later)
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-			        
-					Connection conn;
-					try {
-						conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
-						Statement stmt = conn.createStatement();
-						System.out.println("Connected");
-						//Get the inputs
-						String title = txtTitle.getText();
-						String author = txtAuthor.getText();
-						String isbn = txtISBN.getText();
-						String publisher = txtPublisher.getText();
-						String language = txtLanguage.getText();
-						String subject = comboBoxSubject.getSelectedItem().toString();
-						String bookNum = txtBookNo.getText();
-						String quantity = txtQuantity.getText();
-						DeweyMap deweyMap = new DeweyMap();
-						double deweyDecimal = deweyMap.getDeweyForSubject(subject); 
-						
-					
-						//Build query
-						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Dewey_Decimal, Book_Num)" +
-						        "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', " + deweyDecimal + ", '" + bookNum + "')";
-
-						
-						//Execute query
-						stmt.executeUpdate(sql);
-						JOptionPane.showMessageDialog(rootPane, "Book Registered");
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						System.out.println("Oof there's an error");
-						e1.printStackTrace();
-					}          				
-										
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				registerBooks();
 			}
+				
 		});
+		
 		btnRegister.setForeground(Color.WHITE);
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
@@ -238,5 +195,55 @@ public class RegisterBooksFrame extends JFrame {
 		txtQuantity.setColumns(10);
 		txtQuantity.setBounds(92, 241, 97, 20);
 		contentPane.add(txtQuantity);
+	}
+	
+	public void registerBooks() {
+		try {
+			
+			 // Load the JDBC driver (version 4.0 or later)
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        
+			Connection conn;
+			
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+				Statement stmt = conn.createStatement();
+				System.out.println("Connected");
+				//Get the inputs
+				String title = txtTitle.getText();
+				String author = txtAuthor.getText();
+				String isbn = txtISBN.getText();
+				String publisher = txtPublisher.getText();
+				String language = txtLanguage.getText();
+				String subject = comboBoxSubject.getSelectedItem().toString();
+				String bookNum = txtBookNo.getText();
+				String quantity = txtQuantity.getText();
+				DeweyMap deweyMap = new DeweyMap();
+				double deweyDecimal = deweyMap.getDeweyForSubject(subject); 
+				
+			
+				//Build query
+				String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Dewey_Decimal, Book_Num)" +
+				        "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', " + deweyDecimal + ", '" + bookNum + "')";
+				
+				//Execute query
+				stmt.executeUpdate(sql);
+				JOptionPane.showMessageDialog(rootPane, "Book Registered");
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}          				
+								
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	
 	}
 }
