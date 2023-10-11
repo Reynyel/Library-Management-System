@@ -153,11 +153,6 @@ public class RegisterUser extends JFrame {
 		try {
 			for(int i = 1; i <= level.length; i++) {
 				gradeComboBox.addItem(i);
-				/*This needs to automatically add the section names
-				 * based on grade level
-				 * Still not finished
-				 * No longer returns array out of index exception*/
-
 			}
 			
 		}

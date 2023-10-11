@@ -140,16 +140,17 @@ public class RegisterBooksFrame extends JFrame {
 		JComboBox comboBoxSubject = new JComboBox();
 		comboBoxSubject.setBackground(new Color(255, 255, 255));
 		
-		comboBoxSubject.addItem("Choose a subject");
 		
 		/*This array is temporary
 		 * It only serves as a placeholder
 		 * for actual subject names
 		 * Will be remove once the subject names are added*/
-		String[] subject = {"Subject 1", "Subject 2", "Subject 3", "Subject 4", "Subject 5"};
+		String[] subject = {"General Information", "Philosophy & Psychology", "Religion",
+				"Social Sciences", "Language", "Science", "Technology", "Arts & Recreation",
+				"Literature", "History & Geography"};
 		
-		for(int i=0; i <= subject.length; i++) {
-			comboBoxSubject.addItem("Subject " + i);
+		for(String s : subject) {
+			comboBoxSubject.addItem(s);
 		}
 		
 		comboBoxSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -183,11 +184,16 @@ public class RegisterBooksFrame extends JFrame {
 						String publisher = txtPublisher.getText();
 						String language = txtLanguage.getText();
 						String subject = comboBoxSubject.getSelectedItem().toString();
+						String bookNum = txtBookNo.getText();
+						String quantity = txtQuantity.getText();
+						DeweyMap deweyMap = new DeweyMap();
+						double deweyDecimal = deweyMap.getDeweyForSubject(subject); 
 						
-						
+					
 						//Build query
-						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject)" + 
-						"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "')";	
+						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Dewey_Decimal, Book_Num)" +
+						        "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', " + deweyDecimal + ", '" + bookNum + "')";
+
 						
 						//Execute query
 						stmt.executeUpdate(sql);
