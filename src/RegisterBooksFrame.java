@@ -141,11 +141,6 @@ public class RegisterBooksFrame extends JFrame {
 		comboBoxSubject = new JComboBox();
 		comboBoxSubject.setBackground(new Color(255, 255, 255));
 		
-		
-		/*This array is temporary
-		 * It only serves as a placeholder
-		 * for actual subject names
-		 * Will be remove once the subject names are added*/
 		String[] subjects = {"General Information", "Philosophy & Psychology", "Religion",
 				"Social Sciences", "Language", "Science", "Technology", "Arts & Recreation",
 				"Literature", "History & Geography"};
@@ -198,8 +193,7 @@ public class RegisterBooksFrame extends JFrame {
 	}
 	
 	public void registerBooks() {
-		try {
-			
+		try {		
 			 // Load the JDBC driver (version 4.0 or later)
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
@@ -222,18 +216,33 @@ public class RegisterBooksFrame extends JFrame {
 				String language = txtLanguage.getText();
 				String subject = comboBoxSubject.getSelectedItem().toString();
 				String bookNum = txtBookNo.getText();
-				String quantity = txtQuantity.getText();
+				int quantity = Integer.valueOf(txtQuantity.getText()); //Converts String to Int
 				DeweyMap deweyMap = new DeweyMap();
 				double deweyDecimal = deweyMap.getDeweyForSubject(subject); 
 				
-			
-				//Build query
-				String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Dewey_Decimal, Book_Num)" +
-				        "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', " + deweyDecimal + ", '" + bookNum + "')";
+				int accessionNum = 100;
 				
-				//Execute query
-				stmt.executeUpdate(sql);
-				JOptionPane.showMessageDialog(rootPane, "Book Registered");
+				if(quantity > 1) {
+					for(int i = 0; i <= (quantity - 1); i++) {
+						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Dewey_Decimal, Book_Num, Accession_Num)" +
+						        "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + deweyDecimal + "', '" + bookNum + "', '" + (accessionNum + i) + "')";
+						
+						stmt.executeUpdate(sql);
+						JOptionPane.showMessageDialog(rootPane, "Book Registered");
+					
+					}
+				}
+				
+				else {					
+					//Build query
+					String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Dewey_Decimal, Book_Num, Accession_Num)" +
+							"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + deweyDecimal + "', '" + bookNum + "', '" + accessionNum + "')";
+					
+					//Execute query
+					stmt.executeUpdate(sql);
+					JOptionPane.showMessageDialog(rootPane, "Book Registered");
+				}
+				
 				
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
