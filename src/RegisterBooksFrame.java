@@ -222,13 +222,17 @@ public class RegisterBooksFrame extends JFrame {
 				
 				int accessionNum = 100;
 				
+				/* Checks the book's quantity:
+				 * If there is more than one copy of the same book, multiple entries will be inserted into the database.
+				 * The Accession_Num will increment by 1 for each copy.
+				 * If there's only one copy, a single entry is created.
+				 */
 				if(quantity > 1) {
 					for(int i = 0; i <= (quantity - 1); i++) {
 						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Dewey_Decimal, Book_Num, Accession_Num)" +
 						        "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + deweyDecimal + "', '" + bookNum + "', '" + (accessionNum + i) + "')";
 						
 						stmt.executeUpdate(sql);
-						JOptionPane.showMessageDialog(rootPane, "Book Registered");
 					
 					}
 				}
@@ -240,8 +244,8 @@ public class RegisterBooksFrame extends JFrame {
 					
 					//Execute query
 					stmt.executeUpdate(sql);
-					JOptionPane.showMessageDialog(rootPane, "Book Registered");
 				}
+				JOptionPane.showMessageDialog(rootPane, "Book Registered");
 				
 				
 			} catch (SQLException e1) {
