@@ -15,6 +15,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 
@@ -215,36 +218,61 @@ public class RegisterBooksFrame extends JFrame {
 				String publisher = txtPublisher.getText();
 				String language = txtLanguage.getText();
 				String subject = comboBoxSubject.getSelectedItem().toString();
-				String bookNum = txtBookNo.getText();
 				int quantity = Integer.valueOf(txtQuantity.getText()); //Converts String to Int
 				DeweyMap deweyMap = new DeweyMap();
 				double deweyDecimal = deweyMap.getDeweyForSubject(subject); 
 				
-				int accessionNum = 100;
+				int accessionNum = 00;
+				
+				/*
+				 * Integer Array here for book number
+				 * */
+				
+				Set<Integer> usedBookNumbers = new HashSet<>();
+				
+				Random rd = new Random();
+				int[] arr = new int[6];
+				
+				
+				
+				
 				
 				/* Checks the book's quantity:
 				 * If there is more than one copy of the same book, multiple entries will be inserted into the database.
 				 * The Accession_Num will increment by 1 for each copy.
 				 * If there's only one copy, a single entry is created.
 				 */
+				for(int i = 0; i <= (quantity - 1); i++) {
+					int bookNum;
+					
+					do {
+						bookNum = rd.nextInt(Integer.MAX_VALUE);
+					} while (usedBookNumbers.contains(bookNum));
+					
+					usedBookNumbers.add(bookNum);
 				if(quantity > 1) {
-					for(int i = 0; i <= (quantity - 1); i++) {
-						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Dewey_Decimal, Book_Num, Accession_Num)" +
-						        "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + deweyDecimal + "', '" + bookNum + "', '" + (accessionNum + i) + "')";
+
+						//Build query
+						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num)" +
+								"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + bookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "')";
 						
+						//Execute query
 						stmt.executeUpdate(sql);
 					
 					}
-				}
+				
 				
 				else {					
 					//Build query
-					String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Dewey_Decimal, Book_Num, Accession_Num)" +
-							"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + deweyDecimal + "', '" + bookNum + "', '" + accessionNum + "')";
+					String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num)" +
+							"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + bookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "')";
 					
 					//Execute query
 					stmt.executeUpdate(sql);
 				}
+				
+				}
+				
 				JOptionPane.showMessageDialog(rootPane, "Book Registered");
 				
 				
