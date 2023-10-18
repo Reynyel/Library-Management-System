@@ -15,7 +15,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.awt.event.ActionEvent;
@@ -30,10 +35,8 @@ public class RegisterBooksFrame extends JFrame {
 	private JTextField txtAuthor;
 	private JTextField txtISBN;
 	private JTextField txtPublisher;
-	private JTextField txtLanguage;
-	private JTextField txtBookNo;
 	private JTextField txtQuantity;
-	private JComboBox comboBoxSubject;
+	private JComboBox comboBoxSubject, languageComboBox;
 
 	/**
 	 * Launch the application.
@@ -115,27 +118,6 @@ public class RegisterBooksFrame extends JFrame {
 		lblLanguage.setBounds(10, 272, 80, 14);
 		contentPane.add(lblLanguage);
 		
-		txtLanguage = new JTextField();
-		txtLanguage.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtLanguage.setColumns(10);
-		txtLanguage.setBounds(92, 271, 97, 20);
-		contentPane.add(txtLanguage);
-		
-		JButton btnBack = new JButton("Back");
-		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnBack.setForeground(new Color(255, 255, 255));
-		btnBack.setBackground(new Color(157, 179, 227));
-		btnBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MainMenuFrame menu = new MainMenuFrame();
-				menu.setVisible(true);
-				dispose();
-			}
-		});
-		btnBack.setBorderPainted(false);
-		btnBack.setBounds(10, 583, 93, 33);
-		contentPane.add(btnBack);
-		
 		JLabel lblSubject = new JLabel("Subject");
 		lblSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblSubject.setBounds(10, 306, 80, 14);
@@ -172,17 +154,6 @@ public class RegisterBooksFrame extends JFrame {
 		btnRegister.setBounds(628, 354, 93, 33);
 		contentPane.add(btnRegister);
 		
-		JLabel lblBookNo = new JLabel("Book Number");
-		lblBookNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBookNo.setBounds(10, 71, 115, 14);
-		contentPane.add(lblBookNo);
-		
-		txtBookNo = new JTextField();
-		txtBookNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtBookNo.setColumns(10);
-		txtBookNo.setBounds(105, 70, 616, 20);
-		contentPane.add(txtBookNo);
-		
 		JLabel lblQuantity = new JLabel("Quantity");
 		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblQuantity.setBounds(10, 242, 80, 14);
@@ -193,6 +164,16 @@ public class RegisterBooksFrame extends JFrame {
 		txtQuantity.setColumns(10);
 		txtQuantity.setBounds(92, 241, 97, 20);
 		contentPane.add(txtQuantity);
+		
+		languageComboBox = new JComboBox();
+		String[] langArr = {"English", "Filipino"};
+		for (String s : langArr) {
+			languageComboBox.addItem(s);
+		}
+		languageComboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		languageComboBox.setBackground(Color.WHITE);
+		languageComboBox.setBounds(92, 268, 115, 22);
+		contentPane.add(languageComboBox);
 	}
 	
 	public void registerBooks() {
@@ -216,60 +197,66 @@ public class RegisterBooksFrame extends JFrame {
 				String author = txtAuthor.getText();
 				String isbn = txtISBN.getText();
 				String publisher = txtPublisher.getText();
-				String language = txtLanguage.getText();
+				String language = languageComboBox.getSelectedItem().toString();
 				String subject = comboBoxSubject.getSelectedItem().toString();
 				int quantity = Integer.valueOf(txtQuantity.getText()); //Converts String to Int
 				DeweyMap deweyMap = new DeweyMap();
 				double deweyDecimal = deweyMap.getDeweyForSubject(subject); 
 				
+				//Starting value for accession number
 				int accessionNum = 00;
+								
+				// Create a map to store used book numbers for each title
+				Map<String, Integer> titleToUsedBookNumber = new HashMap<>();
 				
-				/*
-				 * Integer Array here for book number
-				 * */
-				
+				// created a set to store book numbers
 				Set<Integer> usedBookNumbers = new HashSet<>();
 				
-				Random rd = new Random();
-				int[] arr = new int[6];
-				
-				
-				
-				
+				Random rd = new Random();	
 				
 				/* Checks the book's quantity:
 				 * If there is more than one copy of the same book, multiple entries will be inserted into the database.
 				 * The Accession_Num will increment by 1 for each copy.
 				 * If there's only one copy, a single entry is created.
 				 */
-				for(int i = 0; i <= (quantity - 1); i++) {
-					int bookNum;
-					
-					do {
-						bookNum = rd.nextInt(Integer.MAX_VALUE);
-					} while (usedBookNumbers.contains(bookNum));
-					
-					usedBookNumbers.add(bookNum);
-				if(quantity > 1) {
+				int bookNum;
+				
+				/*this will generate a unique 6-character
+				 * book number for a title*/
+				do {
+					bookNum = 100000 + rd.nextInt(900000);
+				} while (usedBookNumbers.contains(bookNum));
+				
+				usedBookNumbers.add(bookNum);
+				
+				/* this is used to store the designated
+				 * book number for a title*/
+				titleToUsedBookNumber.put(title, bookNum);
 
+				for(int i = 0; i <= (quantity - 1); i++) {					
+					
+					if(quantity > 1) {
+							/* this will use the same book number
+							 * for multiple copies of the same title*/
+							int usedBookNum = titleToUsedBookNumber.get(title);
+							
+							//Build query
+							String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num)" +
+									"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + usedBookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "')";
+							
+							//Execute query
+							stmt.executeUpdate(sql);
+						
+						}
+						
+					else {					
 						//Build query
 						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num)" +
 								"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + bookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "')";
 						
 						//Execute query
 						stmt.executeUpdate(sql);
-					
 					}
-				
-				
-				else {					
-					//Build query
-					String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num)" +
-							"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + bookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "')";
-					
-					//Execute query
-					stmt.executeUpdate(sql);
-				}
 				
 				}
 				
