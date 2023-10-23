@@ -5,11 +5,22 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 
@@ -111,6 +122,11 @@ public class RegisterUser extends JFrame {
 		contentPane.add(txtStudentNum);
 		
 		JButton btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				registerStudent();
+			}
+		});
 		btnRegister.setForeground(Color.WHITE);
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
@@ -173,6 +189,51 @@ public class RegisterUser extends JFrame {
 		
 		for(String sectionName : sectionsForGrade) {
 			sectionComboBox.addItem(sectionName);
+		}
+	}
+	
+	public void registerStudent() {
+		try {		
+			 // Load the JDBC driver (version 4.0 or later)
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        
+			Connection conn;
+			
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/studentDB", "root", "ranielle25");
+				Statement stmt = conn.createStatement();
+				System.out.println("Connected");
+				//Get the inputs
+				String studentNum = txtStudentNum.getText();
+				String lastName = txtLastName.getText();
+				String firstName = txtFirstName.getText();
+				String middleName = txtMiddleName.getText();
+				int level = (int) gradeComboBox.getSelectedItem();
+				String section = sectionComboBox.getSelectedItem().toString();
+										
+				//Build query
+				String sql = "INSERT INTO Students (StudentNo, LastName, FirstName, MiddleName, GradeLevel, Section)" +
+						"VALUES ('" + studentNum + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + level +  "', '" + section +"')";
+				
+				//Execute query
+				stmt.executeUpdate(sql);
+				
+				JOptionPane.showMessageDialog(rootPane, "Student Registered");
+				
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+								
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 }

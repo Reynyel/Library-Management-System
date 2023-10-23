@@ -174,6 +174,21 @@ public class RegisterBooksFrame extends JFrame {
 		languageComboBox.setBackground(Color.WHITE);
 		languageComboBox.setBounds(92, 268, 115, 22);
 		contentPane.add(languageComboBox);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainMenuFrame menu = new MainMenuFrame();
+				menu.setVisible(true);
+				dispose();
+			}
+		});
+		btnBack.setForeground(Color.WHITE);
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnBack.setBorderPainted(false);
+		btnBack.setBackground(new Color(157, 179, 227));
+		btnBack.setBounds(10, 583, 93, 33);
+		contentPane.add(btnBack);
 	}
 	
 	public void registerBooks() {
