@@ -42,7 +42,7 @@ public class UserTypeFrame extends JFrame {
 		JButton studentBtn = new JButton("Student");
 		studentBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegisterUser student = new RegisterUser();
+				RegisterStudent student = new RegisterStudent();
 				student.setVisible(true);
 				dispose();
 			}

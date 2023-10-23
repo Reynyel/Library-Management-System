@@ -24,7 +24,7 @@ import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 
-public class RegisterUser extends JFrame {
+public class RegisterStudent extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtLastName;
@@ -44,7 +44,7 @@ public class RegisterUser extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RegisterUser frame = new RegisterUser();
+					RegisterStudent frame = new RegisterStudent();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,7 +56,7 @@ public class RegisterUser extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RegisterUser() {
+	public RegisterStudent() {
 		setTitle("Register User");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 953, 666);
