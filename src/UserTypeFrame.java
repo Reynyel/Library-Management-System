@@ -6,6 +6,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.awt.Font;
 
 public class UserTypeFrame extends JFrame {
 
@@ -51,7 +53,29 @@ public class UserTypeFrame extends JFrame {
 		contentPane.add(studentBtn);
 		
 		JButton teacherBtn = new JButton("Teacher");
+		teacherBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegisterStaff staff = new RegisterStaff();
+				staff.setVisible(true);
+				dispose();
+			}
+		});
 		teacherBtn.setBounds(495, 234, 141, 103);
 		contentPane.add(teacherBtn);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainMenuFrame menu = new MainMenuFrame();
+				menu.setVisible(true);
+				dispose();
+			}
+		});
+		btnBack.setForeground(Color.WHITE);
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnBack.setBorderPainted(false);
+		btnBack.setBackground(new Color(157, 179, 227));
+		btnBack.setBounds(0, 583, 93, 33);
+		contentPane.add(btnBack);
 	}
 }

@@ -137,8 +137,8 @@ public class RegisterStudent extends JFrame {
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MainMenuFrame menu = new MainMenuFrame();
-				menu.setVisible(true);
+				UserTypeFrame type = new UserTypeFrame();
+				type.setVisible(true);
 				dispose();
 			}
 		});
