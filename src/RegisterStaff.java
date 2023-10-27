@@ -5,11 +5,18 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
 public class RegisterStaff extends JFrame {
@@ -21,6 +28,7 @@ public class RegisterStaff extends JFrame {
 	private JTextField txtMiddleName;
 	private JTextField txtContactNum;
 	private JTextField txtEmail;
+	private JRadioButton radioFaculty, radioStaff;
 
 	/**
 	 * Launch the application.
@@ -119,6 +127,11 @@ public class RegisterStaff extends JFrame {
 		contentPane.add(txtEmail);
 		
 		JButton btnRegister = new JButton("Register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				registerStaff();
+			}
+		});
 		btnRegister.setForeground(Color.WHITE);
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
@@ -146,16 +159,81 @@ public class RegisterStaff extends JFrame {
 		lblEmployeeType.setBounds(29, 365, 130, 14);
 		contentPane.add(lblEmployeeType);
 		
-		JRadioButton radioFaculty = new JRadioButton("Faculty");
+		radioFaculty = new JRadioButton("Faculty");
 		radioFaculty.setBackground(new Color(255, 255, 255));
 		radioFaculty.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		radioFaculty.setBounds(155, 363, 109, 23);
 		contentPane.add(radioFaculty);
 		
-		JRadioButton radioStaff = new JRadioButton("Staff");
+		radioStaff = new JRadioButton("Staff");
 		radioStaff.setBackground(new Color(255, 255, 255));
 		radioStaff.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		radioStaff.setBounds(277, 363, 109, 23);
 		contentPane.add(radioStaff);
+		
+		ButtonGroup G = new ButtonGroup();
+		G.add(radioFaculty);
+		G.add(radioStaff);
+	}
+	
+	public void registerStaff() {
+		try {		
+			 // Load the JDBC driver (version 4.0 or later)
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        
+			Connection conn;
+			
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employeeDB", "root", "ranielle25");
+				Statement stmt = conn.createStatement();
+				System.out.println("Connected");
+				//Get the inputs
+				String employeeID = txtEmployeeID.getText();
+				String lastName = txtLastName.getText();
+				String firstName = txtFirstName.getText();
+				String middleName = txtMiddleName.getText();
+				String contact = txtContactNum.getText();
+				String email = txtEmail.getText();
+				String type;
+				
+				if(radioFaculty.isSelected()) {
+					type = "Faculty";
+					//Build query
+					String sql = "INSERT INTO Employee (employeeID, lastName, firstName, middleName, contactNum, email, employeeType)" +
+							"VALUES ('" + employeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
+					
+					//Execute query
+					stmt.executeUpdate(sql);
+					JOptionPane.showMessageDialog(rootPane, "Employee Registered");
+				}
+				else if(radioStaff.isSelected()) {
+					type = "Staff";
+					//Build query
+					String sql = "INSERT INTO Employee (employeeID, lastName, firstName, middleName, contactNum, email, employeeType)" +
+							"VALUES ('" + employeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
+					
+					//Execute query
+					stmt.executeUpdate(sql);
+					JOptionPane.showMessageDialog(rootPane, "Employee Registered");
+				}
+				else {
+					JOptionPane.showMessageDialog(rootPane, "Please select employee type");
+				}
+												
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+								
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }
