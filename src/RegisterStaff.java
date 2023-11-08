@@ -139,6 +139,7 @@ public class RegisterStaff extends JFrame {
 		btnRegister.setBounds(663, 424, 93, 33);
 		contentPane.add(btnRegister);
 		
+		//Back button
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -171,6 +172,10 @@ public class RegisterStaff extends JFrame {
 		radioStaff.setBounds(277, 363, 109, 23);
 		contentPane.add(radioStaff);
 		
+		
+		/*Add radio buttons for employee type
+		 * in a group, so only one radio button
+		 * can be ticked*/
 		ButtonGroup G = new ButtonGroup();
 		G.add(radioFaculty);
 		G.add(radioStaff);
@@ -201,6 +206,8 @@ public class RegisterStaff extends JFrame {
 				String email = txtEmail.getText();
 				String type;
 				
+				
+				//If radioFaculty is ticked, set the employee type to 'Faculty'
 				if(radioFaculty.isSelected()) {
 					type = "Faculty";
 					//Build query
@@ -211,6 +218,8 @@ public class RegisterStaff extends JFrame {
 					stmt.executeUpdate(sql);
 					JOptionPane.showMessageDialog(rootPane, "Employee Registered");
 				}
+				
+				//If radioFaculty is ticked, set the employee type to 'Staff'
 				else if(radioStaff.isSelected()) {
 					type = "Staff";
 					//Build query
@@ -221,6 +230,8 @@ public class RegisterStaff extends JFrame {
 					stmt.executeUpdate(sql);
 					JOptionPane.showMessageDialog(rootPane, "Employee Registered");
 				}
+				
+				//If no radio button is ticked, this message pops up
 				else {
 					JOptionPane.showMessageDialog(rootPane, "Please select employee type");
 				}
