@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,11 +24,16 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.JTextField;
 
 public class SearchBooks extends JFrame {
 
 	private JPanel contentPane;
 	private JTable tblBooks;
+	private JTextField txtTitle;
+	private JTextField txtBookNum;
 
 	/**
 	 * Launch the application.
@@ -50,7 +56,7 @@ public class SearchBooks extends JFrame {
 	 */
 	public SearchBooks() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 952, 666);
+		setBounds(100, 100, 1085, 719);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -74,74 +80,173 @@ public class SearchBooks extends JFrame {
 		
 		JScrollPane js = new JScrollPane(tblBooks);
 		js.setVisible(true);
-		js.setBounds(108, 300, 750, 316); // Adjust the bounds to match the table
+		js.setBounds(132, 327, 790, 342); // Adjust the bounds to match the table
 		contentPane.add(js);
 		
 		JButton btnShowData = new JButton("Show Data");
 		btnShowData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {		
-					 // Load the JDBC driver (version 4.0 or later)
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-			        
-					Connection conn;
-					
-					try {
-						conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
-						Statement stmt = conn.createStatement();
-						System.out.println("Connected");
-										
-						String sql = "SELECT * FROM Books";
-						ResultSet rs = stmt.executeQuery(sql);
-						
-						while(rs.next()) {
-							//add data until there is none
-							String bookNum = rs.getString("Book_Num");
-							String title = rs.getString("Title");
-							String author = rs.getString("Author");
-							String isbn = rs.getString("isbn");
-							String publisher = rs.getString("Publisher");
-							String language = rs.getString("Language");
-							String subject = rs.getString("Subject");
-							String quantity = String.valueOf(rs.getInt("Quantity"));
-							String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
-							String accession = String.valueOf(rs.getInt("Accession_Num"));
-							
-							//array to store data into jtable
-							String tbData[] = {bookNum, title, author, isbn, publisher,
-									language, subject, quantity, dewey, accession};
-							
-							DefaultTableModel tblModel = (DefaultTableModel)tblBooks.getModel();
-							
-							//add string array data to jtable
-							tblModel.addRow(tbData);
-							
-							
-							
-						}
-						
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}          				
-										
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}	
+					update();
 			}
 			
 		});
-		btnShowData.setBounds(67, 126, 148, 57);
+		btnShowData.setBounds(608, 228, 128, 40);
 		contentPane.add(btnShowData);
+		
+		JButton btnSearchBook = new JButton("Search Book");
+		btnSearchBook.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				search();
+			}
+		});
+		btnSearchBook.setBounds(289, 228, 128, 40);
+		contentPane.add(btnSearchBook);
+		
+		JLabel lblNewLabel = new JLabel("Book Title");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel.setBounds(29, 80, 80, 14);
+		contentPane.add(lblNewLabel);
+		
+		txtTitle = new JTextField();
+		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtTitle.setColumns(10);
+		txtTitle.setBounds(111, 79, 629, 20);
+		contentPane.add(txtTitle);
+		
+		JLabel lblBookNumber = new JLabel("Book Number");
+		lblBookNumber.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblBookNumber.setBounds(29, 38, 113, 14);
+		contentPane.add(lblBookNumber);
+		
+		txtBookNum = new JTextField();
+		txtBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtBookNum.setColumns(10);
+		txtBookNum.setBounds(132, 37, 608, 20);
+		contentPane.add(txtBookNum);
+	}
+	
+	Connection conn;
+	PreparedStatement pst;
+	ResultSet rs;
+	
+	public void search() {
+		try {		
+			 // Load the JDBC driver (version 4.0 or later)
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}   		
+			
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+				Statement stmt = conn.createStatement();
+				System.out.println("Connected");
+								
+				String sql = "SELECT * FROM Books WHERE Book_Num = ?";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				
+				String bookNumber = txtBookNum.getText();
+				//int bookNumber = txtBookNumber
+				pstmt.setString(1, bookNumber);
+	
+				
+				ResultSet rs = pstmt.executeQuery();
+
+		        DefaultTableModel tblModel = (DefaultTableModel) tblBooks.getModel();
+
+		        // Clear existing rows in the table
+		        tblModel.setRowCount(0);
+		        
+				while(rs.next()) {
+					//add data until there is none
+					String bookNum = rs.getString("Book_Num");
+					String title = rs.getString("Title");
+					String author = rs.getString("Author");
+					String isbn = rs.getString("isbn");
+					String publisher = rs.getString("Publisher");
+					String language = rs.getString("Language");
+					String subject = rs.getString("Subject");
+					String quantity = String.valueOf(rs.getInt("Quantity"));
+					String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+					String accession = String.valueOf(rs.getInt("Accession_Num"));
+					
+					//array to store data into jtable
+					String tbData[] = {bookNum, title, author, isbn, publisher,
+							language, subject, quantity, dewey, accession};
+				
+					
+					//add string array data to jtable
+					tblModel.addRow(tbData);
+					
+					
+					
+				}
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}          				
+								
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	
 	public void update() {
-		
+		try {		
+			 // Load the JDBC driver (version 4.0 or later)
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}   		
+			
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+				Statement stmt = conn.createStatement();
+				System.out.println("Connected");
+								
+				String sql = "SELECT * FROM Books";
+				ResultSet rs = stmt.executeQuery(sql);
+				
+				while(rs.next()) {
+					//add data until there is none
+					String bookNum = rs.getString("Book_Num");
+					String title = rs.getString("Title");
+					String author = rs.getString("Author");
+					String isbn = rs.getString("isbn");
+					String publisher = rs.getString("Publisher");
+					String language = rs.getString("Language");
+					String subject = rs.getString("Subject");
+					String quantity = String.valueOf(rs.getInt("Quantity"));
+					String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+					String accession = String.valueOf(rs.getInt("Accession_Num"));
+					
+					//array to store data into jtable
+					String tbData[] = {bookNum, title, author, isbn, publisher,
+							language, subject, quantity, dewey, accession};
+					
+					DefaultTableModel tblModel = (DefaultTableModel)tblBooks.getModel();
+					
+					//add string array data to jtable
+					tblModel.addRow(tbData);
+					
+					
+					
+				}
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}          				
+								
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }
