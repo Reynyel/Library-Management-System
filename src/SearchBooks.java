@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.ScrollPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.border.LineBorder;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -27,6 +28,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
 
 public class SearchBooks extends JFrame {
 
@@ -34,6 +36,7 @@ public class SearchBooks extends JFrame {
 	private JTable tblBooks;
 	private JTextField txtTitle;
 	private JTextField txtBookNum;
+	private JComboBox cbAccession;
 
 	/**
 	 * Launch the application.
@@ -123,11 +126,34 @@ public class SearchBooks extends JFrame {
 		txtBookNum.setColumns(10);
 		txtBookNum.setBounds(132, 37, 608, 20);
 		contentPane.add(txtBookNum);
+		
+		txtAuthor = new JTextField();
+		txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtAuthor.setColumns(10);
+		txtAuthor.setBounds(112, 122, 629, 20);
+		contentPane.add(txtAuthor);
+		
+		JLabel lblAuthors = new JLabel("Author(s)");
+		lblAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblAuthors.setBounds(26, 125, 80, 14);
+		contentPane.add(lblAuthors);
+		
+		JLabel lblAccession = new JLabel("Accession");
+		lblAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblAccession.setBounds(29, 171, 80, 14);
+		contentPane.add(lblAccession);
+		
+		cbAccession = new JComboBox();
+		cbAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		cbAccession.setBackground(Color.WHITE);
+		cbAccession.setBounds(111, 167, 49, 22);
+		contentPane.add(cbAccession);
 	}
 	
 	Connection conn;
 	PreparedStatement pst;
 	ResultSet rs;
+	private JTextField txtAuthor;
 	
 	public void search() {
 		try {		
@@ -150,7 +176,6 @@ public class SearchBooks extends JFrame {
 				String bookNumber = txtBookNum.getText();
 				//int bookNumber = txtBookNumber
 				pstmt.setString(1, bookNumber);
-	
 				
 				ResultSet rs = pstmt.executeQuery();
 
@@ -159,30 +184,47 @@ public class SearchBooks extends JFrame {
 		        // Clear existing rows in the table
 		        tblModel.setRowCount(0);
 		        
-				while(rs.next()) {
-					//add data until there is none
-					String bookNum = rs.getString("Book_Num");
-					String title = rs.getString("Title");
-					String author = rs.getString("Author");
-					String isbn = rs.getString("isbn");
-					String publisher = rs.getString("Publisher");
-					String language = rs.getString("Language");
-					String subject = rs.getString("Subject");
-					String quantity = String.valueOf(rs.getInt("Quantity"));
-					String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
-					String accession = String.valueOf(rs.getInt("Accession_Num"));
+		        if(rs.next() == false) {
+					JOptionPane.showMessageDialog(this, "Sorry, book not found!");				
 					
-					//array to store data into jtable
-					String tbData[] = {bookNum, title, author, isbn, publisher,
-							language, subject, quantity, dewey, accession};
-				
-					
-					//add string array data to jtable
-					tblModel.addRow(tbData);
-					
-					
-					
+					txtTitle.setText("");
+					txtAuthor.setText("");
+					cbAccession.removeAllItems();
 				}
+		        
+		        else {
+		        	DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+		        	while(rs.next()) {
+		        				   		        		
+						//add data until there is none
+						String bookNum = rs.getString("Book_Num");
+						String title = rs.getString("Title");
+						String author = rs.getString("Author");
+						String isbn = rs.getString("isbn");
+						String publisher = rs.getString("Publisher");
+						String language = rs.getString("Language");
+						String subject = rs.getString("Subject");
+						String quantity = String.valueOf(rs.getInt("Quantity"));
+						String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+						String accession = String.valueOf(rs.getInt("Accession_Num"));
+						
+						comboBoxModel.addElement(accession);
+						
+						txtTitle.setText(title);
+						txtAuthor.setText(author);				
+						cbAccession.setModel(comboBoxModel);
+						
+						//array to store data into jtable
+						String tbData[] = {bookNum, title, author, isbn, publisher,
+								language, subject, quantity, dewey, accession};
+					
+						
+						//add string array data to jtable
+						tblModel.addRow(tbData);
+																
+					}
+		        }
+				
 				
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
