@@ -107,57 +107,57 @@ public class SearchBooks extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Book Title");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(29, 80, 80, 14);
+		lblNewLabel.setBounds(35, 82, 80, 14);
 		contentPane.add(lblNewLabel);
 		
 		txtTitle = new JTextField();
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtTitle.setColumns(10);
-		txtTitle.setBounds(111, 79, 629, 20);
+		txtTitle.setBounds(117, 81, 629, 20);
 		contentPane.add(txtTitle);
 		
 		JLabel lblBookNumber = new JLabel("Book Number");
 		lblBookNumber.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBookNumber.setBounds(29, 38, 113, 14);
+		lblBookNumber.setBounds(35, 40, 113, 14);
 		contentPane.add(lblBookNumber);
 		
 		txtBookNum = new JTextField();
 		txtBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtBookNum.setColumns(10);
-		txtBookNum.setBounds(132, 37, 608, 20);
+		txtBookNum.setBounds(138, 39, 608, 20);
 		contentPane.add(txtBookNum);
 		
 		txtAuthor = new JTextField();
 		txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtAuthor.setColumns(10);
-		txtAuthor.setBounds(112, 122, 629, 20);
+		txtAuthor.setBounds(118, 124, 629, 20);
 		contentPane.add(txtAuthor);
 		
 		JLabel lblAuthors = new JLabel("Author(s)");
 		lblAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAuthors.setBounds(26, 125, 80, 14);
+		lblAuthors.setBounds(32, 127, 80, 14);
 		contentPane.add(lblAuthors);
 		
 		JLabel lblAccession = new JLabel("Accession");
 		lblAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAccession.setBounds(29, 171, 80, 14);
+		lblAccession.setBounds(35, 173, 80, 14);
 		contentPane.add(lblAccession);
 		
 		cbAccession = new JComboBox();
 		cbAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		cbAccession.setBackground(Color.WHITE);
-		cbAccession.setBounds(111, 167, 49, 22);
+		cbAccession.setBounds(117, 169, 49, 22);
 		contentPane.add(cbAccession);
 		
 		JLabel lblStatus = new JLabel("Status");
 		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStatus.setBounds(29, 216, 80, 14);
+		lblStatus.setBounds(35, 218, 80, 14);
 		contentPane.add(lblStatus);
 		
 		JComboBox cbStatus = new JComboBox();
 		cbStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		cbStatus.setBackground(Color.WHITE);
-		cbStatus.setBounds(111, 212, 89, 22);
+		cbStatus.setBounds(117, 214, 89, 22);
 		cbStatus.addItem("Available");
 		cbStatus.addItem("Not Available");
 		cbStatus.addItem("Borrowed");
@@ -169,7 +169,7 @@ public class SearchBooks extends JFrame {
 				update();
 			}
 		});
-		btnUpdate.setBounds(262, 265, 128, 40);
+		btnUpdate.setBounds(268, 267, 128, 40);
 		contentPane.add(btnUpdate);
 	}
 	

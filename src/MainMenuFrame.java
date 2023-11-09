@@ -101,7 +101,9 @@ public class MainMenuFrame extends JFrame {
 		JButton btnTransac = new JButton("Transactions");
 		btnTransac.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				TransactionFrame transacFrame = new TransactionFrame();
+				transacFrame.setVisible(true);
+				dispose();
 			}
 		});
 		btnTransac.setBounds(663, 354, 148, 108);
