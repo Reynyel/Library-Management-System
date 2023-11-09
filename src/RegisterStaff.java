@@ -194,7 +194,7 @@ public class RegisterStaff extends JFrame {
 			Connection conn;
 			
 			try {
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employeeDB", "root", "ranielle25");
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/booksDB", "root", "ranielle25");
 				Statement stmt = conn.createStatement();
 				System.out.println("Connected");
 				//Get the inputs
@@ -211,7 +211,7 @@ public class RegisterStaff extends JFrame {
 				if(radioFaculty.isSelected()) {
 					type = "Faculty";
 					//Build query
-					String sql = "INSERT INTO Employee (employeeID, lastName, firstName, middleName, contactNum, email, employeeType)" +
+					String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, EmployeeType)" +
 							"VALUES ('" + employeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
 					
 					//Execute query
@@ -223,7 +223,7 @@ public class RegisterStaff extends JFrame {
 				else if(radioStaff.isSelected()) {
 					type = "Staff";
 					//Build query
-					String sql = "INSERT INTO Employee (employeeID, lastName, firstName, middleName, contactNum, email, employeeType)" +
+					String sql = "INSERT INTO Employee (employeeID, LastName, FirstName, MiddleName, ContactNo, email, EmployeeType)" +
 							"VALUES ('" + employeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
 					
 					//Execute query

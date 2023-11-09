@@ -205,7 +205,7 @@ public class RegisterStudent extends JFrame {
 			Connection conn;
 			
 			try {
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/studentDB", "root", "ranielle25");
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/booksDB", "root", "ranielle25");
 				Statement stmt = conn.createStatement();
 				System.out.println("Connected");
 				//Get the inputs

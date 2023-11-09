@@ -98,9 +98,14 @@ public class MainMenuFrame extends JFrame {
 		btnLogOut.setBounds(10, 628, 93, 33);
 		contentPane.add(btnLogOut);
 		
-		JButton btnReport = new JButton("Report");
-		btnReport.setBounds(663, 354, 148, 108);
-		contentPane.add(btnReport);
+		JButton btnTransac = new JButton("Transactions");
+		btnTransac.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnTransac.setBounds(663, 354, 148, 108);
+		contentPane.add(btnTransac);
 		
 		JLabel lblNewLabel = new JLabel("Register Books");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));

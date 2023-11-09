@@ -75,7 +75,7 @@ public class SearchBooks extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"Book Num", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Quantity", "Dewey Decimal", "Accession Number", "Data and Time", "New column"
+				"Book Num", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Quantity", "Dewey Decimal", "Accession Number", "Status", "Date and Time"
 			}
 		));
 		tblBooks.setBounds(108, 300, 750, 316);
@@ -83,17 +83,17 @@ public class SearchBooks extends JFrame {
 		
 		JScrollPane js = new JScrollPane(tblBooks);
 		js.setVisible(true);
-		js.setBounds(132, 327, 790, 342); // Adjust the bounds to match the table
+		js.setBounds(26, 327, 1033, 342); // Adjust the bounds to match the table
 		contentPane.add(js);
 		
 		JButton btnShowData = new JButton("Show Data");
 		btnShowData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-					update();
+					view();
 			}
 			
 		});
-		btnShowData.setBounds(608, 228, 128, 40);
+		btnShowData.setBounds(612, 265, 128, 40);
 		contentPane.add(btnShowData);
 		
 		JButton btnSearchBook = new JButton("Search Book");
@@ -102,7 +102,7 @@ public class SearchBooks extends JFrame {
 				search();
 			}
 		});
-		btnSearchBook.setBounds(289, 228, 128, 40);
+		btnSearchBook.setBounds(438, 265, 128, 40);
 		contentPane.add(btnSearchBook);
 		
 		JLabel lblNewLabel = new JLabel("Book Title");
@@ -148,6 +148,29 @@ public class SearchBooks extends JFrame {
 		cbAccession.setBackground(Color.WHITE);
 		cbAccession.setBounds(111, 167, 49, 22);
 		contentPane.add(cbAccession);
+		
+		JLabel lblStatus = new JLabel("Status");
+		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStatus.setBounds(29, 216, 80, 14);
+		contentPane.add(lblStatus);
+		
+		JComboBox cbStatus = new JComboBox();
+		cbStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		cbStatus.setBackground(Color.WHITE);
+		cbStatus.setBounds(111, 212, 89, 22);
+		cbStatus.addItem("Available");
+		cbStatus.addItem("Not Available");
+		cbStatus.addItem("Borrowed");
+		contentPane.add(cbStatus);
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				update();
+			}
+		});
+		btnUpdate.setBounds(262, 265, 128, 40);
+		contentPane.add(btnUpdate);
 	}
 	
 	Connection conn;
@@ -155,7 +178,7 @@ public class SearchBooks extends JFrame {
 	ResultSet rs;
 	private JTextField txtAuthor;
 	
-	public void search() {
+	public void update() {
 		try {		
 			 // Load the JDBC driver (version 4.0 or later)
 			try {
@@ -237,7 +260,89 @@ public class SearchBooks extends JFrame {
 		}
 	}
 	
-	public void update() {
+	public void search() {
+		try {		
+			 // Load the JDBC driver (version 4.0 or later)
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}   		
+			
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+				Statement stmt = conn.createStatement();
+				System.out.println("Connected");
+								
+				String sql = "SELECT * FROM Books WHERE Book_Num = ?";
+				PreparedStatement pstmt = conn.prepareStatement(sql);
+				
+				String bookNumber = txtBookNum.getText();
+				//int bookNumber = txtBookNumber
+				pstmt.setString(1, bookNumber);
+				
+				ResultSet rs = pstmt.executeQuery();
+
+		        DefaultTableModel tblModel = (DefaultTableModel) tblBooks.getModel();
+
+		        // Clear existing rows in the table
+		        tblModel.setRowCount(0);
+		        
+		        if(!rs.isBeforeFirst()) {
+					JOptionPane.showMessageDialog(this, "Sorry, book not found!");				
+					
+					txtTitle.setText("");
+					txtAuthor.setText("");
+					cbAccession.removeAllItems();
+				}
+		        
+		        else {
+		        	DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+		        	while(rs.next()) {
+		        				   		        		
+						//add data until there is none
+						String bookNum = rs.getString("Book_Num");
+						String title = rs.getString("Title");
+						String author = rs.getString("Author");
+						String isbn = rs.getString("isbn");
+						String publisher = rs.getString("Publisher");
+						String language = rs.getString("Language");
+						String subject = rs.getString("Subject");
+						String quantity = String.valueOf(rs.getInt("Quantity"));
+						String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+						String accession = String.valueOf(rs.getInt("Accession_Num"));
+						
+						comboBoxModel.addElement(accession);
+						
+						txtTitle.setText(title);
+						txtAuthor.setText(author);				
+						cbAccession.setModel(comboBoxModel);
+						
+						//array to store data into jtable
+						String tbData[] = {bookNum, title, author, isbn, publisher,
+								language, subject, quantity, dewey, accession};
+					
+						
+						//add string array data to jtable
+						tblModel.addRow(tbData);
+																
+					}
+		        }
+				
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}          				
+								
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	public void view() {
 		try {		
 			 // Load the JDBC driver (version 4.0 or later)
 			try {
