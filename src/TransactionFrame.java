@@ -22,9 +22,16 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import org.jdatepicker.util.JDatePickerUtil;
+import javax.swing.JFormattedTextField.AbstractFormatter;
 
 public class TransactionFrame extends JFrame {
 
@@ -33,9 +40,9 @@ public class TransactionFrame extends JFrame {
 	private JTextField txtTitle;
 	private JTextField txtAuthor;
 	private JTable tblTransac;
-	private JTextField txtBorrName;
+	private JTextField txtBorrID;
 	private JComboBox cbAccession;
-
+	private JComboBox cbStatus;
 	/**
 	 * Launch the application.
 	 */
@@ -114,11 +121,16 @@ public class TransactionFrame extends JFrame {
 		lblStatus.setBounds(47, 232, 80, 14);
 		contentPane.add(lblStatus);
 		
-		JComboBox cbStatus = new JComboBox();
+		cbStatus = new JComboBox();
 		cbStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		cbStatus.setBackground(Color.WHITE);
 		cbStatus.setBounds(150, 228, 89, 22);
+		cbStatus.addItem("Available");
+		cbStatus.addItem("Not Available");
+		cbStatus.addItem("Borrowed");
 		contentPane.add(cbStatus);
+		
+		
 		
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener() {
@@ -154,13 +166,13 @@ public class TransactionFrame extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		txtBorrName = new JTextField();
-		txtBorrName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtBorrName.setColumns(10);
-		txtBorrName.setBounds(133, 11, 588, 20);
-		panel.add(txtBorrName);
+		txtBorrID = new JTextField();
+		txtBorrID.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtBorrID.setColumns(10);
+		txtBorrID.setBounds(133, 11, 588, 20);
+		panel.add(txtBorrID);
 		
-		JLabel lblBorrowersName = new JLabel("Borrower's Name");
+		JLabel lblBorrowersName = new JLabel("Borrower's ID");
 		lblBorrowersName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblBorrowersName.setBounds(10, 12, 113, 14);
 		panel.add(lblBorrowersName);
@@ -173,6 +185,8 @@ public class TransactionFrame extends JFrame {
 		});
 		btnSearchBook.setBounds(492, 442, 128, 40);
 		contentPane.add(btnSearchBook);
+		
+	
 	}
 	
 	Connection conn;
@@ -180,60 +194,67 @@ public class TransactionFrame extends JFrame {
 	ResultSet rs;
 	
 	public void update() {
-		try {		
-			 // Load the JDBC driver (version 4.0 or later)
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}   		
-			
-			try {
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
-				Statement stmt = conn.createStatement();
-				System.out.println("Connected");
-								
-				String sql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date) " +
-	                     "SELECT Books.Book_Num, Books.Title, Books.AccessionNum, " +
-	                     "CONCAT(Students.LastName, ', ', Students.FirstName, ' ', Students.MiddleName) AS Borrower, " +
-	                     "'Borrowed' AS BookStatus, NOW() AS transaction_date " +
-	                     "FROM Books, Students " +
-	                     "WHERE Books.Book_Num = ? AND CONCAT(Students.LastName, ', ', Students.FirstName, ' ', Students.MiddleName) = ?";
-				
-				PreparedStatement pstmt = conn.prepareStatement(sql);
-				
-				while(rs.next()) {
-					//add data until there is none
-					String bookNum = rs.getString("Book_Num");
-					String title = rs.getString("Title");
-					String author = rs.getString("Author");
-					String accession = String.valueOf(rs.getInt("Accession_Num"));
-					
-					String borrowersName = txtBorrName.getText();
-					
-					//array to store data into jtable
-					String tbData[] = {bookNum, title, author, accession};
-					
-					DefaultTableModel tblModel = (DefaultTableModel)tblTransac.getModel();
-					
-					//add string array data to jtable
-					tblModel.addRow(tbData);
-					
-					
-					
-				}
-				
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}          				
-								
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}	
+	    try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        Class.forName("com.mysql.jdbc.Driver");
+
+	        // Establish a connection
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	        System.out.println("Connected");
+
+	        // Get values from UI components
+	        String bn = txtBookNum.getText();
+	        String tl = txtTitle.getText();
+	        int acc = Integer.parseInt(cbAccession.getSelectedItem().toString());
+	        String status = (String) cbStatus.getSelectedItem();
+	        String userId = txtBorrID.getText();
+	        String borrId = txtBorrID.getText();
+
+	        // Retrieve borrower's name from Students table
+	        String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
+
+	        try (PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)) {
+	            borrowerNameStmt.setString(1, borrId);
+
+	            ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
+
+	            if (borrowerNameResult.next()) {
+	                String borrowerName = borrowerNameResult.getString("LastName") +
+	                        " " + borrowerNameResult.getString("FirstName") +
+	                        " " + borrowerNameResult.getString("MiddleName");
+
+	                // Insert into Transactions table
+	                String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
+	                        "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY))";
+
+	                try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+	                    pstmt.setString(1, bn);
+	                    pstmt.setString(2, tl);
+	                    pstmt.setInt(3, acc);
+	                    pstmt.setString(4, borrowerName);
+	                    pstmt.setString(5, status);
+
+	                    // Execute the update
+	                    int rowsAffected = pstmt.executeUpdate();
+
+	                    if (rowsAffected > 0) {
+	                        System.out.println("Record inserted successfully!");
+
+	                        // Refresh the JTable or perform another query to update UI
+	                        // ...
+	                    } else {
+	                        System.out.println("Failed to insert record!");
+	                    }
+	                }
+	            } else {
+	                System.out.println("Borrower not found!");
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
 	
 	public void search() {
 		try {		
@@ -286,13 +307,9 @@ public class TransactionFrame extends JFrame {
 						
 						txtTitle.setText(title);
 						txtAuthor.setText(author);				
-						cbAccession.setModel(comboBoxModel);
-						
-																
+						cbAccession.setModel(comboBoxModel);															
 					}
-		        }
-				
-				
+		        }			
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

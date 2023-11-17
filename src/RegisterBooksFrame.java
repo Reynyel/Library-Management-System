@@ -71,56 +71,56 @@ public class RegisterBooksFrame extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Book Title");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(10, 110, 80, 14);
+		lblNewLabel.setBounds(10, 82, 80, 14);
 		contentPane.add(lblNewLabel);
 		
 		txtTitle = new JTextField();
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtTitle.setBounds(92, 109, 629, 20);
+		txtTitle.setBounds(92, 81, 629, 20);
 		contentPane.add(txtTitle);
 		txtTitle.setColumns(10);
 		
 		JLabel lblAuthors = new JLabel("Author(s)");
 		lblAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAuthors.setBounds(10, 146, 80, 14);
+		lblAuthors.setBounds(10, 123, 80, 14);
 		contentPane.add(lblAuthors);
 		
 		txtAuthor = new JTextField();
 		txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtAuthor.setColumns(10);
-		txtAuthor.setBounds(92, 145, 629, 20);
+		txtAuthor.setBounds(92, 122, 629, 20);
 		contentPane.add(txtAuthor);
 		
 		JLabel lblIsbn = new JLabel("ISBN");
 		lblIsbn.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblIsbn.setBounds(10, 179, 80, 14);
+		lblIsbn.setBounds(10, 166, 80, 14);
 		contentPane.add(lblIsbn);
 		
 		txtISBN = new JTextField();
 		txtISBN.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtISBN.setColumns(10);
-		txtISBN.setBounds(92, 176, 629, 20);
+		txtISBN.setBounds(92, 163, 629, 20);
 		contentPane.add(txtISBN);
 		
 		JLabel lblPublisher = new JLabel("Publisher");
 		lblPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPublisher.setBounds(10, 210, 80, 14);
+		lblPublisher.setBounds(10, 202, 80, 14);
 		contentPane.add(lblPublisher);
 		
 		txtPublisher = new JTextField();
 		txtPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtPublisher.setColumns(10);
-		txtPublisher.setBounds(92, 209, 629, 20);
+		txtPublisher.setBounds(92, 201, 629, 20);
 		contentPane.add(txtPublisher);
 		
 		JLabel lblLanguage = new JLabel("Language");
 		lblLanguage.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblLanguage.setBounds(10, 272, 80, 14);
+		lblLanguage.setBounds(10, 291, 80, 14);
 		contentPane.add(lblLanguage);
 		
 		JLabel lblSubject = new JLabel("Subject");
 		lblSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblSubject.setBounds(10, 306, 80, 14);
+		lblSubject.setBounds(10, 333, 80, 14);
 		contentPane.add(lblSubject);
 		
 		comboBoxSubject = new JComboBox();
@@ -135,7 +135,7 @@ public class RegisterBooksFrame extends JFrame {
 		}
 		
 		comboBoxSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		comboBoxSubject.setBounds(92, 304, 186, 22);
+		comboBoxSubject.setBounds(92, 331, 186, 22);
 		contentPane.add(comboBoxSubject);
 			
 		
@@ -156,13 +156,13 @@ public class RegisterBooksFrame extends JFrame {
 		
 		JLabel lblQuantity = new JLabel("Quantity");
 		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblQuantity.setBounds(10, 242, 80, 14);
+		lblQuantity.setBounds(10, 245, 80, 14);
 		contentPane.add(lblQuantity);
 		
 		txtQuantity = new JTextField();
 		txtQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtQuantity.setColumns(10);
-		txtQuantity.setBounds(92, 241, 97, 20);
+		txtQuantity.setBounds(92, 244, 97, 20);
 		contentPane.add(txtQuantity);
 		
 		languageComboBox = new JComboBox();
@@ -172,7 +172,7 @@ public class RegisterBooksFrame extends JFrame {
 		}
 		languageComboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		languageComboBox.setBackground(Color.WHITE);
-		languageComboBox.setBounds(92, 268, 115, 22);
+		languageComboBox.setBounds(92, 287, 115, 22);
 		contentPane.add(languageComboBox);
 		
 		JButton btnBack = new JButton("Back");
@@ -256,8 +256,8 @@ public class RegisterBooksFrame extends JFrame {
 							int usedBookNum = titleToUsedBookNumber.get(title);
 							
 							//Build query
-							String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num)" +
-									"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + usedBookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "')";
+							String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num, book_status)" +
+									"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + usedBookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "', '" + "Available" + "')";
 							
 							//Execute query
 							stmt.executeUpdate(sql);
@@ -266,8 +266,8 @@ public class RegisterBooksFrame extends JFrame {
 						
 					else {					
 						//Build query
-						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num)" +
-								"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + bookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "')";
+						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num, book_status)" +
+								"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + bookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "', '" + "Available" + "')";
 						
 						//Execute query
 						stmt.executeUpdate(sql);
