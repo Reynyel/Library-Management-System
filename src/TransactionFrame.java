@@ -64,7 +64,7 @@ public class TransactionFrame extends JFrame {
 	 */
 	public TransactionFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1229, 917);
+		setBounds(100, 100, 1236, 966);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -158,7 +158,7 @@ public class TransactionFrame extends JFrame {
 		
 		JScrollPane js = new JScrollPane(tblTransac);
 		js.setVisible(true);
-		js.setBounds(42, 525, 1085, 342); // Adjust the bounds to match the table
+		js.setBounds(74, 524, 1085, 342); // Adjust the bounds to match the table
 		contentPane.add(js);
 		
 		JPanel panel = new JPanel();
@@ -185,6 +185,17 @@ public class TransactionFrame extends JFrame {
 		});
 		btnSearchBook.setBounds(492, 442, 128, 40);
 		contentPane.add(btnSearchBook);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainMenuFrame menu = new MainMenuFrame();
+				menu.setVisible(true);
+				dispose();
+			}
+		});
+		btnBack.setBounds(10, 876, 128, 40);
+		contentPane.add(btnBack);
 		
 	
 	}
