@@ -220,12 +220,39 @@ public class TransactionFrame extends JFrame {
 
 	            if (borrowerNameResult.next()) {
 	                String borrowerName = borrowerNameResult.getString("LastName") +
-	                        " " + borrowerNameResult.getString("FirstName") +
+	                        ", " + borrowerNameResult.getString("FirstName") +
 	                        " " + borrowerNameResult.getString("MiddleName");
 
 	                // Insert into Transactions table
 	                String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
 	                        "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY))";
+	                
+	                // Initialize ResultSet for Transactions table
+	                String selectTransactionsSql = "SELECT * FROM Transactions";
+	                try (PreparedStatement selectTransactionsStmt = conn.prepareStatement(selectTransactionsSql)) {
+	                    ResultSet rs = selectTransactionsStmt.executeQuery();
+
+	                    while (rs.next()) {
+	                    	//add data until there is none
+                    		String transacId = rs.getString("transaction_id");
+        					String bookNum = rs.getString("BooNum");
+        					String title = rs.getString("Title");
+        					String accNum = rs.getString("AccessionNum");
+        					String bookStatus = rs.getString("BookStatus");
+        					String transactionDate = rs.getString("transaction_date");
+        					String returnDate = rs.getString("return_date");
+        					String userName = rs.getString("Borrower");
+        					
+        					//array to store data into jtable
+        					String tbData[] = {bookNum, title, title, accNum, bookStatus,
+        							transactionDate, returnDate, userName};
+        					
+        					DefaultTableModel tblModel = (DefaultTableModel)tblTransac.getModel();
+        					
+        					//add string array data to jtable
+        					tblModel.addRow(tbData);
+	                    }
+	                }
 
 	                try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
 	                    pstmt.setString(1, bn);
@@ -236,14 +263,13 @@ public class TransactionFrame extends JFrame {
 
 	                    // Execute the update
 	                    int rowsAffected = pstmt.executeUpdate();
-
+	                    
 	                    if (rowsAffected > 0) {
-	                        System.out.println("Record inserted successfully!");
+	                    	JOptionPane.showMessageDialog(rootPane, "Transaction recorded");
 
-	                        // Refresh the JTable or perform another query to update UI
-	                        // ...
+	                    	
 	                    } else {
-	                        System.out.println("Failed to insert record!");
+	                    	JOptionPane.showMessageDialog(rootPane, "Failed to record transaction!");
 	                    }
 	                }
 	            } else {
