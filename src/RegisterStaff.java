@@ -15,6 +15,7 @@ import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -211,22 +212,15 @@ public class RegisterStaff extends JFrame {
 				String email = txtEmail.getText();
 				String type;
 				
-				Map<String, Integer> titleToUsedBookNumber = new HashMap<>();
-				
-				// created a set to store book numbers
-				Set<Integer> usedEmployeeId = new HashSet<>();
-				
-				Random rd = new Random();	
-				
-				int empID;
-				
-				/*this will generate a unique 6-character
-				 * book number for a title*/
-				do {
-					empID = 100000 + rd.nextInt(199999);
-				} while (usedEmployeeId.contains(empID));
-				
-				usedEmployeeId.add(empID);
+				 // Query to get the next available employee ID
+	            String getIdQuery = "SELECT MAX(employeeID) FROM Employees";
+	            ResultSet idResultSet = stmt.executeQuery(getIdQuery);
+
+	            int nextEmployeeID = 100000;
+
+	            if (idResultSet.next()) {
+	                nextEmployeeID = idResultSet.getInt(1) + 1;
+	            }
 				
 
 				//If radioFaculty is ticked, set the employee type to 'Faculty'
@@ -234,7 +228,7 @@ public class RegisterStaff extends JFrame {
 					type = "Faculty";
 					//Build query
 					String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, EmployeeType)" +
-							"VALUES ('" + usedEmployeeId + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
+							"VALUES ('" + nextEmployeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
 					
 					//Execute query
 					stmt.executeUpdate(sql);
@@ -245,8 +239,8 @@ public class RegisterStaff extends JFrame {
 				else if(radioStaff.isSelected()) {
 					type = "Staff";
 					//Build query
-					String sql = "INSERT INTO Employee (employeeID, LastName, FirstName, MiddleName, ContactNo, email, EmployeeType)" +
-							"VALUES ('" + usedEmployeeId + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
+					String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, EmployeeType)" +
+							"VALUES ('" + nextEmployeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
 					
 					//Execute query
 					stmt.executeUpdate(sql);
