@@ -17,6 +17,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import java.awt.event.ActionEvent;
 
 public class RegisterStaff extends JFrame {
@@ -206,13 +211,30 @@ public class RegisterStaff extends JFrame {
 				String email = txtEmail.getText();
 				String type;
 				
+				Map<String, Integer> titleToUsedBookNumber = new HashMap<>();
 				
+				// created a set to store book numbers
+				Set<Integer> usedEmployeeId = new HashSet<>();
+				
+				Random rd = new Random();	
+				
+				int empID;
+				
+				/*this will generate a unique 6-character
+				 * book number for a title*/
+				do {
+					empID = 100000 + rd.nextInt(199999);
+				} while (usedEmployeeId.contains(empID));
+				
+				usedEmployeeId.add(empID);
+				
+
 				//If radioFaculty is ticked, set the employee type to 'Faculty'
 				if(radioFaculty.isSelected()) {
 					type = "Faculty";
 					//Build query
 					String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, EmployeeType)" +
-							"VALUES ('" + employeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
+							"VALUES ('" + usedEmployeeId + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
 					
 					//Execute query
 					stmt.executeUpdate(sql);
@@ -224,7 +246,7 @@ public class RegisterStaff extends JFrame {
 					type = "Staff";
 					//Build query
 					String sql = "INSERT INTO Employee (employeeID, LastName, FirstName, MiddleName, ContactNo, email, EmployeeType)" +
-							"VALUES ('" + employeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
+							"VALUES ('" + usedEmployeeId + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
 					
 					//Execute query
 					stmt.executeUpdate(sql);

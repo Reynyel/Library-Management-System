@@ -197,6 +197,7 @@ public class TransactionFrame extends JFrame {
 		btnBack.setBounds(10, 876, 128, 40);
 		contentPane.add(btnBack);
 		
+		fetchAndDisplayData();
 	
 	}
 	
@@ -204,6 +205,47 @@ public class TransactionFrame extends JFrame {
 	PreparedStatement pst;
 	ResultSet rs;
 	
+	// New method to fetch and display data in the JTable
+    private void fetchAndDisplayData() {
+        try {
+            // Load the JDBC driver (version 4.0 or later)
+            Class.forName("com.mysql.jdbc.Driver");
+
+            // Establish a connection
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+            System.out.println("Connected");
+
+            // Fetch data from Transactions table
+            String selectTransactionsSql = "SELECT * FROM Transactions";
+            try (PreparedStatement selectTransactionsStmt = conn.prepareStatement(selectTransactionsSql)) {
+                ResultSet rs = selectTransactionsStmt.executeQuery();
+
+                DefaultTableModel tblModel = (DefaultTableModel) tblTransac.getModel();
+                tblModel.setRowCount(0); // Clear existing rows
+
+                while (rs.next()) {
+                    String transacId = rs.getString("transaction_id");
+                    String bookNum = rs.getString("BooNum");
+                    String title = rs.getString("Title");
+                    String accNum = rs.getString("AccessionNum");
+                    String bookStatus = rs.getString("BookStatus");
+                    String transactionDate = rs.getString("transaction_date");
+                    String returnDate = rs.getString("return_date");
+                    String userName = rs.getString("Borrower");
+
+                    // array to store data into jtable
+                    String tbData[] = {transacId, bookNum, title, accNum, bookStatus,
+                            transactionDate, returnDate, userName};
+
+                    // add string array data to jtable
+                    tblModel.addRow(tbData);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 	public void update() {
 	    try {
 	        // Load the JDBC driver (version 4.0 or later)
