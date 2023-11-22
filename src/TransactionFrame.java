@@ -246,93 +246,101 @@ public class TransactionFrame extends JFrame {
         }
     }
 
-	public void update() {
-	    try {
-	        // Load the JDBC driver (version 4.0 or later)
-	        Class.forName("com.mysql.jdbc.Driver");
+    public void update() {
+        try {
+            // Load the JDBC driver (version 4.0 or later)
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
-	        // Establish a connection
-	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
-	        System.out.println("Connected");
+            // Establish a connection
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB?useSSL=false", "root", "ranielle25");
+            System.out.println("Connected");
 
-	        // Get values from UI components
-	        String bn = txtBookNum.getText();
-	        String tl = txtTitle.getText();
-	        int acc = Integer.parseInt(cbAccession.getSelectedItem().toString());
-	        String status = (String) cbStatus.getSelectedItem();
-	        String userId = txtBorrID.getText();
-	        String borrId = txtBorrID.getText();
+            // Get values from UI components
+            String bn = txtBookNum.getText();
+            String tl = txtTitle.getText();
+            int acc = Integer.parseInt(cbAccession.getSelectedItem().toString());
+            String status = (String) cbStatus.getSelectedItem();
+            String userId = txtBorrID.getText();
+            String borrId = txtBorrID.getText();
 
-	        // Retrieve borrower's name from Students table
-	        String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
+            // Retrieve borrower's name from Students table
+            String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
 
-	        try (PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)) {
-	            borrowerNameStmt.setString(1, borrId);
+            try (PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)) {
+                borrowerNameStmt.setString(1, borrId);
 
-	            ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
+                ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
 
-	            if (borrowerNameResult.next()) {
-	                String borrowerName = borrowerNameResult.getString("LastName") +
-	                        ", " + borrowerNameResult.getString("FirstName") +
-	                        " " + borrowerNameResult.getString("MiddleName");
+                if (borrowerNameResult.next()) {
+                    String borrowerName = borrowerNameResult.getString("LastName") +
+                            ", " + borrowerNameResult.getString("FirstName") +
+                            " " + borrowerNameResult.getString("MiddleName");
 
-	                // Insert into Transactions table
-	                String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
-	                        "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY))";
-	                
-	                // Initialize ResultSet for Transactions table
-	                String selectTransactionsSql = "SELECT * FROM Transactions";
-	                try (PreparedStatement selectTransactionsStmt = conn.prepareStatement(selectTransactionsSql)) {
-	                    ResultSet rs = selectTransactionsStmt.executeQuery();
+                    // Insert into Transactions table
+                    String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
+                            "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY))";
 
-	                    while (rs.next()) {
-	                    	//add data until there is none
-                    		String transacId = rs.getString("transaction_id");
-        					String bookNum = rs.getString("BooNum");
-        					String title = rs.getString("Title");
-        					String accNum = rs.getString("AccessionNum");
-        					String bookStatus = rs.getString("BookStatus");
-        					String transactionDate = rs.getString("transaction_date");
-        					String returnDate = rs.getString("return_date");
-        					String userName = rs.getString("Borrower");
-        					
-        					//array to store data into jtable
-        					String tbData[] = {bookNum, title, title, accNum, bookStatus,
-        							transactionDate, returnDate, userName};
-        					
-        					DefaultTableModel tblModel = (DefaultTableModel)tblTransac.getModel();
-        					
-        					//add string array data to jtable
-        					tblModel.addRow(tbData);
-	                    }
-	                }
+                    try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+                        pstmt.setString(1, bn);
+                        pstmt.setString(2, tl);
+                        pstmt.setInt(3, acc);
+                        pstmt.setString(4, borrowerName);
+                        pstmt.setString(5, status);
 
-	                try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-	                    pstmt.setString(1, bn);
-	                    pstmt.setString(2, tl);
-	                    pstmt.setInt(3, acc);
-	                    pstmt.setString(4, borrowerName);
-	                    pstmt.setString(5, status);
+                        // Execute the update
+                        int rowsAffected = pstmt.executeUpdate();
 
-	                    // Execute the update
-	                    int rowsAffected = pstmt.executeUpdate();
-	                    
-	                    if (rowsAffected > 0) {
-	                    	JOptionPane.showMessageDialog(rootPane, "Transaction recorded");
+                        if (rowsAffected > 0) {
+                            JOptionPane.showMessageDialog(rootPane, "Transaction recorded");
 
-	                    	
-	                    } else {
-	                    	JOptionPane.showMessageDialog(rootPane, "Failed to record transaction!");
-	                    }
-	                }
-	            } else {
-	                System.out.println("Borrower not found!");
-	            }
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	}
+                            // Fetch and display the latest data entry
+                            fetchAndDisplayLatestData();
+                        } else {
+                            JOptionPane.showMessageDialog(rootPane, "Failed to record transaction!");
+                        }
+                    }
+                } else {
+                    System.out.println("Borrower not found!");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // New method to fetch and display the latest data entry in the JTable
+    private void fetchAndDisplayLatestData() {
+        try {
+            // Fetch data from Transactions table for the latest entry
+            String selectLatestTransactionSql = "SELECT * FROM Transactions ORDER BY transaction_date DESC LIMIT 1";
+            try (PreparedStatement selectLatestTransactionStmt = conn.prepareStatement(selectLatestTransactionSql)) {
+                ResultSet rs = selectLatestTransactionStmt.executeQuery();
+
+                DefaultTableModel tblModel = (DefaultTableModel) tblTransac.getModel();
+
+                while (rs.next()) {
+                    String transacId = rs.getString("transaction_id");
+                    String bookNum = rs.getString("BooNum");
+                    String title = rs.getString("Title");
+                    String accNum = rs.getString("AccessionNum");
+                    String bookStatus = rs.getString("BookStatus");
+                    String transactionDate = rs.getString("transaction_date");
+                    String returnDate = rs.getString("return_date");
+                    String userName = rs.getString("Borrower");
+
+                    // array to store data into the JTable
+                    String tbData[] = {transacId, bookNum, title, accNum, bookStatus,
+                            transactionDate, returnDate, userName};
+
+                    // add string array data to the JTable
+                    tblModel.addRow(tbData);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 	
 	public void search() {
@@ -360,9 +368,6 @@ public class TransactionFrame extends JFrame {
 				ResultSet rs = pstmt.executeQuery();
 
 		        DefaultTableModel tblModel = (DefaultTableModel) tblTransac.getModel();
-
-		        // Clear existing rows in the table
-		        tblModel.setRowCount(0);
 		        
 		        if(!rs.isBeforeFirst()) {
 					JOptionPane.showMessageDialog(this, "Sorry, book not found!");				
