@@ -138,7 +138,7 @@ public class TransactionFrame extends JFrame {
 				update();
 			}
 		});
-		btnUpdate.setBounds(333, 442, 128, 40);
+		btnUpdate.setBounds(480, 442, 128, 40);
 		contentPane.add(btnUpdate);
 		
 		tblTransac = new JTable();
@@ -183,7 +183,7 @@ public class TransactionFrame extends JFrame {
 				search();
 			}
 		});
-		btnSearchBook.setBounds(492, 442, 128, 40);
+		btnSearchBook.setBounds(691, 442, 128, 40);
 		contentPane.add(btnSearchBook);
 		
 		JButton btnBack = new JButton("Back");
@@ -246,6 +246,7 @@ public class TransactionFrame extends JFrame {
         }
     }
 
+    private String userId;
     public void update() {
         try {
             // Load the JDBC driver (version 4.0 or later)
@@ -260,55 +261,116 @@ public class TransactionFrame extends JFrame {
             String tl = txtTitle.getText();
             int acc = Integer.parseInt(cbAccession.getSelectedItem().toString());
             String status = (String) cbStatus.getSelectedItem();
-            String userId = txtBorrID.getText();
+            userId = txtBorrID.getText();
             String borrId = txtBorrID.getText();
 
-            // Retrieve borrower's name from Students table
-            String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
-
-            try (PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)) {
-                borrowerNameStmt.setString(1, borrId);
-
-                ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
-
-                if (borrowerNameResult.next()) {
-                    String borrowerName = borrowerNameResult.getString("LastName") +
-                            ", " + borrowerNameResult.getString("FirstName") +
-                            " " + borrowerNameResult.getString("MiddleName");
-
-                    // Insert into Transactions table
-                    String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
-                            "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY))";
-
-                    try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-                        pstmt.setString(1, bn);
-                        pstmt.setString(2, tl);
-                        pstmt.setInt(3, acc);
-                        pstmt.setString(4, borrowerName);
-                        pstmt.setString(5, status);
-
-                        // Execute the update
-                        int rowsAffected = pstmt.executeUpdate();
-
-                        if (rowsAffected > 0) {
-                            JOptionPane.showMessageDialog(rootPane, "Transaction recorded");
-
-                            // Fetch and display the latest data entry
-                            fetchAndDisplayLatestData();
-                        } else {
-                            JOptionPane.showMessageDialog(rootPane, "Failed to record transaction!");
-                        }
-                    }
-                } else {
-                    System.out.println("Borrower not found!");
-                }
+            // Check if the user is a student or faculty/school staff based on ID
+            if (borrId.startsWith("0")) {
+            	String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
+            	try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
+            		borrowerNameStmt.setString(1, borrId);
+            		ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
+            		
+            		if(borrowerNameResult.next()) {
+            			String borrowerName = borrowerNameResult.getString("LastName") + 
+            					", " + borrowerNameResult.getString("FirstName") +
+            					" " + borrowerNameResult.getString("MiddleName");
+            			
+            			insertTransaction(bn, tl, acc, status, borrowerName);
+            		}
+            		else {
+            			JOptionPane.showMessageDialog(rootPane, "Name not found!");
+            		}
+            	}
+                
+                
+            } else if (borrId.startsWith("1")) {
+            	String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Employees WHERE employeeID = ?";
+            	try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
+            		borrowerNameStmt.setString(1, borrId);
+            		ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
+            		
+            		if(borrowerNameResult.next()) {
+            			String borrowerName = borrowerNameResult.getString("LastName") + 
+            					", " + borrowerNameResult.getString("FirstName") +
+            					" " + borrowerNameResult.getString("MiddleName");
+            			
+            			insertTransaction(bn, tl, acc, status, borrowerName);
+            		}
+            		else {
+            			JOptionPane.showMessageDialog(rootPane, "Name not found!");
+            		}
+            	}
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Invalid user ID format!");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // New method to fetch and display the latest data entry in the JTable
+    
+    /*BUGGED
+     * The problem is that the borrower column displays 
+     * the return date as well (IND or 'DATE_ADD(CURDATE, INTERVAL 3 DAY)')*/
+    private void insertTransaction(String bn, String tl, int acc, String status, String borrowerName) {
+        String checkId = userId;
+
+        try {
+            // Load the JDBC driver (version 4.0 or later)
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Establish a connection
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB?useSSL=false", "root", "ranielle25");
+            System.out.println("Connected");
+
+            if (checkId.startsWith("1")) {
+                // If user ID starts with "1", set return date to "IND"
+                String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
+                        "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), 'IND')";
+
+                try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+                    pstmt.setString(1, bn);
+                    pstmt.setString(2, tl);
+                    pstmt.setInt(3, acc);
+                    pstmt.setString(4, borrowerName);
+                    pstmt.setString(5, status);
+
+                    // Execute the update
+                    int rowsAffected = pstmt.executeUpdate();
+                    
+                    JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
+                    
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // If user ID does not start with "1", set return date to three days from the transaction date
+                String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
+                        "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY))";
+
+                try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+                    pstmt.setString(1, bn);
+                    pstmt.setString(2, tl);
+                    pstmt.setInt(3, acc);
+                    pstmt.setString(4, borrowerName);
+                    pstmt.setString(5, status);
+
+                    // Execute the update
+                    int rowsAffected = pstmt.executeUpdate();
+                    
+                    JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
+                    
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+     
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void fetchAndDisplayLatestData() {
         try {
             // Fetch data from Transactions table for the latest entry
@@ -318,7 +380,7 @@ public class TransactionFrame extends JFrame {
 
                 DefaultTableModel tblModel = (DefaultTableModel) tblTransac.getModel();
 
-                while (rs.next()) {
+                if (rs.next()) {
                     String transacId = rs.getString("transaction_id");
                     String bookNum = rs.getString("BooNum");
                     String title = rs.getString("Title");
@@ -334,12 +396,15 @@ public class TransactionFrame extends JFrame {
 
                     // add string array data to the JTable
                     tblModel.addRow(tbData);
+                } else {
+                    System.out.println("No data found in the Transactions table.");
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 
 	
