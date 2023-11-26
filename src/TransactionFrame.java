@@ -264,7 +264,7 @@ public class TransactionFrame extends JFrame {
             userId = txtBorrID.getText();
             String borrId = txtBorrID.getText();
 
-            // Check if the user is a student or faculty/school staff based on ID
+            // Check if the user is a student or faculty/school staff based on ID number
             if (borrId.startsWith("0")) {
             	String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
             	try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
@@ -276,7 +276,7 @@ public class TransactionFrame extends JFrame {
             					", " + borrowerNameResult.getString("FirstName") +
             					" " + borrowerNameResult.getString("MiddleName");
             			
-            			insertTransaction(bn, tl, acc, status, borrowerName);
+            			insertTransaction(bn, tl, acc, status, borrowerName);          			
             		}
             		else {
             			JOptionPane.showMessageDialog(rootPane, "Name not found!");
@@ -296,6 +296,7 @@ public class TransactionFrame extends JFrame {
             					" " + borrowerNameResult.getString("MiddleName");
             			
             			insertTransaction(bn, tl, acc, status, borrowerName);
+            			
             		}
             		else {
             			JOptionPane.showMessageDialog(rootPane, "Name not found!");
@@ -304,6 +305,8 @@ public class TransactionFrame extends JFrame {
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Invalid user ID format!");
             }
+            
+            fetchAndDisplayData();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -370,43 +373,6 @@ public class TransactionFrame extends JFrame {
             e.printStackTrace();
         }
     }
-
-    private void fetchAndDisplayLatestData() {
-        try {
-            // Fetch data from Transactions table for the latest entry
-            String selectLatestTransactionSql = "SELECT * FROM Transactions ORDER BY transaction_date DESC LIMIT 1";
-            try (PreparedStatement selectLatestTransactionStmt = conn.prepareStatement(selectLatestTransactionSql)) {
-                ResultSet rs = selectLatestTransactionStmt.executeQuery();
-
-                DefaultTableModel tblModel = (DefaultTableModel) tblTransac.getModel();
-
-                if (rs.next()) {
-                    String transacId = rs.getString("transaction_id");
-                    String bookNum = rs.getString("BooNum");
-                    String title = rs.getString("Title");
-                    String accNum = rs.getString("AccessionNum");
-                    String bookStatus = rs.getString("BookStatus");
-                    String transactionDate = rs.getString("transaction_date");
-                    String returnDate = rs.getString("return_date");
-                    String userName = rs.getString("Borrower");
-
-                    // array to store data into the JTable
-                    String tbData[] = {transacId, bookNum, title, accNum, bookStatus,
-                            transactionDate, returnDate, userName};
-
-                    // add string array data to the JTable
-                    tblModel.addRow(tbData);
-                } else {
-                    System.out.println("No data found in the Transactions table.");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
 	
 	public void search() {
 		try {		
