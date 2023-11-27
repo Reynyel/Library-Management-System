@@ -106,6 +106,11 @@ public class TransactionFrame extends JFrame {
 		contentPane.add(txtAuthor);
 		
 		cbAccession = new JComboBox();
+		cbAccession.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setStatusBasedOnAccession();
+			}
+		});
 		cbAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		cbAccession.setBackground(Color.WHITE);
 		cbAccession.setBounds(150, 183, 49, 22);
@@ -205,6 +210,37 @@ public class TransactionFrame extends JFrame {
 	PreparedStatement pst;
 	ResultSet rs;
 	
+	// This method is to set the status based on the selected accession number
+	private void setStatusBasedOnAccession() {
+		try {
+			String bookNumber = txtBookNum.getText();
+			int accessionNumber = Integer.parseInt(cbAccession.getSelectedItem().toString());
+			
+			String selectStatusSql = "SELECT book_status FROM Books WHERE Book_Num = ? AND Accession_Num = ?";
+			try(PreparedStatement selectStatusStmt = conn.prepareStatement(selectStatusSql)){
+				selectStatusStmt.setString(1, bookNumber);
+				selectStatusStmt.setInt(2, accessionNumber);
+				ResultSet statusResultSet = selectStatusStmt.executeQuery();
+				
+				if(statusResultSet.next()) {
+					String status = statusResultSet.getString("book_status");
+					cbStatus.setSelectedItem(status);
+				}
+				
+				else {
+					cbStatus.setSelectedIndex(-1);
+				}
+			}
+			
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 	// New method to fetch and display data in the JTable
     private void fetchAndDisplayData() {
         try {
@@ -264,6 +300,7 @@ public class TransactionFrame extends JFrame {
             userId = txtBorrID.getText();
             String borrId = txtBorrID.getText();
 
+            
             // Check if the user is a student or faculty/school staff based on ID number
             if (borrId.startsWith("0")) {
             	String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
@@ -312,10 +349,7 @@ public class TransactionFrame extends JFrame {
         }
     }
 
-    
-    /*BUGGED
-     * The problem is that the borrower column displays 
-     * the return date as well (IND or 'DATE_ADD(CURDATE, INTERVAL 3 DAY)')*/
+
     private void insertTransaction(String bn, String tl, int acc, String status, String borrowerName) {
         String checkId = userId;
 
@@ -327,48 +361,65 @@ public class TransactionFrame extends JFrame {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB?useSSL=false", "root", "ranielle25");
             System.out.println("Connected");
 
-            if (checkId.startsWith("1")) {
-                // If user ID starts with "1", set return date to "IND"
-                String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
-                        "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), 'IND')";
+            // Update book status in Books table
+            String updateBookStatusSql = "UPDATE Books SET book_status = ? WHERE Book_Num = ? AND Accession_Num = ?";
+            
+            try(PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql)){
+            	updateBookStatusStmt.setString(1, status);
+            	updateBookStatusStmt.setString(2, bn);
+            	updateBookStatusStmt.setInt(3, acc);
+            	
+            	//Execute query
+            	int rowAffected = updateBookStatusStmt.executeUpdate();
+            	
+            	if (checkId.startsWith("1")) {
+                    // If user ID starts with "1", set return date to "IND"
+                    String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
+                            "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), 'IND')";
 
-                try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-                    pstmt.setString(1, bn);
-                    pstmt.setString(2, tl);
-                    pstmt.setInt(3, acc);
-                    pstmt.setString(4, borrowerName);
-                    pstmt.setString(5, status);
+                    try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+                        pstmt.setString(1, bn);
+                        pstmt.setString(2, tl);
+                        pstmt.setInt(3, acc);
+                        pstmt.setString(4, borrowerName);
+                        pstmt.setString(5, status);
 
-                    // Execute the update
-                    int rowsAffected = pstmt.executeUpdate();
-                    
-                    JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
-                    
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                        // Execute the update
+                        int rowsAffected = pstmt.executeUpdate();
+                        
+                        JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
+                        
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // If user ID does not start with "1", set return date to three days from the transaction date
+                    String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
+                            "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY))";
+
+                    try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+                        pstmt.setString(1, bn);
+                        pstmt.setString(2, tl);
+                        pstmt.setInt(3, acc);
+                        pstmt.setString(4, borrowerName);
+                        pstmt.setString(5, status);
+
+                        // Execute the update
+                        int rowsAffected = pstmt.executeUpdate();
+                        
+                        JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
+                        
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+         
                 }
-            } else {
-                // If user ID does not start with "1", set return date to three days from the transaction date
-                String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
-                        "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY))";
-
-                try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-                    pstmt.setString(1, bn);
-                    pstmt.setString(2, tl);
-                    pstmt.setInt(3, acc);
-                    pstmt.setString(4, borrowerName);
-                    pstmt.setString(5, status);
-
-                    // Execute the update
-                    int rowsAffected = pstmt.executeUpdate();
-                    
-                    JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
-                    
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-     
+            	
             }
+            catch(SQLException e) {
+            	e.printStackTrace();
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -422,7 +473,8 @@ public class TransactionFrame extends JFrame {
 						
 						txtTitle.setText(title);
 						txtAuthor.setText(author);				
-						cbAccession.setModel(comboBoxModel);															
+						cbAccession.setModel(comboBoxModel);		
+												
 					}
 		        }			
 			} catch (SQLException e1) {
