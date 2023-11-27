@@ -302,54 +302,50 @@ public class TransactionFrame extends JFrame {
             String borrId = txtBorrID.getText();
 
             
-            if ("Borrowed".equals(status)) {
-        		JOptionPane.showMessageDialog(rootPane, "This book is currently borrowed.");  		
-        	}        
-            else {
-            	// Check if the user is a student or faculty/school staff based on ID number
-                if (borrId.startsWith("0")) {
-                	String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
-                	try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
-                		borrowerNameStmt.setString(1, borrId);
-                		ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
-                		
-                		if(borrowerNameResult.next()) {
-                			String borrowerName = borrowerNameResult.getString("LastName") + 
-                					", " + borrowerNameResult.getString("FirstName") +
-                					" " + borrowerNameResult.getString("MiddleName");
-                			
-                			insertTransaction(bn, tl, acc, status, borrowerName);          			
-                		}
-                		else {
-                			JOptionPane.showMessageDialog(rootPane, "Name not found!");
-                		}
-                	}
-                    
-                    
-                } else if (borrId.startsWith("1")) {
-                	String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Employees WHERE employeeID = ?";
-                	try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
-                		borrowerNameStmt.setString(1, borrId);
-                		ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
-                		
-                		if(borrowerNameResult.next()) {
-                			String borrowerName = borrowerNameResult.getString("LastName") + 
-                					", " + borrowerNameResult.getString("FirstName") +
-                					" " + borrowerNameResult.getString("MiddleName");
-                			
-                			insertTransaction(bn, tl, acc, status, borrowerName);
-                			
-                		}
-                		else {
-                			JOptionPane.showMessageDialog(rootPane, "Name not found!");
-                		}
-                	}
-                	
-                	
-                } else {
-                    JOptionPane.showMessageDialog(rootPane, "Invalid user ID format!");
-                }
+        	// Check if the user is a student or faculty/school staff based on ID number
+            if (borrId.startsWith("0")) {
+            	String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
+            	try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
+            		borrowerNameStmt.setString(1, borrId);
+            		ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
+            		
+            		if(borrowerNameResult.next()) {
+            			String borrowerName = borrowerNameResult.getString("LastName") + 
+            					", " + borrowerNameResult.getString("FirstName") +
+            					" " + borrowerNameResult.getString("MiddleName");
+            			
+            			insertTransaction(bn, tl, acc, status, borrowerName);          			
+            		}
+            		else {
+            			JOptionPane.showMessageDialog(rootPane, "Name not found!");
+            		}
+            	}
+                
+                
+            } else if (borrId.startsWith("1")) {
+            	String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Employees WHERE employeeID = ?";
+            	try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
+            		borrowerNameStmt.setString(1, borrId);
+            		ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
+            		
+            		if(borrowerNameResult.next()) {
+            			String borrowerName = borrowerNameResult.getString("LastName") + 
+            					", " + borrowerNameResult.getString("FirstName") +
+            					" " + borrowerNameResult.getString("MiddleName");
+            			
+            			insertTransaction(bn, tl, acc, status, borrowerName);
+            			
+            		}
+            		else {
+            			JOptionPane.showMessageDialog(rootPane, "Name not found!");
+            		}
+            	}
+            	
+            	
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Invalid user ID format!");
             }
+            
             
             
             fetchAndDisplayData();

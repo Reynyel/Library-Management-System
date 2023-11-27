@@ -174,43 +174,37 @@ public class SearchBooks extends JFrame {
 		        // Clear existing rows in the table
 		        tblModel.setRowCount(0);
 		        
-		        if(!rs.isBeforeFirst()) {
-					JOptionPane.showMessageDialog(this, "Sorry, book not found!");				
+	        
+	        	DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+	        	while(rs.next()) {
+	        				   		        		
+					//add data until there is none
+					String bookNum = rs.getString("Book_Num");
+					String title = rs.getString("Title");
+					String author = rs.getString("Author");
+					String isbn = rs.getString("isbn");
+					String publisher = rs.getString("Publisher");
+					String language = rs.getString("Language");
+					String subject = rs.getString("Subject");
+					String quantity = String.valueOf(rs.getInt("Quantity"));
+					String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+					String accession = String.valueOf(rs.getInt("Accession_Num"));
+					String status = rs.getString("book_status");
 					
-					txtTitle.setText("");
-
+					comboBoxModel.addElement(accession);
+					
+					txtTitle.setText(title);
+					
+					//array to store data into jtable
+					String tbData[] = {bookNum, title, author, isbn, publisher,
+							language, subject, quantity, dewey, accession, status};
+				
+					
+					//add string array data to jtable
+					tblModel.addRow(tbData);
+															
 				}
 		        
-		        else {
-		        	DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-		        	while(rs.next()) {
-		        				   		        		
-						//add data until there is none
-						String bookNum = rs.getString("Book_Num");
-						String title = rs.getString("Title");
-						String author = rs.getString("Author");
-						String isbn = rs.getString("isbn");
-						String publisher = rs.getString("Publisher");
-						String language = rs.getString("Language");
-						String subject = rs.getString("Subject");
-						String quantity = String.valueOf(rs.getInt("Quantity"));
-						String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
-						String accession = String.valueOf(rs.getInt("Accession_Num"));
-						
-						comboBoxModel.addElement(accession);
-						
-						txtTitle.setText(title);
-						
-						//array to store data into jtable
-						String tbData[] = {bookNum, title, author, isbn, publisher,
-								language, subject, quantity, dewey, accession};
-					
-						
-						//add string array data to jtable
-						tblModel.addRow(tbData);
-																
-					}
-		        }
 				
 				
 			} catch (SQLException e1) {
@@ -260,10 +254,11 @@ public class SearchBooks extends JFrame {
 					String quantity = String.valueOf(rs.getInt("Quantity"));
 					String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
 					String accession = String.valueOf(rs.getInt("Accession_Num"));
+					String status = rs.getString("book_status");
 					
 					//array to store data into jtable
 					String tbData[] = {bookNum, title, author, isbn, publisher,
-							language, subject, quantity, dewey, accession};
+							language, subject, quantity, dewey, accession, status};
 					
 					
 					
