@@ -58,6 +58,7 @@ public class RegisterBooksFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public RegisterBooksFrame() {
+		setResizable(false);
 		setTitle("Register Books");
 		setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

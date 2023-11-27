@@ -33,6 +33,7 @@ public class UserTypeFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public UserTypeFrame() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 953, 666);
 		contentPane = new JPanel();

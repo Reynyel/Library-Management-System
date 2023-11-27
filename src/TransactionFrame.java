@@ -63,6 +63,7 @@ public class TransactionFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public TransactionFrame() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1236, 966);
 		contentPane = new JPanel();

@@ -56,6 +56,7 @@ public class RegisterStaff extends JFrame {
 	 * Create the frame.
 	 */
 	public RegisterStaff() {
+		setResizable(false);
 		setTitle("Register Staff");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 953, 666);
