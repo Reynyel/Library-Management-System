@@ -153,10 +153,10 @@ public class TransactionFrame extends JFrame {
 		tblTransac.setCellSelectionEnabled(true);
 		tblTransac.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Transaction ID", "Book Num", "Title", "Accession", "Status", "Transaction Date", "Return Date", "Borrower"
+				"Transaction ID", "Book Num", "Title", "Accession", "Status", "Transaction Date", "Return Date", "Borrower", "ID"
 			}
 		));
 		tblTransac.setBounds(126, 598, 632, -215);
@@ -269,10 +269,10 @@ public class TransactionFrame extends JFrame {
                     String transactionDate = rs.getString("transaction_date");
                     String returnDate = rs.getString("return_date");
                     String userName = rs.getString("Borrower");
-
+                    String userId = rs.getString("user_id");
                     // array to store data into jtable
                     String tbData[] = {transacId, bookNum, title, accNum, bookStatus,
-                            transactionDate, returnDate, userName};
+                            transactionDate, returnDate, userName, userId};
 
                     // add string array data to jtable
                     tblModel.addRow(tbData);
@@ -379,8 +379,8 @@ public class TransactionFrame extends JFrame {
             	
             	if (checkId.startsWith("1")) {
                     // If user ID starts with "1", set return date to "IND"
-                    String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
-                            "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), 'IND')";
+                    String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id) " +
+                            "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), 'IND', ?)";
 
                     try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                         pstmt.setString(1, bn);
@@ -388,6 +388,7 @@ public class TransactionFrame extends JFrame {
                         pstmt.setInt(3, acc);
                         pstmt.setString(4, borrowerName);
                         pstmt.setString(5, status);
+                        pstmt.setString(6, userId);
 
                         // Execute the update
                         int rowsAffected = pstmt.executeUpdate();
@@ -399,8 +400,8 @@ public class TransactionFrame extends JFrame {
                     }
                 } else {
                     // If user ID does not start with "1", set return date to three days from the transaction date
-                    String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date) " +
-                            "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY))";
+                    String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id) " +
+                            "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY), ?)";
 
                     try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
                         pstmt.setString(1, bn);
@@ -408,6 +409,7 @@ public class TransactionFrame extends JFrame {
                         pstmt.setInt(3, acc);
                         pstmt.setString(4, borrowerName);
                         pstmt.setString(5, status);
+                        pstmt.setString(6, userId);
 
                         // Execute the update
                         int rowsAffected = pstmt.executeUpdate();

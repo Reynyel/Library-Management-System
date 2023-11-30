@@ -75,7 +75,7 @@ public class SearchBooks extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"Book Num", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Quantity", "Dewey Decimal", "Accession Number", "Status", "Date and Time"
+				"Book Num", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Quantity", "Dewey Decimal", "Accession Number", "Status"
 			}
 		));
 		tblBooks.setBounds(108, 300, 750, 316);
@@ -137,6 +137,20 @@ public class SearchBooks extends JFrame {
 		});
 		btnBack.setBounds(10, 680, 128, 40);
 		contentPane.add(btnBack);
+		
+		JComboBox cbStatus = new JComboBox();
+		cbStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		cbStatus.setBackground(Color.WHITE);
+		cbStatus.setBounds(117, 114, 89, 22);
+		cbStatus.addItem("Available");
+		cbStatus.addItem("Not Available");
+		cbStatus.addItem("Borrowed");
+		contentPane.add(cbStatus);
+		
+		JLabel lblStatus = new JLabel("Status");
+		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStatus.setBounds(35, 118, 80, 14);
+		contentPane.add(lblStatus);
 		
 		view();
 	}
