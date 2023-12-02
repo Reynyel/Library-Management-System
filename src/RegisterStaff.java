@@ -15,6 +15,7 @@ import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,6 +25,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.awt.event.ActionEvent;
+import javax.swing.JTable;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import color.AlternateColorRender;
 
 public class RegisterStaff extends JFrame {
 
@@ -35,6 +40,7 @@ public class RegisterStaff extends JFrame {
 	private JTextField txtContactNum;
 	private JTextField txtEmail;
 	private JRadioButton radioFaculty, radioStaff;
+	private JTable tblEmployees;
 
 	/**
 	 * Launch the application.
@@ -59,7 +65,7 @@ public class RegisterStaff extends JFrame {
 		setResizable(false);
 		setTitle("Register Staff");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 953, 666);
+		setBounds(100, 100, 1262, 973);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -137,6 +143,7 @@ public class RegisterStaff extends JFrame {
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				registerStaff();
+				displayData();
 			}
 		});
 		btnRegister.setForeground(Color.WHITE);
@@ -159,7 +166,7 @@ public class RegisterStaff extends JFrame {
 		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnBack.setBorderPainted(false);
 		btnBack.setBackground(new Color(157, 179, 227));
-		btnBack.setBounds(10, 583, 93, 33);
+		btnBack.setBounds(10, 890, 93, 33);
 		contentPane.add(btnBack);
 		
 		JLabel lblEmployeeType = new JLabel("Employee Type");
@@ -186,6 +193,82 @@ public class RegisterStaff extends JFrame {
 		ButtonGroup G = new ButtonGroup();
 		G.add(radioFaculty);
 		G.add(radioStaff);
+		
+		tblEmployees = new JTable();
+		tblEmployees.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"Employee ID", "Last Name", "First Name", "Middle Name", "Contact No.", "Email", "Employee Type"
+			}
+		));
+		tblEmployees.setColumnSelectionAllowed(true);
+		tblEmployees.setCellSelectionEnabled(true);
+		tblEmployees.setBorder(new LineBorder(new Color(0, 0, 0)));
+		tblEmployees.setBounds(29, 493, 1155, 370);
+		AlternateColorRender alternate = new AlternateColorRender();
+		tblEmployees.setDefaultRenderer(Object.class, alternate);
+		contentPane.add(tblEmployees);
+		
+		displayData();
+	}
+	
+	Connection conn;
+	PreparedStatement pst;
+	ResultSet rs;
+	
+	public void displayData(){
+		try {		
+			 // Load the JDBC driver (version 4.0 or later)
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}   		
+			
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+				Statement stmt = conn.createStatement();
+				System.out.println("Connected");
+								
+				String sql = "SELECT * FROM Employees";
+				ResultSet rs = stmt.executeQuery(sql);
+				
+				
+				DefaultTableModel tblModel = (DefaultTableModel)tblEmployees.getModel();
+				
+				// Clear existing rows in the table
+	            tblModel.setRowCount(0);
+	            
+				while(rs.next()) {
+					//add data until there is none
+					String employeeId = rs.getString("employeeID");
+					String lastName = rs.getString("LastName");
+					String firstName = rs.getString("FirstName");
+					String middleName = rs.getString("MiddleName");
+					String contactNo = rs.getString("ContactNo");
+					String email = rs.getString("email");
+					String type = rs.getString("EmployeeType");
+					
+					//array to store data into jtable
+					String tbData[] = {employeeId, lastName, firstName, middleName,
+							contactNo, email, type};
+									
+					//add string array data to jtable
+					tblModel.addRow(tbData);													
+				}
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}          				
+								
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	
 	public void registerStaff() {

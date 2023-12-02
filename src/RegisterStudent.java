@@ -14,6 +14,8 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -23,6 +25,10 @@ import java.util.Random;
 import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+import color.AlternateColorRender;
 
 public class RegisterStudent extends JFrame {
 
@@ -36,6 +42,7 @@ public class RegisterStudent extends JFrame {
 	private JComboBox sectionComboBox;
 	
 	private StudentSections section;
+	private JTable tblStudents;
 
 	/**
 	 * Launch the application.
@@ -60,7 +67,7 @@ public class RegisterStudent extends JFrame {
 		setResizable(false);
 		setTitle("Register User");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 953, 666);
+		setBounds(100, 100, 1219, 864);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -126,13 +133,14 @@ public class RegisterStudent extends JFrame {
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				registerStudent();
+				displayData();
 			}
 		});
 		btnRegister.setForeground(Color.WHITE);
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
 		btnRegister.setBackground(new Color(157, 179, 227));
-		btnRegister.setBounds(661, 335, 93, 33);
+		btnRegister.setBounds(661, 334, 93, 33);
 		contentPane.add(btnRegister);
 		
 		JButton btnBack = new JButton("Back");
@@ -147,7 +155,7 @@ public class RegisterStudent extends JFrame {
 		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnBack.setBorderPainted(false);
 		btnBack.setBackground(new Color(157, 179, 227));
-		btnBack.setBounds(10, 583, 93, 33);
+		btnBack.setBounds(10, 781, 93, 33);
 		contentPane.add(btnBack);
 		
 		gradeComboBox = new JComboBox();
@@ -179,7 +187,24 @@ public class RegisterStudent extends JFrame {
 		
 		contentPane.add(gradeComboBox);
 		
+		tblStudents = new JTable();
+		tblStudents.setColumnSelectionAllowed(true);
+		tblStudents.setCellSelectionEnabled(true);
+		tblStudents.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null},
+			},
+			new String[] {
+				"Student No.", "Last Name", "First Name", "Middle Name", "Grade Level", "Section"
+			}
+		));
+		tblStudents.setBorder(new LineBorder(new Color(0, 0, 0)));
+		tblStudents.setBounds(38, 378, 1155, 370);
+		AlternateColorRender alternate = new AlternateColorRender();
+		tblStudents.setDefaultRenderer(Object.class, alternate);
+		contentPane.add(tblStudents);
 		
+		displayData();
 	}
 	
 	public void updateSectionComboBox() {
@@ -190,6 +215,62 @@ public class RegisterStudent extends JFrame {
 		
 		for(String sectionName : sectionsForGrade) {
 			sectionComboBox.addItem(sectionName);
+		}
+	}
+	
+	Connection conn;
+	PreparedStatement pst;
+	ResultSet rs;
+	
+	public void displayData(){
+		try {		
+			 // Load the JDBC driver (version 4.0 or later)
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}   		
+			
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+				Statement stmt = conn.createStatement();
+				System.out.println("Connected");
+								
+				String sql = "SELECT * FROM Students";
+				ResultSet rs = stmt.executeQuery(sql);
+				
+				
+				DefaultTableModel tblModel = (DefaultTableModel)tblStudents.getModel();
+				
+				// Clear existing rows in the table
+	            tblModel.setRowCount(0);
+	            
+				while(rs.next()) {
+					//add data until there is none
+					String studentNum = rs.getString("StudentNo");
+					String lastName = rs.getString("LastName");
+					String firstName = rs.getString("FirstName");
+					String middleName = rs.getString("MiddleName");
+					String gradeLevel = String.valueOf(rs.getString("GradeLevel"));
+					String section = rs.getString("Section");
+					
+					//array to store data into jtable
+					String tbData[] = {studentNum, lastName, firstName, middleName,
+							gradeLevel, section};
+									
+					//add string array data to jtable
+					tblModel.addRow(tbData);													
+				}
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}          				
+								
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 	
