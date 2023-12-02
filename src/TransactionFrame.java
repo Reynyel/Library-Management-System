@@ -32,6 +32,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import org.jdatepicker.util.JDatePickerUtil;
 import javax.swing.JFormattedTextField.AbstractFormatter;
+import color.AlternateColorRender;
 
 public class TransactionFrame extends JFrame {
 
@@ -151,6 +152,7 @@ public class TransactionFrame extends JFrame {
 		tblTransac.setBorder(new LineBorder(new Color(0, 0, 0)));
 		tblTransac.setColumnSelectionAllowed(true);
 		tblTransac.setCellSelectionEnabled(true);
+		
 		tblTransac.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null, null, null, null},
@@ -160,6 +162,9 @@ public class TransactionFrame extends JFrame {
 			}
 		));
 		tblTransac.setBounds(126, 598, 632, -215);
+		
+		AlternateColorRender alternate = new AlternateColorRender();
+		tblTransac.setDefaultRenderer(Object.class, alternate);
 		contentPane.add(tblTransac);
 		
 		JScrollPane js = new JScrollPane(tblTransac);
@@ -182,7 +187,6 @@ public class TransactionFrame extends JFrame {
 		lblBorrowersName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblBorrowersName.setBounds(10, 12, 113, 14);
 		panel.add(lblBorrowersName);
-		
 		JButton btnSearchBook = new JButton("Search Book");
 		btnSearchBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -202,6 +206,10 @@ public class TransactionFrame extends JFrame {
 		});
 		btnBack.setBounds(10, 876, 128, 40);
 		contentPane.add(btnBack);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(24, 33, 759, 235);
+		contentPane.add(panel_1);
 		
 		fetchAndDisplayData();
 	

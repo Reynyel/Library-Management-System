@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import color.AlternateColorRender;
 
 public class SearchBooks extends JFrame {
 
@@ -79,6 +80,9 @@ public class SearchBooks extends JFrame {
 			}
 		));
 		tblBooks.setBounds(108, 300, 750, 316);
+		AlternateColorRender alternate = new AlternateColorRender();
+		
+		tblBooks.setDefaultRenderer(Object.class, alternate);
 		contentPane.add(tblBooks);
 		
 		JScrollPane js = new JScrollPane(tblBooks);
@@ -147,7 +151,7 @@ public class SearchBooks extends JFrame {
 		
 		cbStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		cbStatus.setBackground(Color.WHITE);
-		cbStatus.setBounds(117, 114, 89, 22);
+		cbStatus.setBounds(108, 131, 89, 22);
 		cbStatus.addItem("All");
 		cbStatus.addItem("Available");
 		cbStatus.addItem("Not Available");
@@ -156,7 +160,7 @@ public class SearchBooks extends JFrame {
 		
 		JLabel lblStatus = new JLabel("Status");
 		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStatus.setBounds(35, 118, 80, 14);
+		lblStatus.setBounds(35, 135, 80, 14);
 		contentPane.add(lblStatus);
 		
 		view();
@@ -184,212 +188,65 @@ public class SearchBooks extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	
+		
+		String sql = "SELECT * FROM Books WHERE Book_Num = ?";
+	    String additionalCondition = "";
+
 	    switch (selectedStatus) {
-	        case "All":
-	        	try {
-	        		String sql = "SELECT * FROM Books WHERE Book_Num = ?";   
-					PreparedStatement pstmt = conn.prepareStatement(sql);
-					
-					String bookNumber = txtBookNum.getText();
-					
-					pstmt.setString(1, bookNumber);
-					
-					ResultSet rs = pstmt.executeQuery();
+	    case "All":
+            break;
+        case "Available":
+            additionalCondition = " AND book_status = 'Available'";
+            break;
+        case "Not Available":
+            additionalCondition = " AND book_status = 'Not Available'";
+            break;
+        case "Borrowed":
+            additionalCondition = " AND book_status = 'Borrowed'";
+            break;
+        default:
+            break;        
+	    }
+	    
+	    try {
+	        sql += additionalCondition;
+	        PreparedStatement pstmt = conn.prepareStatement(sql);
 
-			        DefaultTableModel tblModel = (DefaultTableModel) tblBooks.getModel();
+	        String bookNumber = txtBookNum.getText();
+	        pstmt.setString(1, bookNumber);
 
-			        // Clear existing rows in the table
-			        tblModel.setRowCount(0);
-			        
-		        
-		        	DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-		        	while(rs.next()) {
-		        				   		        		
-						//add data until there is none
-						String bookNum = rs.getString("Book_Num");
-						String title = rs.getString("Title");
-						String author = rs.getString("Author");
-						String isbn = rs.getString("isbn");
-						String publisher = rs.getString("Publisher");
-						String language = rs.getString("Language");
-						String subject = rs.getString("Subject");
-						String quantity = String.valueOf(rs.getInt("Quantity"));
-						String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
-						String accession = String.valueOf(rs.getInt("Accession_Num"));
-						String status = rs.getString("book_status");
-						
-						comboBoxModel.addElement(accession);
-						
-						txtTitle.setText(title);
-						
-						//array to store data into jtable
-						String tbData[] = {bookNum, title, author, isbn, publisher,
-								language, subject, quantity, dewey, accession, status};
-					
-						
-						//add string array data to jtable
-						tblModel.addRow(tbData);
-		        	}       															
-				}
-	        	catch(SQLException e) {
-	        		e.printStackTrace();
-	        	}     	
-	            break;
-	        case "Available":
-	        	try {
-	        		String sql = "SELECT * FROM Books WHERE Book_Num = ? AND book_status = 'Available'";   
-					PreparedStatement pstmt = conn.prepareStatement(sql);
-					
-					String bookNumber = txtBookNum.getText();
-					//int bookNumber = txtBookNumber
-					pstmt.setString(1, bookNumber);
-					
-					ResultSet rs = pstmt.executeQuery();
+	        ResultSet rs = pstmt.executeQuery();
 
-			        DefaultTableModel tblModel = (DefaultTableModel) tblBooks.getModel();
+	        DefaultTableModel tblModel = (DefaultTableModel) tblBooks.getModel();
+	        tblModel.setRowCount(0);
 
-			        // Clear existing rows in the table
-			        tblModel.setRowCount(0);
-			        
-		        
-		        	DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-		        	while(rs.next()) {
-		        				   		        		
-						//add data until there is none
-						String bookNum = rs.getString("Book_Num");
-						String title = rs.getString("Title");
-						String author = rs.getString("Author");
-						String isbn = rs.getString("isbn");
-						String publisher = rs.getString("Publisher");
-						String language = rs.getString("Language");
-						String subject = rs.getString("Subject");
-						String quantity = String.valueOf(rs.getInt("Quantity"));
-						String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
-						String accession = String.valueOf(rs.getInt("Accession_Num"));
-						String status = rs.getString("book_status");
-						
-						comboBoxModel.addElement(accession);
-						
-						txtTitle.setText(title);
-						
-						//array to store data into jtable
-						String tbData[] = {bookNum, title, author, isbn, publisher,
-								language, subject, quantity, dewey, accession, status};
-					
-						
-						//add string array data to jtable
-						tblModel.addRow(tbData);
-		        	}       															
-				}
-	        	catch(SQLException e) {
-	        		e.printStackTrace();
-	        	}
-	            break;
-	        case "Not Available":
-	        	try {
-	        		String sql = "SELECT * FROM Books WHERE Book_Num = ? AND book_status = 'Not Available'";   
-					PreparedStatement pstmt = conn.prepareStatement(sql);
-					
-					String bookNumber = txtBookNum.getText();
-					//int bookNumber = txtBookNumber
-					pstmt.setString(1, bookNumber);
-					
-					ResultSet rs = pstmt.executeQuery();
+	        DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+	        while (rs.next()) {
+	            // add data until there is none
+	            String bookNum = rs.getString("Book_Num");
+	            String title = rs.getString("Title");
+	            String author = rs.getString("Author");
+	            String isbn = rs.getString("isbn");
+	            String publisher = rs.getString("Publisher");
+	            String language = rs.getString("Language");
+	            String subject = rs.getString("Subject");
+	            String quantity = String.valueOf(rs.getInt("Quantity"));
+	            String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+	            String accession = String.valueOf(rs.getInt("Accession_Num"));
+	            String status = rs.getString("book_status");
 
-			        DefaultTableModel tblModel = (DefaultTableModel) tblBooks.getModel();
+	            comboBoxModel.addElement(accession);
+	            txtTitle.setText(title);
 
-			        // Clear existing rows in the table
-			        tblModel.setRowCount(0);
-			        
-		        
-		        	DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-		        	while(rs.next()) {
-		        				   		        		
-						//add data until there is none
-						String bookNum = rs.getString("Book_Num");
-						String title = rs.getString("Title");
-						String author = rs.getString("Author");
-						String isbn = rs.getString("isbn");
-						String publisher = rs.getString("Publisher");
-						String language = rs.getString("Language");
-						String subject = rs.getString("Subject");
-						String quantity = String.valueOf(rs.getInt("Quantity"));
-						String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
-						String accession = String.valueOf(rs.getInt("Accession_Num"));
-						String status = rs.getString("book_status");
-						
-						comboBoxModel.addElement(accession);
-						
-						txtTitle.setText(title);
-						
-						//array to store data into jtable
-						String tbData[] = {bookNum, title, author, isbn, publisher,
-								language, subject, quantity, dewey, accession, status};
-					
-						
-						//add string array data to jtable
-						tblModel.addRow(tbData);
-		        	}       															
-				}
-	        	catch(SQLException e) {
-	        		e.printStackTrace();
-	        	}
-	            break;
-	        case "Borrowed":
-	        	try {
-	        		String sql = "SELECT * FROM Books WHERE Book_Num = ? AND book_status = 'Borrowed'";   
-					PreparedStatement pstmt = conn.prepareStatement(sql);
-					
-					String bookNumber = txtBookNum.getText();
-					//int bookNumber = txtBookNumber
-					pstmt.setString(1, bookNumber);
-					
-					ResultSet rs = pstmt.executeQuery();
+	            // array to store data into jtable
+	            String tbData[] = {bookNum, title, author, isbn, publisher,
+	                    language, subject, quantity, dewey, accession, status};
 
-			        DefaultTableModel tblModel = (DefaultTableModel) tblBooks.getModel();
-
-			        // Clear existing rows in the table
-			        tblModel.setRowCount(0);
-			        
-		        
-		        	DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-		        	while(rs.next()) {
-		        				   		        		
-						//add data until there is none
-						String bookNum = rs.getString("Book_Num");
-						String title = rs.getString("Title");
-						String author = rs.getString("Author");
-						String isbn = rs.getString("isbn");
-						String publisher = rs.getString("Publisher");
-						String language = rs.getString("Language");
-						String subject = rs.getString("Subject");
-						String quantity = String.valueOf(rs.getInt("Quantity"));
-						String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
-						String accession = String.valueOf(rs.getInt("Accession_Num"));
-						String status = rs.getString("book_status");
-						
-						comboBoxModel.addElement(accession);
-						
-						txtTitle.setText(title);
-						
-						//array to store data into jtable
-						String tbData[] = {bookNum, title, author, isbn, publisher,
-								language, subject, quantity, dewey, accession, status};
-					
-						
-						//add string array data to jtable
-						tblModel.addRow(tbData);
-		        	}       															
-				}
-	        	catch(SQLException e) {
-	        		e.printStackTrace();
-	        	}
-	            break;
-	        default:
-	        	
-	            break;
-         
+	            // add string array data to jtable
+	            tblModel.addRow(tbData);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
 	    }
 	}
 	
