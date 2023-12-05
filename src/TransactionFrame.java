@@ -308,10 +308,11 @@ public class TransactionFrame extends JFrame {
             String status = (String) cbStatus.getSelectedItem();
             userId = txtBorrID.getText();
             String borrId = txtBorrID.getText();
-
+            
+            String userType = getUserType(borrId);
             
         	// Check if the user is a student or faculty/school staff based on ID number
-            if (borrId.startsWith("0")) {
+            if ("Student".equals(userType)) {
             	String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
             	try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
             		borrowerNameStmt.setString(1, borrId);
@@ -330,7 +331,7 @@ public class TransactionFrame extends JFrame {
             	}
                 
                 
-            } else if (borrId.startsWith("1")) {
+            } else if ("Faculty".equals(userType) ||  "Staff".equals(userType)) {
             	String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Employees WHERE employeeID = ?";
             	try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
             		borrowerNameStmt.setString(1, borrId);
@@ -384,9 +385,11 @@ public class TransactionFrame extends JFrame {
             	
             	//Execute query
             	int rowAffected = updateBookStatusStmt.executeUpdate();
+            	String borrId = txtBorrID.getText();
             	
-            	if (checkId.startsWith("1")) {
-                    // If user ID starts with "1", set return date to "IND"
+            	String userType = getUserType(borrId);
+            	
+            	if ("Faculty".equals(userType) || "Staff".equals(userType)) {                  
                     String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id) " +
                             "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), 'IND', ?)";
 
@@ -439,6 +442,30 @@ public class TransactionFrame extends JFrame {
             e.printStackTrace();
         }
     }
+    
+    //Get user type from both Employees and Students table
+    private String getUserType(String userId) {
+    	String userType = "";
+    	
+		String userTypeSql = "SELECT UserType FROM Students WHERE StudentNo = ? UNION SELECT UserType FROM Employees WHERE employeeID = ?";
+		try(PreparedStatement userTypeStmt = conn.prepareStatement(userTypeSql)) {
+			userTypeStmt.setString(1, userId);
+			userTypeStmt.setString(2, userId);
+			
+			ResultSet userTypeResult = userTypeStmt.executeQuery();
+			
+			if(userTypeResult.next()) {
+				userType = userTypeResult.getString("UserType");
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return userType;
+    	
+    }
+    
 	
 	public void search() {
 		try {		

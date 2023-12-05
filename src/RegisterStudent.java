@@ -192,10 +192,10 @@ public class RegisterStudent extends JFrame {
 		tblStudents.setCellSelectionEnabled(true);
 		tblStudents.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Student No.", "Last Name", "First Name", "Middle Name", "Grade Level", "Section"
+				"Student No.", "Last Name", "First Name", "Middle Name", "Grade Level", "Section", "User Type"
 			}
 		));
 		tblStudents.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -254,10 +254,10 @@ public class RegisterStudent extends JFrame {
 					String middleName = rs.getString("MiddleName");
 					String gradeLevel = String.valueOf(rs.getString("GradeLevel"));
 					String section = rs.getString("Section");
-					
+					String userType = rs.getString("UserType");
 					//array to store data into jtable
 					String tbData[] = {studentNum, lastName, firstName, middleName,
-							gradeLevel, section};
+							gradeLevel, section, userType};
 									
 					//add string array data to jtable
 					tblModel.addRow(tbData);													
@@ -299,8 +299,8 @@ public class RegisterStudent extends JFrame {
 				String section = sectionComboBox.getSelectedItem().toString();
 										
 				//Build query
-				String sql = "INSERT INTO Students (StudentNo, LastName, FirstName, MiddleName, GradeLevel, Section)" +
-						"VALUES ('" + studentNum + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + level +  "', '" + section +"')";
+				String sql = "INSERT INTO Students (StudentNo, LastName, FirstName, MiddleName, GradeLevel, Section, UserType)" +
+						"VALUES ('" + studentNum + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + level +  "', '" + section + "', '" + "Student" + "')";
 				
 				//Execute query
 				stmt.executeUpdate(sql);
