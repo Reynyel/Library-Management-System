@@ -10,6 +10,7 @@ import javax.swing.border.*;
 import java.awt.Font;
 import java.awt.Graphics;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -17,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 
 public class LogInFrame extends JFrame {
 
@@ -55,19 +57,21 @@ public class LogInFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel userLabel = new JLabel("Username");
-		userLabel.setBounds(566, 177, 75, 14);
+		userLabel.setForeground(new Color(255, 255, 255));
+		userLabel.setBounds(166, 278, 71, 30);
 		userLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(userLabel);
 		
 		JLabel passLabel = new JLabel("Password");
-		passLabel.setBounds(565, 217, 75, 14);
+		passLabel.setForeground(new Color(255, 255, 255));
+		passLabel.setBounds(166, 360, 71, 30);
 		passLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(passLabel);
 		
 		JButton logBtn = new JButton("Log In");
-		logBtn.setBounds(651, 260, 95, 33);
-		logBtn.setForeground(new Color(255, 255, 255));
-		logBtn.setBackground(new Color(157, 179, 227));
+		logBtn.setBounds(166, 445, 107, 43);
+		logBtn.setForeground(new Color(0, 0, 0));
+		logBtn.setBackground(new Color(188, 143, 143));
 		logBtn.addActionListener(new ActionListener() {
 			/*
 			 * Invoked when the log in button is clicked.
@@ -87,13 +91,15 @@ public class LogInFrame extends JFrame {
 		contentPane.add(logBtn);
 		
 		usernameTxt = new JTextField();
-		usernameTxt.setBounds(651, 176, 212, 20);
+		usernameTxt.setBackground(new Color(192, 192, 192));
+		usernameTxt.setBounds(166, 319, 298, 30);
 		usernameTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(usernameTxt);
 		usernameTxt.setColumns(10);
 		
 		passwordTxt = new JPasswordField();
-		passwordTxt.setBounds(650, 216, 212, 20);
+		passwordTxt.setBackground(new Color(192, 192, 192));
+		passwordTxt.setBounds(166, 401, 298, 33);
 		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(passwordTxt);
 		
@@ -115,24 +121,26 @@ public class LogInFrame extends JFrame {
 		btnHidden.setBorderPainted(false);
 		contentPane.add(btnHidden);
 		
-		JLabel lblNewLabel = new JLabel("SREI Santa Rosa");
-		lblNewLabel.setFont(new Font("Tw Cen MT", Font.PLAIN, 51));
-		lblNewLabel.setBounds(68, 44, 352, 128);
+		JLabel lblTitle = new JLabel("Santa Rosa Educational Institution");
+		lblTitle.setBackground(new Color(128, 128, 128));
+		lblTitle.setForeground(new Color(255, 255, 255));
+		lblTitle.setFont(new Font("Microsoft JhengHei UI Light", Font.BOLD, 38));
+		lblTitle.setBounds(112, 112, 636, 77);
+		contentPane.add(lblTitle);
+		
+		JLabel lblBottomTitle = new JLabel("Library Management System");
+		lblBottomTitle.setForeground(new Color(245, 255, 250));
+		lblBottomTitle.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 20));
+		lblBottomTitle.setBounds(112, 174, 283, 43);
+		contentPane.add(lblBottomTitle);
+		
+		JLabel lblNewLabel = new JLabel();
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Projects\\Library-Management-System\\bg1.jpg"));
+		lblNewLabel.setBounds(10, 11, 1036, 630);
 		contentPane.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("Library ");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		lblNewLabel_1.setBounds(68, 170, 82, 60);
-		contentPane.add(lblNewLabel_1);
+		ImageIcon icon = new ImageIcon("download(1).jpg");
+
 		
-		JLabel lblNewLabel_1_1 = new JLabel("Management");
-		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		lblNewLabel_1_1.setBounds(68, 221, 157, 60);
-		contentPane.add(lblNewLabel_1_1);
-		
-		JLabel lblNewLabel_1_2 = new JLabel("System");
-		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		lblNewLabel_1_2.setBounds(68, 281, 82, 60);
-		contentPane.add(lblNewLabel_1_2);
 	}
 }
