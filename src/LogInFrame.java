@@ -55,17 +55,17 @@ public class LogInFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel userLabel = new JLabel("Username");
-		userLabel.setBounds(351, 295, 75, 14);
+		userLabel.setBounds(566, 177, 75, 14);
 		userLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(userLabel);
 		
 		JLabel passLabel = new JLabel("Password");
-		passLabel.setBounds(350, 335, 75, 14);
+		passLabel.setBounds(565, 217, 75, 14);
 		passLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(passLabel);
 		
 		JButton logBtn = new JButton("Log In");
-		logBtn.setBounds(481, 375, 95, 33);
+		logBtn.setBounds(651, 260, 95, 33);
 		logBtn.setForeground(new Color(255, 255, 255));
 		logBtn.setBackground(new Color(157, 179, 227));
 		logBtn.addActionListener(new ActionListener() {
@@ -87,13 +87,13 @@ public class LogInFrame extends JFrame {
 		contentPane.add(logBtn);
 		
 		usernameTxt = new JTextField();
-		usernameTxt.setBounds(436, 294, 212, 20);
+		usernameTxt.setBounds(651, 176, 212, 20);
 		usernameTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(usernameTxt);
 		usernameTxt.setColumns(10);
 		
 		passwordTxt = new JPasswordField();
-		passwordTxt.setBounds(435, 334, 212, 20);
+		passwordTxt.setBounds(650, 216, 212, 20);
 		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(passwordTxt);
 		
@@ -117,22 +117,22 @@ public class LogInFrame extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("SREI Santa Rosa");
 		lblNewLabel.setFont(new Font("Tw Cen MT", Font.PLAIN, 51));
-		lblNewLabel.setBounds(286, 91, 362, 125);
+		lblNewLabel.setBounds(68, 44, 352, 128);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Library ");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		lblNewLabel_1.setBounds(648, 79, 82, 60);
+		lblNewLabel_1.setBounds(68, 170, 82, 60);
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Management");
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		lblNewLabel_1_1.setBounds(648, 130, 157, 60);
+		lblNewLabel_1_1.setBounds(68, 221, 157, 60);
 		contentPane.add(lblNewLabel_1_1);
 		
 		JLabel lblNewLabel_1_2 = new JLabel("System");
 		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		lblNewLabel_1_2.setBounds(648, 178, 82, 60);
+		lblNewLabel_1_2.setBounds(68, 281, 82, 60);
 		contentPane.add(lblNewLabel_1_2);
 	}
 }
