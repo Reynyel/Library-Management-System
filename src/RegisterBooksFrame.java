@@ -204,7 +204,7 @@ public class RegisterBooksFrame extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(514, 90, 365, 471);
+		scrollPane.setBounds(514, 90, 374, 471);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();

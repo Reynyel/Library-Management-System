@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Font;
 
-public class UserTypeFrame extends JFrame {
+public class SearchType extends JFrame {
 
 	private JPanel contentPane;
 
@@ -20,7 +20,7 @@ public class UserTypeFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UserTypeFrame frame = new UserTypeFrame();
+					SearchType frame = new SearchType();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -32,7 +32,7 @@ public class UserTypeFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public UserTypeFrame() {
+	public SearchType() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 953, 666);
@@ -43,33 +43,33 @@ public class UserTypeFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton studentBtn = new JButton("Register Student");
-		studentBtn.setFont(new Font("Microsoft JhengHei UI Light", Font.BOLD, 50));
-		studentBtn.setBackground(new Color(204, 255, 255));
-		studentBtn.setBorderPainted(false);
-		studentBtn.addActionListener(new ActionListener() {
+		JButton srchBookBtn = new JButton("Search for Books");
+		srchBookBtn.setFont(new Font("Microsoft JhengHei UI Light", Font.BOLD, 50));
+		srchBookBtn.setBackground(new Color(176, 224, 230));
+		srchBookBtn.setBorderPainted(false);
+		srchBookBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegisterStudent student = new RegisterStudent();
-				student.setVisible(true);
+				SearchBooks searchBooks = new SearchBooks();
+				searchBooks.setVisible(true);
 				dispose();
 			}
 		});
-		studentBtn.setBounds(10, 11, 451, 561);
-		contentPane.add(studentBtn);
+		srchBookBtn.setBounds(10, 11, 451, 561);
+		contentPane.add(srchBookBtn);
 		
-		JButton teacherBtn = new JButton("Register Faculty/Staff");
-		teacherBtn.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 40));
-		teacherBtn.setBackground(new Color(153, 204, 255));
-		teacherBtn.setBorderPainted(false);
-		teacherBtn.addActionListener(new ActionListener() {
+		JButton srchStudentBtn = new JButton("Search for Students");
+		srchStudentBtn.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 44));
+		srchStudentBtn.setBackground(new Color(135, 206, 250));
+		srchStudentBtn.setBorderPainted(false);
+		srchStudentBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegisterStaff staff = new RegisterStaff();
-				staff.setVisible(true);
+				SearchStudents searchStudents = new SearchStudents();
+				searchStudents.setVisible(true);
 				dispose();
 			}
 		});
-		teacherBtn.setBounds(476, 11, 451, 561);
-		contentPane.add(teacherBtn);
+		srchStudentBtn.setBounds(476, 11, 451, 561);
+		contentPane.add(srchStudentBtn);
 		
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
