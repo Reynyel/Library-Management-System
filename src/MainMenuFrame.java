@@ -70,15 +70,15 @@ public class MainMenuFrame extends JFrame {
 		btnSearchBooks.setBorderPainted(false);
 		btnSearchBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SearchBooks searchBooks = new SearchBooks();
-				searchBooks.setVisible(true);
+				SearchType searchType = new SearchType();
+				searchType.setVisible(true);
 				dispose();
 			}
 		});
 		btnSearchBooks.setBounds(440, 11, 197, 606);
 		contentPane.add(btnSearchBooks);
 		
-		JButton btnRegisterUser = new JButton("Register Users");
+		JButton btnRegisterUser = new JButton("Manage Users");
 		btnRegisterUser.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 40));
 		btnRegisterUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
