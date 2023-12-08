@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class MainMenuFrame extends JFrame {
 
@@ -35,31 +36,38 @@ public class MainMenuFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MainMenuFrame() {
+		setBackground(new Color(255, 255, 255));
 		setResizable(false);
 		setTitle("Main Menu");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1100, 711);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 255, 255));
+		contentPane.setBackground(new Color(204, 255, 204));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JButton btnRegisterBooks = new JButton("Register Books");
+		btnRegisterBooks.setForeground(new Color(0, 0, 0));
+		btnRegisterBooks.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 40));
+		btnRegisterBooks.setBackground(new Color(204, 255, 153));
+		btnRegisterBooks.setBorderPainted(false);
 		btnRegisterBooks.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				RegisterBooksFrame registerFrame = new RegisterBooksFrame();
 				registerFrame.setVisible(true);
 				dispose();
 			}
 		});
-		btnRegisterBooks.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\book1.jpg"));
-		btnRegisterBooks.setBounds(262, 150, 168, 108);
-		btnRegisterBooks.setBorderPainted(false);
+		btnRegisterBooks.setBounds(10, 11, 420, 305);
 		contentPane.add(btnRegisterBooks);
 		
-		JButton btnSearchBooks = new JButton("Search Books");
+		JButton btnSearchBooks = new JButton("Search");
+		btnSearchBooks.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 40));
+		btnSearchBooks.setBackground(new Color(153, 255, 153));
+		btnSearchBooks.setBorderPainted(false);
 		btnSearchBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				SearchBooks searchBooks = new SearchBooks();
@@ -67,10 +75,11 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnSearchBooks.setBounds(663, 150, 148, 108);
+		btnSearchBooks.setBounds(440, 11, 197, 606);
 		contentPane.add(btnSearchBooks);
 		
 		JButton btnRegisterUser = new JButton("Register Users");
+		btnRegisterUser.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 40));
 		btnRegisterUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UserTypeFrame user = new UserTypeFrame();
@@ -78,16 +87,15 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnRegisterUser.setBackground(new Color(255, 255, 255));
-		btnRegisterUser.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\user (2).png"));
+		btnRegisterUser.setBackground(new Color(102, 255, 153));
 		btnRegisterUser.setBorderPainted(false);
-		btnRegisterUser.setBounds(262, 332, 157, 152);
+		btnRegisterUser.setBounds(10, 327, 420, 290);
 		contentPane.add(btnRegisterUser);
 		
 		JButton btnLogOut = new JButton("Log out");
 		btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnLogOut.setBackground(new Color(157, 179, 227));
-		btnLogOut.setForeground(new Color(255, 255, 255));
+		btnLogOut.setForeground(new Color(0, 0, 0));
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LogInFrame logInFrame = new LogInFrame();
@@ -100,6 +108,9 @@ public class MainMenuFrame extends JFrame {
 		contentPane.add(btnLogOut);
 		
 		JButton btnTransac = new JButton("Transactions");
+		btnTransac.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 60));
+		btnTransac.setBackground(new Color(102, 255, 204));
+		btnTransac.setBorderPainted(false);
 		btnTransac.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				TransactionFrame transacFrame = new TransactionFrame();
@@ -107,17 +118,7 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnTransac.setBounds(663, 354, 148, 108);
+		btnTransac.setBounds(647, 11, 427, 606);
 		contentPane.add(btnTransac);
-		
-		JLabel lblNewLabel = new JLabel("Register Books");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(284, 267, 107, 14);
-		contentPane.add(lblNewLabel);
-		
-		JLabel lblNewLabel_1 = new JLabel("Register User");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_1.setBounds(284, 520, 115, 14);
-		contentPane.add(lblNewLabel_1);
 	}
 }
