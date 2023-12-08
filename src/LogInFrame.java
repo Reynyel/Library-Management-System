@@ -57,19 +57,20 @@ public class LogInFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel userLabel = new JLabel("Username");
+		userLabel.setBackground(new Color(255, 255, 255));
 		userLabel.setForeground(new Color(255, 255, 255));
-		userLabel.setBounds(166, 278, 71, 30);
+		userLabel.setBounds(85, 273, 71, 30);
 		userLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(userLabel);
 		
 		JLabel passLabel = new JLabel("Password");
 		passLabel.setForeground(new Color(255, 255, 255));
-		passLabel.setBounds(166, 360, 71, 30);
+		passLabel.setBounds(85, 355, 71, 30);
 		passLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(passLabel);
 		
 		JButton logBtn = new JButton("Log In");
-		logBtn.setBounds(166, 445, 107, 43);
+		logBtn.setBounds(276, 440, 107, 43);
 		logBtn.setForeground(new Color(0, 0, 0));
 		logBtn.setBackground(new Color(188, 143, 143));
 		logBtn.addActionListener(new ActionListener() {
@@ -92,14 +93,14 @@ public class LogInFrame extends JFrame {
 		
 		usernameTxt = new JTextField();
 		usernameTxt.setBackground(new Color(192, 192, 192));
-		usernameTxt.setBounds(166, 319, 298, 30);
+		usernameTxt.setBounds(85, 314, 298, 30);
 		usernameTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(usernameTxt);
 		usernameTxt.setColumns(10);
 		
 		passwordTxt = new JPasswordField();
 		passwordTxt.setBackground(new Color(192, 192, 192));
-		passwordTxt.setBounds(166, 401, 298, 33);
+		passwordTxt.setBounds(85, 396, 298, 33);
 		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(passwordTxt);
 		
@@ -122,19 +123,20 @@ public class LogInFrame extends JFrame {
 		contentPane.add(btnHidden);
 		
 		JLabel lblTitle = new JLabel("Santa Rosa Educational Institution");
-		lblTitle.setBackground(new Color(128, 128, 128));
+		lblTitle.setBackground(new Color(255, 255, 255));
 		lblTitle.setForeground(new Color(255, 255, 255));
 		lblTitle.setFont(new Font("Microsoft JhengHei UI Light", Font.BOLD, 38));
-		lblTitle.setBounds(112, 112, 636, 77);
+		lblTitle.setBounds(85, 113, 636, 77);
 		contentPane.add(lblTitle);
 		
 		JLabel lblBottomTitle = new JLabel("Library Management System");
-		lblBottomTitle.setForeground(new Color(245, 255, 250));
+		lblBottomTitle.setForeground(new Color(255, 255, 255));
 		lblBottomTitle.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 20));
-		lblBottomTitle.setBounds(112, 174, 283, 43);
+		lblBottomTitle.setBounds(95, 181, 283, 43);
 		contentPane.add(lblBottomTitle);
 		
 		JLabel lblNewLabel = new JLabel();
+		lblNewLabel.setBackground(new Color(192, 192, 192));
 		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Projects\\Library-Management-System\\bg1.jpg"));
 		lblNewLabel.setBounds(10, 11, 1036, 630);
 		contentPane.add(lblNewLabel);
