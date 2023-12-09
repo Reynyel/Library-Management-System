@@ -61,7 +61,7 @@ public class SearchBooks extends JFrame {
 		setTitle("Book Search");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1085, 768);
+		setBounds(100, 100, 1364, 768);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(176, 224, 230));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -88,7 +88,7 @@ public class SearchBooks extends JFrame {
 		
 		JScrollPane js = new JScrollPane(tblBooks);
 		js.setVisible(true);
-		js.setBounds(10, 23, 1049, 402); // Adjust the bounds to match the table
+		js.setBounds(10, 23, 1328, 402); // Adjust the bounds to match the table
 		contentPane.add(js);
 		
 		JButton btnShowData = new JButton("Show Data");
@@ -102,7 +102,7 @@ public class SearchBooks extends JFrame {
 			}
 			
 		});
-		btnShowData.setBounds(579, 585, 128, 40);
+		btnShowData.setBounds(711, 585, 128, 40);
 		contentPane.add(btnShowData);
 		
 		JButton btnSearchBook = new JButton("Search Book");
@@ -115,29 +115,29 @@ public class SearchBooks extends JFrame {
 				search();
 			}
 		});
-		btnSearchBook.setBounds(419, 585, 128, 40);
+		btnSearchBook.setBounds(551, 585, 128, 40);
 		contentPane.add(btnSearchBook);
 		
 		JLabel lblNewLabel = new JLabel("Book Title");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(236, 490, 80, 30);
+		lblNewLabel.setBounds(368, 490, 80, 30);
 		contentPane.add(lblNewLabel);
 		
 		txtTitle = new JTextField();
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtTitle.setColumns(10);
-		txtTitle.setBounds(349, 491, 475, 30);
+		txtTitle.setBounds(481, 491, 475, 30);
 		contentPane.add(txtTitle);
 		
 		JLabel lblBookNumber = new JLabel("Book Number");
 		lblBookNumber.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBookNumber.setBounds(234, 449, 113, 30);
+		lblBookNumber.setBounds(366, 449, 113, 30);
 		contentPane.add(lblBookNumber);
 		
 		txtBookNum = new JTextField();
 		txtBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtBookNum.setColumns(10);
-		txtBookNum.setBounds(349, 450, 475, 30);
+		txtBookNum.setBounds(481, 450, 475, 30);
 		contentPane.add(txtBookNum);
 		
 		JButton btnBack = new JButton("Back");
@@ -164,7 +164,7 @@ public class SearchBooks extends JFrame {
 		
 		cbStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		cbStatus.setBackground(Color.WHITE);
-		cbStatus.setBounds(349, 532, 89, 30);
+		cbStatus.setBounds(481, 532, 89, 30);
 		cbStatus.addItem("All");
 		cbStatus.addItem("Available");
 		cbStatus.addItem("Not Available");
@@ -173,7 +173,7 @@ public class SearchBooks extends JFrame {
 		
 		JLabel lblStatus = new JLabel("Status");
 		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStatus.setBounds(236, 531, 80, 30);
+		lblStatus.setBounds(368, 531, 80, 30);
 		contentPane.add(lblStatus);
 		
 		view();
@@ -364,7 +364,7 @@ public class SearchBooks extends JFrame {
 	            
 				while(rs.next()) {
 					//add data until there is none
-					String bookNum = rs.getString("Book_Num");
+					String bookNum = String.valueOf(rs.getInt("Book_Num"));
 					String title = rs.getString("Title");
 					String author = rs.getString("Author");
 					String isbn = rs.getString("isbn");

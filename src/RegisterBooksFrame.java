@@ -3,6 +3,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -13,6 +15,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -62,13 +66,14 @@ public class RegisterBooksFrame extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
-	public RegisterBooksFrame() {
+	public RegisterBooksFrame() throws SQLException {
 		setResizable(false);
 		setTitle("Register Books");
 		setBackground(new Color(255, 255, 255));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 953, 666);
+		setBounds(100, 100, 1303, 666);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -204,11 +209,81 @@ public class RegisterBooksFrame extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(514, 90, 374, 471);
+		scrollPane.setBounds(514, 90, 763, 471);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"Book Number", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Dewey", "Accession", "Status", "Date Registered"
+			}
+		));
 		scrollPane.setViewportView(table);
+		
+		displayLatestData();
+	}
+	
+	Connection conn;
+	PreparedStatement pst;
+	ResultSet rs;
+	
+	/*
+	 * Displays book entries
+	 * in descending order*/
+	public void displayLatestData() throws SQLException {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}   		
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+			Statement stmt = conn.createStatement();
+			System.out.println("Connected");
+							
+			String sql = "SELECT * FROM Books";
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			
+			DefaultTableModel tblModel = (DefaultTableModel)table.getModel();
+			
+			// Clear existing rows in the table
+            tblModel.setRowCount(0);
+            
+			while(rs.next()) {
+				//add data until there is none
+				String bookNum = String.valueOf(rs.getInt("Book_Num"));
+				String title = rs.getString("Title");
+				String author = rs.getString("Author");
+				String isbn = rs.getString("isbn");
+				String publisher = rs.getString("Publisher");
+				String language = rs.getString("Language");
+				String subject = rs.getString("Subject");
+				String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+				String accession = String.valueOf(rs.getInt("Accession_Num"));
+				String status = rs.getString("book_status");
+				String dateRegistered = rs.getString("date_registered");
+				
+				//array to store data into jtable
+				String tbData[] = {bookNum, title, author, isbn, publisher,
+						language, subject, dewey, accession, status, dateRegistered};
+								
+				//add string array data to jtable
+				tblModel.addRow(tbData);
+				
+				
+				
+			}
+			
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	
 	public void registerBooks() {
@@ -296,7 +371,7 @@ public class RegisterBooksFrame extends JFrame {
 				}
 				
 				JOptionPane.showMessageDialog(rootPane, "Book Registered");
-				
+				displayLatestData();
 				
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block

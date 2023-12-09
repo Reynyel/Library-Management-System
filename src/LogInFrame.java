@@ -137,7 +137,7 @@ public class LogInFrame extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel();
 		lblNewLabel.setBackground(new Color(192, 192, 192));
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Projects\\Library-Management-System\\bg1.jpg"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\bg1.jpg"));
 		lblNewLabel.setBounds(10, 11, 1036, 630);
 		contentPane.add(lblNewLabel);
 		
