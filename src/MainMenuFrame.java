@@ -50,7 +50,7 @@ public class MainMenuFrame extends JFrame {
 		
 		JButton btnRegisterBooks = new JButton("Register Books");
 		btnRegisterBooks.setForeground(new Color(0, 0, 0));
-		btnRegisterBooks.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 40));
+		btnRegisterBooks.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 60));
 		btnRegisterBooks.setBackground(new Color(204, 255, 153));
 		btnRegisterBooks.setBorderPainted(false);
 		btnRegisterBooks.addActionListener(new ActionListener() {
@@ -61,11 +61,11 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnRegisterBooks.setBounds(10, 11, 420, 305);
+		btnRegisterBooks.setBounds(10, 11, 519, 305);
 		contentPane.add(btnRegisterBooks);
 		
 		JButton btnSearchBooks = new JButton("Search");
-		btnSearchBooks.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 40));
+		btnSearchBooks.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 60));
 		btnSearchBooks.setBackground(new Color(153, 255, 153));
 		btnSearchBooks.setBorderPainted(false);
 		btnSearchBooks.addActionListener(new ActionListener() {
@@ -75,11 +75,11 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnSearchBooks.setBounds(440, 11, 197, 606);
+		btnSearchBooks.setBounds(555, 11, 519, 305);
 		contentPane.add(btnSearchBooks);
 		
 		JButton btnRegisterUser = new JButton("Manage Users");
-		btnRegisterUser.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 40));
+		btnRegisterUser.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 60));
 		btnRegisterUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UserTypeFrame user = new UserTypeFrame();
@@ -89,7 +89,7 @@ public class MainMenuFrame extends JFrame {
 		});
 		btnRegisterUser.setBackground(new Color(102, 255, 153));
 		btnRegisterUser.setBorderPainted(false);
-		btnRegisterUser.setBounds(10, 327, 420, 290);
+		btnRegisterUser.setBounds(10, 327, 519, 290);
 		contentPane.add(btnRegisterUser);
 		
 		JButton btnLogOut = new JButton("Log out");
@@ -118,7 +118,7 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnTransac.setBounds(647, 11, 427, 606);
+		btnTransac.setBounds(555, 327, 519, 290);
 		contentPane.add(btnTransac);
 	}
 }
