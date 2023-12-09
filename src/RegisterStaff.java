@@ -250,7 +250,7 @@ public class RegisterStaff extends JFrame {
 					String middleName = rs.getString("MiddleName");
 					String contactNo = rs.getString("ContactNo");
 					String email = rs.getString("email");
-					String type = rs.getString("EmployeeType");
+					String type = rs.getString("UserType");
 					
 					//array to store data into jtable
 					String tbData[] = {employeeId, lastName, firstName, middleName,
@@ -311,7 +311,7 @@ public class RegisterStaff extends JFrame {
 				if(radioFaculty.isSelected()) {
 					type = "Faculty";
 					//Build query
-					String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, EmployeeType)" +
+					String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, UserType)" +
 							"VALUES ('" + nextEmployeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
 					
 					//Execute query
@@ -323,7 +323,7 @@ public class RegisterStaff extends JFrame {
 				else if(radioStaff.isSelected()) {
 					type = "Staff";
 					//Build query
-					String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, EmployeeType)" +
+					String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, UserType)" +
 							"VALUES ('" + nextEmployeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
 					
 					//Execute query

@@ -513,7 +513,7 @@ public class TransactionFrame extends JFrame {
 						//add data until there is none
 						String bookNum = rs.getString("Book_Num");
 						String title = rs.getString("Title");
-						String author = rs.getString("Author");;
+						String author = rs.getString("Author");
 						String accession = String.valueOf(rs.getInt("Accession_Num"));
 						
 						comboBoxModel.addElement(accession);

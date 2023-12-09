@@ -9,6 +9,7 @@ import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 
@@ -56,9 +57,15 @@ public class MainMenuFrame extends JFrame {
 		btnRegisterBooks.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				RegisterBooksFrame registerFrame = new RegisterBooksFrame();
-				registerFrame.setVisible(true);
-				dispose();
+				RegisterBooksFrame registerFrame;
+				try {
+					registerFrame = new RegisterBooksFrame();
+					registerFrame.setVisible(true);
+					dispose();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnRegisterBooks.setBounds(10, 11, 519, 305);
