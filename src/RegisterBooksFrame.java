@@ -286,6 +286,7 @@ public class RegisterBooksFrame extends JFrame {
 	PreparedStatement pst;
 	ResultSet rs;
 	
+	/*Update entries*/
 	public void update() throws SQLException {
 		String title = txtTitle.getText();
 		String author = txtAuthor.getText();
@@ -300,10 +301,7 @@ public class RegisterBooksFrame extends JFrame {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		
-		
+		}	
 		try {
 			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
 			Statement stmt = conn.createStatement();
@@ -351,7 +349,7 @@ public class RegisterBooksFrame extends JFrame {
 		}
 		
 	}
-	
+	//Clear components
 	private void clear() {
 		txtTitle.setText("");
 		txtAuthor.setText("");
