@@ -13,6 +13,8 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -34,7 +36,9 @@ import java.awt.Component;
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 
+import tablemodel.NonEditTableModel;
 
 
 public class RegisterBooksFrame extends JFrame {
@@ -213,6 +217,7 @@ public class RegisterBooksFrame extends JFrame {
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null, null, null, null, null, null},
@@ -221,7 +226,58 @@ public class RegisterBooksFrame extends JFrame {
 				"Book Number", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Dewey", "Accession", "Status", "Date Registered"
 			}
 		));
+		Object[][] data = {null, null, null, null, null, null, null, null, null, null, null};
+		Object[] columnNames = {"Book Number", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Dewey", "Accession", "Status", "Date Registered"};
+		NonEditTableModel model;
+		Set<Integer> editableColumns = new HashSet<>();
+		
+		table.setModel(new NonEditTableModel(data, columnNames, editableColumns));
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2) { //double click rows
+					int selectedRow = table.getSelectedRow();
+					if(selectedRow != -1) {
+						//get data and populate textbox and combobox
+						String bookNum = (String) table.getValueAt(selectedRow, 0);
+						String title = (String) table.getValueAt(selectedRow, 1);
+						String author = (String) table.getValueAt(selectedRow, 2);
+						String isbn = (String) table.getValueAt(selectedRow, 3);
+						String publisher = (String) table.getValueAt(selectedRow, 4);
+						String language = (String) table.getValueAt(selectedRow, 5);
+						String subject = (String) table.getValueAt(selectedRow, 6);
+						
+						//Populate fields
+						txtTitle.setText(title);
+						txtAuthor.setText(author);
+						txtISBN.setText(isbn);
+						txtPublisher.setText(publisher);
+						languageComboBox.setSelectedItem(language);
+						comboBoxSubject.setSelectedItem(subject);
+						
+					}
+				}
+			}
+		});
 		scrollPane.setViewportView(table);
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					update();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				clear();
+			}
+		});
+		btnUpdate.setForeground(Color.WHITE);
+		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnUpdate.setBorderPainted(false);
+		btnUpdate.setBackground(new Color(157, 179, 227));
+		btnUpdate.setBounds(297, 391, 93, 33);
+		contentPane.add(btnUpdate);
 		
 		displayLatestData();
 	}
@@ -230,6 +286,80 @@ public class RegisterBooksFrame extends JFrame {
 	PreparedStatement pst;
 	ResultSet rs;
 	
+	public void update() throws SQLException {
+		String title = txtTitle.getText();
+		String author = txtAuthor.getText();
+		String isbn = txtISBN.getText();
+		String publisher = txtPublisher.getText();
+		String language = languageComboBox.getSelectedItem().toString();
+		String subject = comboBoxSubject.getSelectedItem().toString();
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+			Statement stmt = conn.createStatement();
+			System.out.println("Connected");
+							
+			String sql = "UPDATE Books SET Title = ?, Author = ?, ISBN = ?, Publisher = ?, Language = ?, Subject = ? WHERE Book_Num = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			
+			int selectedRow = table.getSelectedRow();
+			
+			if(selectedRow != -1) {
+				
+				//get book_num value from row
+				String bookNum = (String) table.getValueAt(selectedRow, 0);
+				
+				pstmt.setString(1, title);
+				pstmt.setString(2, author);
+				pstmt.setString(3, isbn);
+				pstmt.setString(4, publisher);
+				pstmt.setString(5, language);
+				pstmt.setString(6, subject);
+				
+				pstmt.setString(7, bookNum);
+				
+				int rowsAffected = pstmt.executeUpdate();
+				if(rowsAffected > 0) {
+					JOptionPane.showMessageDialog(rootPane, "Updated succesfully");
+					displayLatestData();
+				}
+				
+				else {
+					JOptionPane.showMessageDialog(rootPane, "No rows updated");
+				}
+				
+			}
+			else {
+	            JOptionPane.showMessageDialog(rootPane, "No row selected");
+	        }
+			
+		}
+		
+		
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void clear() {
+		txtTitle.setText("");
+		txtAuthor.setText("");
+		txtISBN.setText("");
+		txtPublisher.setText("");
+		languageComboBox.setSelectedIndex(0);
+		comboBoxSubject.setSelectedIndex(0);
+	}
 	/*
 	 * Displays book entries
 	 * in descending order*/
@@ -350,9 +480,8 @@ public class RegisterBooksFrame extends JFrame {
 							 * for multiple copies of the same title*/
 							int usedBookNum = titleToUsedBookNumber.get(title);
 							
-							//Build query
-							String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num, book_status)" +
-									"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + usedBookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "', '" + "Available" + "')";
+							String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num, book_status, date_registered)" +
+								    "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + usedBookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "', '" + "Available" + "', CURRENT_DATE())";
 							
 							//Execute query
 							stmt.executeUpdate(sql);
@@ -360,9 +489,9 @@ public class RegisterBooksFrame extends JFrame {
 						}
 						
 					else {					
-						//Build query
-						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num, book_status)" +
-								"VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + bookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "', '" + "Available" + "')";
+						// For single copy
+						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num, book_status, date_registered)" +
+						    "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + bookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "', '" + "Available" + "', CURRENT_DATE())";
 						
 						//Execute query
 						stmt.executeUpdate(sql);
