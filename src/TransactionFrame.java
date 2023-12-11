@@ -23,14 +23,10 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import org.jdatepicker.util.JDatePickerUtil;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import color.AlternateColorRender;
 
@@ -64,11 +60,12 @@ public class TransactionFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public TransactionFrame() {
+		setTitle("Transaction Module");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1236, 966);
+		setBounds(100, 100, 1130, 750);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 255, 255));
+		contentPane.setBackground(new Color(127, 255, 212));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -76,35 +73,35 @@ public class TransactionFrame extends JFrame {
 		
 		JLabel lblBookNumber = new JLabel("Book Number");
 		lblBookNumber.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBookNumber.setBounds(47, 54, 113, 14);
+		lblBookNumber.setBounds(47, 54, 113, 28);
 		contentPane.add(lblBookNumber);
 		
 		txtBookNum = new JTextField();
 		txtBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtBookNum.setColumns(10);
-		txtBookNum.setBounds(150, 51, 608, 20);
+		txtBookNum.setBounds(150, 55, 621, 27);
 		contentPane.add(txtBookNum);
 		
 		txtTitle = new JTextField();
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtTitle.setColumns(10);
-		txtTitle.setBounds(150, 93, 629, 20);
+		txtTitle.setBounds(150, 94, 621, 27);
 		contentPane.add(txtTitle);
 		
 		JLabel lblNewLabel = new JLabel("Book Title");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(47, 96, 80, 14);
+		lblNewLabel.setBounds(47, 93, 90, 28);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblAuthors = new JLabel("Author(s)");
 		lblAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAuthors.setBounds(44, 141, 80, 14);
+		lblAuthors.setBounds(47, 141, 77, 27);
 		contentPane.add(lblAuthors);
 		
 		txtAuthor = new JTextField();
 		txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtAuthor.setColumns(10);
-		txtAuthor.setBounds(150, 138, 629, 20);
+		txtAuthor.setBounds(150, 141, 621, 27);
 		contentPane.add(txtAuthor);
 		
 		cbAccession = new JComboBox();
@@ -115,17 +112,17 @@ public class TransactionFrame extends JFrame {
 		});
 		cbAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		cbAccession.setBackground(Color.WHITE);
-		cbAccession.setBounds(150, 183, 49, 22);
+		cbAccession.setBounds(150, 183, 89, 28);
 		contentPane.add(cbAccession);
 		
 		JLabel lblAccession = new JLabel("Accession");
 		lblAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAccession.setBounds(47, 187, 80, 14);
+		lblAccession.setBounds(47, 187, 80, 24);
 		contentPane.add(lblAccession);
 		
 		JLabel lblStatus = new JLabel("Status");
 		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStatus.setBounds(47, 232, 80, 14);
+		lblStatus.setBounds(47, 230, 80, 20);
 		contentPane.add(lblStatus);
 		
 		cbStatus = new JComboBox();
@@ -136,17 +133,6 @@ public class TransactionFrame extends JFrame {
 		cbStatus.addItem("Not Available");
 		cbStatus.addItem("Borrowed");
 		contentPane.add(cbStatus);
-		
-		
-		
-		JButton btnUpdate = new JButton("Update");
-		btnUpdate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				update();
-			}
-		});
-		btnUpdate.setBounds(480, 442, 128, 40);
-		contentPane.add(btnUpdate);
 		
 		tblTransac = new JTable();
 		tblTransac.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -169,34 +155,51 @@ public class TransactionFrame extends JFrame {
 		
 		JScrollPane js = new JScrollPane(tblTransac);
 		js.setVisible(true);
-		js.setBounds(74, 524, 1085, 342); // Adjust the bounds to match the table
+		js.setBounds(24, 355, 1059, 276); // Adjust the bounds to match the table
 		contentPane.add(js);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(24, 279, 759, 135);
+		panel.setBounds(24, 279, 1059, 65);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		txtBorrID = new JTextField();
 		txtBorrID.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtBorrID.setColumns(10);
-		txtBorrID.setBounds(133, 11, 588, 20);
+		txtBorrID.setBounds(130, 23, 621, 30);
 		panel.add(txtBorrID);
 		
 		JLabel lblBorrowersName = new JLabel("Borrower's ID");
 		lblBorrowersName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBorrowersName.setBounds(10, 12, 113, 14);
+		lblBorrowersName.setBounds(10, 22, 113, 30);
 		panel.add(lblBorrowersName);
+		
+		
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
+		btnUpdate.setBounds(779, 13, 128, 40);
+		panel.add(btnUpdate);
 		JButton btnSearchBook = new JButton("Search Book");
+		btnSearchBook.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
+		btnSearchBook.setBounds(917, 11, 128, 40);
+		panel.add(btnSearchBook);
 		btnSearchBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
 			}
 		});
-		btnSearchBook.setBounds(691, 442, 128, 40);
-		contentPane.add(btnSearchBook);
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				update();
+			}
+		});
 		
 		JButton btnBack = new JButton("Back");
+		btnBack.setForeground(new Color(255, 255, 255));
+		btnBack.setBackground(new Color(65, 105, 225));
+		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnBack.setBorderPainted(false);
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MainMenuFrame menu = new MainMenuFrame();
@@ -204,11 +207,11 @@ public class TransactionFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnBack.setBounds(10, 876, 128, 40);
+		btnBack.setBounds(34, 642, 128, 40);
 		contentPane.add(btnBack);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(24, 33, 759, 235);
+		panel_1.setBounds(24, 33, 1059, 235);
 		contentPane.add(panel_1);
 		
 		fetchAndDisplayData();
