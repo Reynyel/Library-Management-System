@@ -63,7 +63,7 @@ public class SearchStudents extends JFrame {
 		setTitle("Book Search");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1085, 768);
+		setBounds(100, 100, 1072, 750);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(135, 206, 250));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -81,7 +81,7 @@ public class SearchStudents extends JFrame {
 			}
 			
 		});
-		btnShowData.setBounds(579, 585, 128, 40);
+		btnShowData.setBounds(698, 559, 128, 40);
 		contentPane.add(btnShowData);
 		
 		JButton btnSearchBook = new JButton("Search User");
@@ -93,29 +93,29 @@ public class SearchStudents extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnSearchBook.setBounds(419, 585, 128, 40);
+		btnSearchBook.setBounds(560, 559, 128, 40);
 		contentPane.add(btnSearchBook);
 		
 		JLabel lblNewLabel = new JLabel("Name");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(240, 433, 80, 30);
+		lblNewLabel.setBounds(198, 477, 80, 30);
 		contentPane.add(lblNewLabel);
 		
 		txtTitle = new JTextField();
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtTitle.setColumns(10);
-		txtTitle.setBounds(353, 434, 475, 30);
+		txtTitle.setBounds(313, 477, 513, 30);
 		contentPane.add(txtTitle);
 		
 		JLabel lblBookNumber = new JLabel("User ID");
 		lblBookNumber.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBookNumber.setBounds(240, 392, 105, 30);
+		lblBookNumber.setBounds(198, 437, 105, 30);
 		contentPane.add(lblBookNumber);
 		
 		txtBookNum = new JTextField();
 		txtBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtBookNum.setColumns(10);
-		txtBookNum.setBounds(353, 393, 475, 30);
+		txtBookNum.setBounds(313, 438, 513, 30);
 		contentPane.add(txtBookNum);
 		
 		JButton btnBack = new JButton("Back");
@@ -130,7 +130,7 @@ public class SearchStudents extends JFrame {
 				dispose();
 			}
 		});
-		btnBack.setBounds(10, 680, 128, 40);
+		btnBack.setBounds(10, 660, 128, 40);
 		contentPane.add(btnBack);
 		
 		JComboBox cbStatus = new JComboBox();
@@ -141,7 +141,7 @@ public class SearchStudents extends JFrame {
 		
 		cbStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		cbStatus.setBackground(Color.WHITE);
-		cbStatus.setBounds(353, 475, 89, 30);
+		cbStatus.setBounds(313, 518, 105, 30);
 		cbStatus.addItem("All");
 		cbStatus.addItem("Available");
 		cbStatus.addItem("Not Available");
@@ -150,14 +150,14 @@ public class SearchStudents extends JFrame {
 		
 		JLabel lblStatus = new JLabel("User Type");
 		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStatus.setBounds(240, 474, 80, 30);
+		lblStatus.setBounds(198, 518, 80, 30);
 		contentPane.add(lblStatus);
 		
 		table = new JTable();
 		table.setColumnSelectionAllowed(true);
 		table.setCellSelectionEnabled(true);
 		table.setBorder(new LineBorder(new Color(0, 0, 0)));
-		table.setBounds(10, 11, 1049, 370);
+		table.setBounds(10, 11, 1036, 402);
 		contentPane.add(table);
 		
 	}

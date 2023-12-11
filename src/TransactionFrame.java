@@ -23,14 +23,10 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import org.jdatepicker.util.JDatePickerUtil;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import color.AlternateColorRender;
 
@@ -67,7 +63,7 @@ public class TransactionFrame extends JFrame {
 		setTitle("Transaction Module");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1130, 966);
+		setBounds(100, 100, 1130, 750);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(127, 255, 212));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -159,34 +155,34 @@ public class TransactionFrame extends JFrame {
 		
 		JScrollPane js = new JScrollPane(tblTransac);
 		js.setVisible(true);
-		js.setBounds(24, 425, 1059, 421); // Adjust the bounds to match the table
+		js.setBounds(24, 355, 1059, 276); // Adjust the bounds to match the table
 		contentPane.add(js);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(24, 279, 1059, 135);
+		panel.setBounds(24, 279, 1059, 65);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		txtBorrID = new JTextField();
 		txtBorrID.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtBorrID.setColumns(10);
-		txtBorrID.setBounds(130, 13, 621, 30);
+		txtBorrID.setBounds(130, 23, 621, 30);
 		panel.add(txtBorrID);
 		
 		JLabel lblBorrowersName = new JLabel("Borrower's ID");
 		lblBorrowersName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBorrowersName.setBounds(10, 12, 113, 30);
+		lblBorrowersName.setBounds(10, 22, 113, 30);
 		panel.add(lblBorrowersName);
 		
 		
 		
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
-		btnUpdate.setBounds(783, 84, 128, 40);
+		btnUpdate.setBounds(779, 13, 128, 40);
 		panel.add(btnUpdate);
 		JButton btnSearchBook = new JButton("Search Book");
 		btnSearchBook.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
-		btnSearchBook.setBounds(921, 84, 128, 40);
+		btnSearchBook.setBounds(917, 11, 128, 40);
 		panel.add(btnSearchBook);
 		btnSearchBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -211,7 +207,7 @@ public class TransactionFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnBack.setBounds(24, 857, 128, 40);
+		btnBack.setBounds(34, 642, 128, 40);
 		contentPane.add(btnBack);
 		
 		JPanel panel_1 = new JPanel();

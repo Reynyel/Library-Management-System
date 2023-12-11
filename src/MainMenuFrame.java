@@ -1,4 +1,3 @@
-package src;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -42,7 +41,7 @@ public class MainMenuFrame extends JFrame {
 		setResizable(false);
 		setTitle("Main Menu");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1100, 711);
+		setBounds(100, 100, 1072, 750);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(204, 255, 204));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -69,7 +68,7 @@ public class MainMenuFrame extends JFrame {
 				}
 			}
 		});
-		btnRegisterBooks.setBounds(10, 11, 519, 305);
+		btnRegisterBooks.setBounds(10, 30, 500, 305);
 		contentPane.add(btnRegisterBooks);
 		
 		JButton btnSearchBooks = new JButton("Search");
@@ -83,7 +82,7 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnSearchBooks.setBounds(555, 11, 519, 305);
+		btnSearchBooks.setBounds(539, 30, 500, 305);
 		contentPane.add(btnSearchBooks);
 		
 		JButton btnRegisterUser = new JButton("Manage Users");
@@ -97,12 +96,12 @@ public class MainMenuFrame extends JFrame {
 		});
 		btnRegisterUser.setBackground(new Color(102, 255, 153));
 		btnRegisterUser.setBorderPainted(false);
-		btnRegisterUser.setBounds(10, 327, 519, 290);
+		btnRegisterUser.setBounds(10, 366, 500, 290);
 		contentPane.add(btnRegisterUser);
 		
 		JButton btnLogOut = new JButton("Log out");
 		btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnLogOut.setBackground(new Color(157, 179, 227));
+		btnLogOut.setBackground(new Color(65, 105, 225));
 		btnLogOut.setForeground(new Color(0, 0, 0));
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -112,7 +111,7 @@ public class MainMenuFrame extends JFrame {
 			}
 		});
 		btnLogOut.setBorderPainted(false);
-		btnLogOut.setBounds(10, 628, 93, 33);
+		btnLogOut.setBounds(10, 667, 93, 33);
 		contentPane.add(btnLogOut);
 		
 		JButton btnTransac = new JButton("Transactions");
@@ -126,7 +125,7 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnTransac.setBounds(555, 327, 519, 290);
+		btnTransac.setBounds(539, 366, 500, 290);
 		contentPane.add(btnTransac);
 	}
 }

@@ -35,7 +35,7 @@ public class SearchType extends JFrame {
 	public SearchType() {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 953, 666);
+		setBounds(100, 100, 1072, 750);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(51, 102, 102));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -54,11 +54,11 @@ public class SearchType extends JFrame {
 				dispose();
 			}
 		});
-		srchBookBtn.setBounds(10, 11, 451, 561);
+		srchBookBtn.setBounds(25, 11, 500, 645);
 		contentPane.add(srchBookBtn);
 		
-		JButton srchStudentBtn = new JButton("Search for Students");
-		srchStudentBtn.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 44));
+		JButton srchStudentBtn = new JButton("Search for Users");
+		srchStudentBtn.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 50));
 		srchStudentBtn.setBackground(new Color(135, 206, 250));
 		srchStudentBtn.setBorderPainted(false);
 		srchStudentBtn.addActionListener(new ActionListener() {
@@ -68,7 +68,7 @@ public class SearchType extends JFrame {
 				dispose();
 			}
 		});
-		srchStudentBtn.setBounds(476, 11, 451, 561);
+		srchStudentBtn.setBounds(535, 11, 500, 645);
 		contentPane.add(srchStudentBtn);
 		
 		JButton btnBack = new JButton("Back");
@@ -83,7 +83,7 @@ public class SearchType extends JFrame {
 		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnBack.setBorderPainted(false);
 		btnBack.setBackground(new Color(0, 51, 153));
-		btnBack.setBounds(10, 583, 93, 33);
+		btnBack.setBounds(10, 667, 93, 33);
 		contentPane.add(btnBack);
 	}
 }

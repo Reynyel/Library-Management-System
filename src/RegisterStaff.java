@@ -65,9 +65,9 @@ public class RegisterStaff extends JFrame {
 		setResizable(false);
 		setTitle("Register Staff");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1262, 973);
+		setBounds(100, 100, 1072, 750);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 255, 255));
+		contentPane.setBackground(new Color(135, 206, 235));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -75,68 +75,68 @@ public class RegisterStaff extends JFrame {
 		
 		JLabel lblEmployeeID = new JLabel("Employee ID");
 		lblEmployeeID.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblEmployeeID.setBounds(29, 78, 130, 14);
+		lblEmployeeID.setBounds(146, 347, 115, 30);
 		contentPane.add(lblEmployeeID);
 		
 		JLabel lblLastName = new JLabel("Last Name");
 		lblLastName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblLastName.setBounds(29, 124, 130, 14);
+		lblLastName.setBounds(146, 393, 130, 30);
 		contentPane.add(lblLastName);
 		
 		JLabel lblFirstName = new JLabel("First Name");
 		lblFirstName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblFirstName.setBounds(29, 170, 130, 14);
+		lblFirstName.setBounds(146, 441, 130, 30);
 		contentPane.add(lblFirstName);
 		
 		JLabel lblMiddleName = new JLabel("Middle Name");
 		lblMiddleName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblMiddleName.setBounds(29, 216, 130, 14);
+		lblMiddleName.setBounds(146, 482, 130, 30);
 		contentPane.add(lblMiddleName);
 		
 		txtEmployeeID = new JTextField();
 		txtEmployeeID.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtEmployeeID.setColumns(10);
-		txtEmployeeID.setBounds(127, 77, 217, 20);
+		txtEmployeeID.setBounds(271, 348, 217, 30);
 		contentPane.add(txtEmployeeID);
 		
 		txtLastName = new JTextField();
 		txtLastName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtLastName.setColumns(10);
-		txtLastName.setBounds(127, 123, 629, 20);
+		txtLastName.setBounds(271, 394, 629, 30);
 		contentPane.add(txtLastName);
 		
 		txtFirstName = new JTextField();
 		txtFirstName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtFirstName.setColumns(10);
-		txtFirstName.setBounds(127, 169, 629, 20);
+		txtFirstName.setBounds(271, 442, 629, 30);
 		contentPane.add(txtFirstName);
 		
 		txtMiddleName = new JTextField();
 		txtMiddleName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtMiddleName.setColumns(10);
-		txtMiddleName.setBounds(127, 215, 629, 20);
+		txtMiddleName.setBounds(271, 483, 629, 30);
 		contentPane.add(txtMiddleName);
 		
 		JLabel lblContactNo = new JLabel("Contact No.");
 		lblContactNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblContactNo.setBounds(29, 261, 130, 14);
+		lblContactNo.setBounds(146, 530, 130, 30);
 		contentPane.add(lblContactNo);
 		
 		JLabel lblEmail = new JLabel("Email Address");
 		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblEmail.setBounds(29, 311, 130, 14);
+		lblEmail.setBounds(146, 571, 130, 30);
 		contentPane.add(lblEmail);
 		
 		txtContactNum = new JTextField();
 		txtContactNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtContactNum.setColumns(10);
-		txtContactNum.setBounds(127, 260, 629, 20);
+		txtContactNum.setBounds(271, 531, 629, 30);
 		contentPane.add(txtContactNum);
 		
 		txtEmail = new JTextField();
 		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtEmail.setColumns(10);
-		txtEmail.setBounds(127, 310, 629, 20);
+		txtEmail.setBounds(271, 572, 629, 30);
 		contentPane.add(txtEmail);
 		
 		JButton btnRegister = new JButton("Register");
@@ -149,8 +149,8 @@ public class RegisterStaff extends JFrame {
 		btnRegister.setForeground(Color.WHITE);
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
-		btnRegister.setBackground(new Color(157, 179, 227));
-		btnRegister.setBounds(663, 424, 93, 33);
+		btnRegister.setBackground(new Color(220, 20, 60));
+		btnRegister.setBounds(807, 612, 93, 33);
 		contentPane.add(btnRegister);
 		
 		//Back button
@@ -165,25 +165,25 @@ public class RegisterStaff extends JFrame {
 		btnBack.setForeground(Color.WHITE);
 		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnBack.setBorderPainted(false);
-		btnBack.setBackground(new Color(157, 179, 227));
-		btnBack.setBounds(10, 890, 93, 33);
+		btnBack.setBackground(new Color(65, 105, 225));
+		btnBack.setBounds(10, 667, 93, 33);
 		contentPane.add(btnBack);
 		
 		JLabel lblEmployeeType = new JLabel("Employee Type");
 		lblEmployeeType.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblEmployeeType.setBounds(29, 365, 130, 14);
+		lblEmployeeType.setBounds(146, 612, 130, 30);
 		contentPane.add(lblEmployeeType);
 		
 		radioFaculty = new JRadioButton("Faculty");
-		radioFaculty.setBackground(new Color(255, 255, 255));
+		radioFaculty.setBackground(new Color(135, 206, 250));
 		radioFaculty.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		radioFaculty.setBounds(155, 363, 109, 23);
+		radioFaculty.setBounds(271, 613, 109, 30);
 		contentPane.add(radioFaculty);
 		
 		radioStaff = new JRadioButton("Staff");
-		radioStaff.setBackground(new Color(255, 255, 255));
+		radioStaff.setBackground(new Color(135, 206, 250));
 		radioStaff.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		radioStaff.setBounds(277, 363, 109, 23);
+		radioStaff.setBounds(379, 615, 109, 30);
 		contentPane.add(radioStaff);
 		
 		
@@ -206,7 +206,7 @@ public class RegisterStaff extends JFrame {
 		tblEmployees.setColumnSelectionAllowed(true);
 		tblEmployees.setCellSelectionEnabled(true);
 		tblEmployees.setBorder(new LineBorder(new Color(0, 0, 0)));
-		tblEmployees.setBounds(29, 493, 1155, 370);
+		tblEmployees.setBounds(10, 11, 1036, 325);
 		AlternateColorRender alternate = new AlternateColorRender();
 		tblEmployees.setDefaultRenderer(Object.class, alternate);
 		contentPane.add(tblEmployees);
