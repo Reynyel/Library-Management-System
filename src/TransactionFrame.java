@@ -64,6 +64,7 @@ public class TransactionFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public TransactionFrame() {
+		setTitle("Transaction Module");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1130, 966);
@@ -169,7 +170,7 @@ public class TransactionFrame extends JFrame {
 		txtBorrID = new JTextField();
 		txtBorrID.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtBorrID.setColumns(10);
-		txtBorrID.setBounds(133, 12, 588, 30);
+		txtBorrID.setBounds(130, 13, 621, 30);
 		panel.add(txtBorrID);
 		
 		JLabel lblBorrowersName = new JLabel("Borrower's ID");
@@ -199,7 +200,8 @@ public class TransactionFrame extends JFrame {
 		});
 		
 		JButton btnBack = new JButton("Back");
-		btnBack.setBackground(new Color(0, 0, 205));
+		btnBack.setForeground(new Color(255, 255, 255));
+		btnBack.setBackground(new Color(65, 105, 225));
 		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnBack.setBorderPainted(false);
 		btnBack.addActionListener(new ActionListener() {
