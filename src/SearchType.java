@@ -63,7 +63,7 @@ public class SearchType extends JFrame {
 		srchStudentBtn.setBorderPainted(false);
 		srchStudentBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SearchStudents searchStudents = new SearchStudents();
+				SearchStudentsFrame searchStudents = new SearchStudentsFrame();
 				searchStudents.setVisible(true);
 				dispose();
 			}

@@ -31,13 +31,13 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import color.AlternateColorRender;
 
-public class SearchStudents extends JFrame {
+public class SearchStudentsFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JTable tblBooks;
 	private JTextField txtTitle;
 	private JTextField txtBookNum;
-	private JTable table;
+	private JTable tblUser;
 
 	/**
 	 * Launch the application.
@@ -47,7 +47,7 @@ public class SearchStudents extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SearchStudents frame = new SearchStudents();
+					SearchStudentsFrame frame = new SearchStudentsFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -59,7 +59,7 @@ public class SearchStudents extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SearchStudents() {
+	public SearchStudentsFrame() {
 		setTitle("Book Search");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -153,12 +153,67 @@ public class SearchStudents extends JFrame {
 		lblStatus.setBounds(198, 518, 80, 30);
 		contentPane.add(lblStatus);
 		
-		table = new JTable();
-		table.setColumnSelectionAllowed(true);
-		table.setCellSelectionEnabled(true);
-		table.setBorder(new LineBorder(new Color(0, 0, 0)));
-		table.setBounds(10, 11, 1036, 402);
-		contentPane.add(table);
+		tblUser = new JTable();
+		tblUser.setColumnSelectionAllowed(true);
+		tblUser.setCellSelectionEnabled(true);
+		tblUser.setBorder(new LineBorder(new Color(0, 0, 0)));
+		tblUser.setBounds(10, 11, 1036, 402);
+		contentPane.add(tblUser);
 		
+	}
+	Connection conn;
+	PreparedStatement pst;
+	ResultSet rs;
+	
+	public void displayData(){
+		try {		
+			 // Load the JDBC driver (version 4.0 or later)
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}   		
+			
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+				Statement stmt = conn.createStatement();
+				System.out.println("Connected");
+								
+				String sql = "SELECT * FROM Students";
+				ResultSet rs = stmt.executeQuery(sql);
+				
+				
+				DefaultTableModel tblModel = (DefaultTableModel)tblUser.getModel();
+				
+				// Clear existing rows in the table
+	            tblModel.setRowCount(0);
+	            
+				while(rs.next()) {
+					//add data until there is none
+					String studentNum = rs.getString("StudentNo");
+					String lastName = rs.getString("LastName");
+					String firstName = rs.getString("FirstName");
+					String middleName = rs.getString("MiddleName");
+					String gradeLevel = String.valueOf(rs.getString("GradeLevel"));
+					String section = rs.getString("Section");
+					String userType = rs.getString("UserType");
+					//array to store data into jtable
+					String tbData[] = {studentNum, lastName, firstName, middleName,
+							gradeLevel, section, userType};
+									
+					//add string array data to jtable
+					tblModel.addRow(tbData);													
+				}
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}          				
+								
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }

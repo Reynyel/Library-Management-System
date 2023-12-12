@@ -11,6 +11,8 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,6 +31,7 @@ import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import color.AlternateColorRender;
+import tablemodel.NonEditTableModel;
 
 public class RegisterStudent extends JFrame {
 
@@ -202,7 +205,53 @@ public class RegisterStudent extends JFrame {
 		tblStudents.setBounds(10, 11, 1036, 350);
 		AlternateColorRender alternate = new AlternateColorRender();
 		tblStudents.setDefaultRenderer(Object.class, alternate);
+		
+		Object[][] data = {null, null, null, null, null, null, null, null, null, null, null};
+		Object[] columnNames = {"Student No.", "Last Name", "First Name", "MiddleName", "Grade Level", "Section", "User Type"};
+		NonEditTableModel model;
+		Set<Integer> editableColumns = new HashSet<>();
+		
+		tblStudents.setModel(new NonEditTableModel(data, columnNames, editableColumns));
+		tblStudents.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2) { //double click rows
+					int selectedRow = tblStudents.getSelectedRow();
+					if(selectedRow != -1) {
+						//get data and populate textbox and combobox
+						String studentNum = (String) tblStudents.getValueAt(selectedRow, 0);
+						String lastName = (String) tblStudents.getValueAt(selectedRow, 1);
+						String firstName = (String) tblStudents.getValueAt(selectedRow, 2);
+						String middleName = (String) tblStudents.getValueAt(selectedRow, 3);
+						String gradeLevel = (String) tblStudents.getValueAt(selectedRow, 4);
+						String section = (String) tblStudents.getValueAt(selectedRow, 5);
+						String userType = (String) tblStudents.getValueAt(selectedRow, 6);
+						
+						//Populate fields
+						txtLastName.setText(lastName);
+						txtFirstName.setText(firstName);
+						txtMiddleName.setText(middleName);
+						gradeComboBox.setSelectedItem(gradeLevel);
+						sectionComboBox.setSelectedItem(section);
+						txtStudentNum.setText(studentNum);
+						
+					}
+				}
+			}
+		});
 		contentPane.add(tblStudents);
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateUserData();
+			}
+		});
+		btnUpdate.setForeground(new Color(245, 255, 250));
+		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnUpdate.setBorderPainted(false);
+		btnUpdate.setBackground(new Color(32, 178, 170));
+		btnUpdate.setBounds(714, 590, 93, 33);
+		contentPane.add(btnUpdate);
 		
 		displayData();
 	}
@@ -221,6 +270,67 @@ public class RegisterStudent extends JFrame {
 	Connection conn;
 	PreparedStatement pst;
 	ResultSet rs;
+	
+	public void updateUserData() {
+		String lastName = txtLastName.getText();
+		String firstName = txtFirstName.getText();
+		String middleName = txtMiddleName.getText();
+		String gradeLevel = gradeComboBox.getSelectedItem().toString();
+		String section = sectionComboBox.getSelectedItem().toString();
+		String studentNo = txtStudentNum.getText();
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+			Statement stmt = conn.createStatement();
+			System.out.println("Connected");
+							
+			String sql = "UPDATE Students SET LastName = ?, FirstName = ?, MiddleName = ?, GradeLevel = ?, Section = ? WHERE StudentNo = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			
+			int selectedRow = tblStudents.getSelectedRow();
+			
+			if(selectedRow != -1) {
+				
+				//get book_num value from row
+				String bookNum = (String) tblStudents.getValueAt(selectedRow, 0);
+				
+				pstmt.setString(1, lastName);
+				pstmt.setString(2, firstName);
+				pstmt.setString(3, middleName);
+				pstmt.setString(4, gradeLevel);
+				pstmt.setString(5, section);
+				pstmt.setString(6, studentNo);
+				
+				int rowsAffected = pstmt.executeUpdate();
+				if(rowsAffected > 0) {
+					JOptionPane.showMessageDialog(rootPane, "Updated succesfully");
+					displayData();
+				}
+				
+				else {
+					JOptionPane.showMessageDialog(rootPane, "No rows updated");
+				}
+				
+			}
+			else {
+	            JOptionPane.showMessageDialog(rootPane, "No row selected");
+	        }
+			
+		}
+		
+		
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public void displayData(){
 		try {		
