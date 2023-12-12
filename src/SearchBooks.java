@@ -123,24 +123,24 @@ public class SearchBooks extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Book Title");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(198, 478, 80, 30);
+		lblNewLabel.setBounds(198, 437, 80, 30);
 		contentPane.add(lblNewLabel);
 		
 		txtTitle = new JTextField();
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtTitle.setColumns(10);
-		txtTitle.setBounds(323, 478, 513, 30);
+		txtTitle.setBounds(323, 437, 513, 30);
 		contentPane.add(txtTitle);
 		
 		JLabel lblBookNumber = new JLabel("Book Number");
 		lblBookNumber.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBookNumber.setBounds(198, 437, 113, 30);
+		lblBookNumber.setBounds(198, 478, 113, 30);
 		contentPane.add(lblBookNumber);
 		
 		txtBookNum = new JTextField();
 		txtBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtBookNum.setColumns(10);
-		txtBookNum.setBounds(323, 437, 513, 30);
+		txtBookNum.setBounds(323, 478, 513, 30);
 		contentPane.add(txtBookNum);
 		
 		JButton btnBack = new JButton("Back");
@@ -258,6 +258,7 @@ public class SearchBooks extends JFrame {
 
 	            // add string array data to jtable
 	            tblModel.addRow(tbData);
+	          
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -361,11 +362,11 @@ public class SearchBooks extends JFrame {
 				Statement stmt = conn.createStatement();
 				System.out.println("Connected");
 								
-				String sql = "SELECT * FROM Books WHERE Book_Num = ?";
+				String sql = "SELECT * FROM Books WHERE Title = ?";
 				PreparedStatement pstmt = conn.prepareStatement(sql);
 				
-				String bookNumber = txtBookNum.getText();
-				pstmt.setString(1, bookNumber);
+				String bookTitle = txtTitle.getText();
+				pstmt.setString(1, bookTitle);
 				
 				ResultSet rs = pstmt.executeQuery();
 
@@ -399,6 +400,7 @@ public class SearchBooks extends JFrame {
         		
         			comboBoxModel.addElement(accession);
         			
+        			txtBookNum.setText(bookNum);
         			txtTitle.setText(title);
         			
         			//array to store data into jtable
