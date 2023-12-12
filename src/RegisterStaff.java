@@ -29,6 +29,10 @@ import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import color.AlternateColorRender;
+import tablemodel.NonEditTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ListSelectionModel;
 
 public class RegisterStaff extends JFrame {
 
@@ -194,7 +198,11 @@ public class RegisterStaff extends JFrame {
 		G.add(radioFaculty);
 		G.add(radioStaff);
 		
+		
+		
 		tblEmployees = new JTable();
+		tblEmployees.setColumnSelectionAllowed(true);
+		tblEmployees.setCellSelectionEnabled(true);
 		tblEmployees.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null, null},
@@ -203,13 +211,56 @@ public class RegisterStaff extends JFrame {
 				"Employee ID", "Last Name", "First Name", "Middle Name", "Contact No.", "Email", "Employee Type"
 			}
 		));
-		tblEmployees.setColumnSelectionAllowed(true);
-		tblEmployees.setCellSelectionEnabled(true);
-		tblEmployees.setBorder(new LineBorder(new Color(0, 0, 0)));
+		
+		Object[][] data = {null, null, null, null, null, null, null};
+		Object[] columnNames = {"Employee ID", "Last Name", "First Name", "Middle Name", "Contact No.", "Email", "Employee Type"};
+		NonEditTableModel model;
+		Set<Integer> editableColumns = new HashSet<>();
+		tblEmployees.setModel(new NonEditTableModel(data, columnNames, editableColumns));
+		tblEmployees.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 2) { //double click rows
+					int selectedRow = tblEmployees.getSelectedRow();
+					if(selectedRow != -1) {
+						//get data and populate textbox and combobox
+						String employeeId = (String) tblEmployees.getValueAt(selectedRow, 0);
+						String lastName = (String) tblEmployees.getValueAt(selectedRow, 1);
+						String firstName = (String) tblEmployees.getValueAt(selectedRow, 2);
+						String middleName = (String) tblEmployees.getValueAt(selectedRow, 3);
+						String contactNum = (String) tblEmployees.getValueAt(selectedRow, 4);
+						String email = (String) tblEmployees.getValueAt(selectedRow, 5);
+						String employeeType = (String) tblEmployees.getValueAt(selectedRow, 6);
+						
+						//Populate fields
+						txtEmployeeID.setText(employeeId);
+						txtLastName.setText(lastName);
+						txtFirstName.setText(firstName);
+						txtMiddleName.setText(middleName);
+						txtEmail.setText(email);
+						txtContactNum.setText(contactNum);;										
+					}
+				}
+			}
+		});
+		tblEmployees.setBorder(new LineBorder(new Color(0, 0, 0)));	
 		tblEmployees.setBounds(10, 11, 1036, 325);
 		AlternateColorRender alternate = new AlternateColorRender();
 		tblEmployees.setDefaultRenderer(Object.class, alternate);
 		contentPane.add(tblEmployees);
+		
+		btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateUserData();
+			}
+		});
+		btnUpdate.setForeground(new Color(245, 255, 250));
+		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnUpdate.setBorderPainted(false);
+		btnUpdate.setBackground(new Color(32, 178, 170));
+		btnUpdate.setBounds(697, 613, 93, 33);
+		contentPane.add(btnUpdate);
 		
 		displayData();
 	}
@@ -217,6 +268,76 @@ public class RegisterStaff extends JFrame {
 	Connection conn;
 	PreparedStatement pst;
 	ResultSet rs;
+	private JButton btnUpdate;
+	
+	public void updateUserData() {
+		String lastName = txtLastName.getText();
+		String firstName = txtFirstName.getText();
+		String middleName = txtMiddleName.getText();
+		String email = txtEmail.getText();
+		String contactNo = txtContactNum.getText();
+		String employeeType = "";
+		
+		if(radioFaculty.isSelected()) {
+			employeeType = "Faculty";
+		}
+		else if(radioStaff.isSelected()) {
+			employeeType = "Staff";
+		}
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+			Statement stmt = conn.createStatement();
+			System.out.println("Connected");
+							
+			String sql = "UPDATE Employees SET LastName = ?, FirstName = ?, MiddleName = ?, email = ?, ContactNo = ?, UserType = ? WHERE employeeID = ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			
+			int selectedRow = tblEmployees.getSelectedRow();
+			
+			if(selectedRow != -1) {
+				
+				//get book_num value from row
+				String employeeID = (String) tblEmployees.getValueAt(selectedRow, 0);
+				
+				pstmt.setString(1, lastName);
+				pstmt.setString(2, firstName);
+				pstmt.setString(3, middleName);
+				pstmt.setString(4, email);
+				pstmt.setString(5, contactNo);
+				pstmt.setString(6, employeeType);
+				pstmt.setString(7, employeeID);
+				
+				int rowsAffected = pstmt.executeUpdate();
+				if(rowsAffected > 0) {
+					JOptionPane.showMessageDialog(rootPane, "Updated succesfully");
+					displayData();
+				}
+				
+				else {
+					JOptionPane.showMessageDialog(rootPane, "No rows updated");
+				}
+				
+			}
+			else {
+	            JOptionPane.showMessageDialog(rootPane, "No row selected");
+	        }
+			
+		}
+		
+		
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public void displayData(){
 		try {		
