@@ -150,8 +150,8 @@ public class SearchBooks extends JFrame {
 		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MainMenuFrame menu = new MainMenuFrame();
-				menu.setVisible(true);
+				SearchType search = new SearchType();
+				search.setVisible(true);
 				dispose();
 			}
 		});

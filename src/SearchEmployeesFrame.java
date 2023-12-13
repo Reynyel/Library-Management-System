@@ -1,58 +1,51 @@
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import java.awt.ScrollPane;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.border.LineBorder;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-import java.awt.event.ActionEvent;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import java.awt.Font;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.JComboBox;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
+
 import color.AlternateColorRender;
 import tablemodel.NonEditTableModel;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+public class SearchEmployeesFrame extends JFrame {
 
-public class SearchStudentsFrame extends JFrame {
-
-	private JPanel contentPane;
-	private JTable tblBooks;
+	private JPanel contentPane;;
 	private JTextField txtName;
 	private JTextField txtUserId;
 	private JTable tblUser;
-
+	private JTextField txtEmail;
+	private JTextField txtContact;
 	/**
 	 * Launch the application.
 	 */
-	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SearchStudentsFrame frame = new SearchStudentsFrame();
+					SearchEmployeesFrame frame = new SearchEmployeesFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,9 +57,8 @@ public class SearchStudentsFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SearchStudentsFrame() {
-		setTitle("Search Student");
-		setResizable(false);
+	public SearchEmployeesFrame() {
+		setTitle("Search Employee");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1072, 750);
 		contentPane = new JPanel();
@@ -140,7 +132,7 @@ public class SearchStudentsFrame extends JFrame {
 		btnBack.setBounds(10, 660, 128, 40);
 		contentPane.add(btnBack);
 		
-		JLabel lblGrade = new JLabel("Grade");
+		JLabel lblGrade = new JLabel("Email");
 		lblGrade.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblGrade.setBounds(198, 518, 80, 30);
 		contentPane.add(lblGrade);
@@ -152,12 +144,12 @@ public class SearchStudentsFrame extends JFrame {
 					{null, null, null, null, null, null},
 				},
 				new String[] {
-						"User ID", "Last Name", "First Name", "Middle Name", "Grade Level", "Section"
+						"User ID", "Last Name", "First Name", "Middle Name", "Contact No.", "Email"
 				}
 				));
 		tblUser.setColumnSelectionAllowed(true);
 		Object[][] data = {null, null, null, null, null, null};
-		Object[] columnNames = {"User ID", "Last Name", "First Name", "Middle Name", "Grade Level", "Section"};
+		Object[] columnNames = {"User ID", "Last Name", "First Name", "Middle Name", "Contact No.", "Email"};
 		NonEditTableModel model;
 		Set<Integer> editableColumns = new HashSet<>();
 		tblUser.setModel(new NonEditTableModel(data, columnNames, editableColumns));
@@ -172,14 +164,14 @@ public class SearchStudentsFrame extends JFrame {
 						String lastName = (String) tblUser.getValueAt(selectedRow, 1);
 						String firstName = (String) tblUser.getValueAt(selectedRow, 2);
 						String middleName = (String) tblUser.getValueAt(selectedRow, 3);
-						String level = (String) tblUser.getValueAt(selectedRow, 4);
-						String section = (String) tblUser.getValueAt(selectedRow, 5);						
+						String contactNo = (String) tblUser.getValueAt(selectedRow, 4);
+						String email = (String) tblUser.getValueAt(selectedRow, 5);						
 						
 						//Populate fields
 						txtUserId.setText(userId);
 						txtName.setText(lastName + ", " + firstName + "  " + middleName);
-						txtLevel.setText(level);
-						txtSection.setText(section);
+						txtContact.setText(contactNo);
+						txtEmail.setText(email);
 						
 					}
 				}
@@ -187,23 +179,24 @@ public class SearchStudentsFrame extends JFrame {
 		});
 		tblUser.setBorder(new LineBorder(new Color(0, 0, 0)));
 		tblUser.setBounds(10, 11, 1036, 402);
+		
 		AlternateColorRender alternate = new AlternateColorRender();
 		tblUser.setDefaultRenderer(Object.class, alternate);
 		contentPane.add(tblUser);
 		
-		txtLevel = new JTextField();
-		txtLevel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtLevel.setColumns(10);
-		txtLevel.setBounds(313, 518, 62, 30);
-		contentPane.add(txtLevel);
+		txtEmail = new JTextField();
+		txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtEmail.setColumns(10);
+		txtEmail.setBounds(313, 518, 209, 30);
+		contentPane.add(txtEmail);
 		
-		txtSection = new JTextField();
-		txtSection.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtSection.setColumns(10);
-		txtSection.setBounds(313, 559, 175, 30);
-		contentPane.add(txtSection);
+		txtContact = new JTextField();
+		txtContact.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtContact.setColumns(10);
+		txtContact.setBounds(313, 559, 209, 30);
+		contentPane.add(txtContact);
 		
-		JLabel lblSection = new JLabel("Section");
+		JLabel lblSection = new JLabel("Contact No.");
 		lblSection.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblSection.setBounds(198, 559, 80, 30);
 		contentPane.add(lblSection);
@@ -233,7 +226,7 @@ public class SearchStudentsFrame extends JFrame {
 				Statement stmt = conn.createStatement();
 				System.out.println("Connected");
 								
-				String sql = "SELECT * FROM Students WHERE StudentNo = ?";
+				String sql = "SELECT * FROM Employees WHERE employeeID = ?";
 				PreparedStatement pstmt = conn.prepareStatement(sql);
 				
 				String userId = txtUserId.getText();
@@ -246,11 +239,11 @@ public class SearchStudentsFrame extends JFrame {
 	        	DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
 	        	
 	        	if(!rs.isBeforeFirst()) {
-	        		JOptionPane.showMessageDialog(this, "Student not found.");
+	        		JOptionPane.showMessageDialog(this, "Employee not found.");
 	        		txtUserId.setText("");
 	        		txtName.setText("");
-	        		txtSection.setText("");
-	        		txtLevel.setText("");
+	        		txtContact.setText("");
+	        		txtEmail.setText("");
 	        	}
 	        	
 	        	else {
@@ -258,21 +251,21 @@ public class SearchStudentsFrame extends JFrame {
 		        	tblModel.setRowCount(0);	
 	        		while(rs.next()) {
         			//add data until there is none
-        			String studentNo = rs.getString("StudentNo");
+        			String userID = rs.getString("employeeID");
         			String lastName = rs.getString("LastName");
         			String firstName = rs.getString("FirstName");
         			String middleName = rs.getString("MiddleName");
-        			String level = rs.getString("GradeLevel");
-        			String section = rs.getString("Section");
+        			String contactNo = rs.getString("ContactNo");
+        			String email = rs.getString("email");
         			
-        			txtUserId.setText(studentNo);
+        			txtUserId.setText(userID);
         			txtName.setText(lastName + ", " + firstName + " " + middleName);
-        			txtLevel.setText(level);
-        			txtSection.setText(section);
+        			txtContact.setText(contactNo);
+        			txtEmail.setText(email);
         			
         			//array to store data into jtable
-        			String tbData[] = {studentNo, lastName, firstName, middleName, level,
-        					section};
+        			String tbData[] = {userId, lastName, firstName, middleName, contactNo,
+        					email};
         			
         			//add string array data to jtable
         			tblModel.addRow(tbData);
@@ -305,7 +298,7 @@ public class SearchStudentsFrame extends JFrame {
 				Statement stmt = conn.createStatement();
 				System.out.println("Connected");
 								
-				String sql = "SELECT * FROM Students";
+				String sql = "SELECT * FROM Employees";
 				ResultSet rs = stmt.executeQuery(sql);
 				
 				
@@ -316,16 +309,16 @@ public class SearchStudentsFrame extends JFrame {
 	            
 				while(rs.next()) {
 					//add data until there is none
-					String studentNum = rs.getString("StudentNo");
+					String userId = rs.getString("employeeID");
 					String lastName = rs.getString("LastName");
 					String firstName = rs.getString("FirstName");
 					String middleName = rs.getString("MiddleName");
-					String gradeLevel = String.valueOf(rs.getString("GradeLevel"));
-					String section = rs.getString("Section");
+					String contactNo = String.valueOf(rs.getString("ContactNo"));
+					String email = rs.getString("email");
 					String userType = rs.getString("UserType");
 					//array to store data into jtable
-					String tbData[] = {studentNum, lastName, firstName, middleName,
-							gradeLevel, section};
+					String tbData[] = {userId, lastName, firstName, middleName,
+							contactNo, email};
 									
 					//add string array data to jtable
 					tblModel.addRow(tbData);													
@@ -341,4 +334,5 @@ public class SearchStudentsFrame extends JFrame {
 			e1.printStackTrace();
 		}
 	}
+
 }
