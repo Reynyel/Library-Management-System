@@ -39,7 +39,6 @@ public class TransactionFrame extends JFrame {
 	private JTable tblTransac;
 	private JTextField txtBorrID;
 	private JComboBox cbAccession;
-	private JComboBox cbStatus;
 	/**
 	 * Launch the application.
 	 */
@@ -125,15 +124,6 @@ public class TransactionFrame extends JFrame {
 		lblStatus.setBounds(47, 230, 80, 20);
 		contentPane.add(lblStatus);
 		
-		cbStatus = new JComboBox();
-		cbStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		cbStatus.setBackground(Color.WHITE);
-		cbStatus.setBounds(150, 228, 89, 22);
-		cbStatus.addItem("Available");
-		cbStatus.addItem("Not Available");
-		cbStatus.addItem("Borrowed");
-		contentPane.add(cbStatus);
-		
 		tblTransac = new JTable();
 		tblTransac.setBorder(new LineBorder(new Color(0, 0, 0)));
 		tblTransac.setColumnSelectionAllowed(true);
@@ -213,6 +203,13 @@ public class TransactionFrame extends JFrame {
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(24, 33, 1059, 235);
 		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		
+		txtStatus = new JTextField();
+		txtStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtStatus.setColumns(10);
+		txtStatus.setBounds(123, 197, 91, 27);
+		panel_1.add(txtStatus);
 		
 		fetchAndDisplayData();
 	
@@ -236,11 +233,11 @@ public class TransactionFrame extends JFrame {
 				
 				if(statusResultSet.next()) {
 					String status = statusResultSet.getString("book_status");
-					cbStatus.setSelectedItem(status);
+					txtStatus.setText(status);
 				}
 				
 				else {
-					cbStatus.setSelectedIndex(-1);
+					txtStatus.setText(selectStatusSql);
 				}
 			}
 			
@@ -295,6 +292,7 @@ public class TransactionFrame extends JFrame {
     }
 
     private String userId;
+    private JTextField txtStatus;
     public void update() {
         try {
             // Load the JDBC driver (version 4.0 or later)
@@ -308,7 +306,6 @@ public class TransactionFrame extends JFrame {
             String bn = txtBookNum.getText();
             String tl = txtTitle.getText();
             int acc = Integer.parseInt(cbAccession.getSelectedItem().toString());
-            String status = (String) cbStatus.getSelectedItem();
             userId = txtBorrID.getText();
             String borrId = txtBorrID.getText();
             
@@ -326,7 +323,7 @@ public class TransactionFrame extends JFrame {
             					", " + borrowerNameResult.getString("FirstName") +
             					" " + borrowerNameResult.getString("MiddleName");
             			
-            			insertTransaction(bn, tl, acc, status, borrowerName);          			
+            			insertTransaction(bn, tl, acc, borrowerName);          			
             		}
             		else {
             			JOptionPane.showMessageDialog(rootPane, "Name not found!");
@@ -345,7 +342,7 @@ public class TransactionFrame extends JFrame {
             					", " + borrowerNameResult.getString("FirstName") +
             					" " + borrowerNameResult.getString("MiddleName");
             			
-            			insertTransaction(bn, tl, acc, status, borrowerName);
+            			insertTransaction(bn, tl, acc, borrowerName);
             			
             		}
             		else {
@@ -367,7 +364,7 @@ public class TransactionFrame extends JFrame {
     }
 
 
-    private void insertTransaction(String bn, String tl, int acc, String status, String borrowerName) {
+    private void insertTransaction(String bn, String tl, int acc, String borrowerName) {
         String checkId = userId;
 
         try {
@@ -377,73 +374,105 @@ public class TransactionFrame extends JFrame {
             // Establish a connection
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB?useSSL=false", "root", "ranielle25");
             System.out.println("Connected");
-
-            // Update book status in Books table
-            String updateBookStatusSql = "UPDATE Books SET book_status = ? WHERE Book_Num = ? AND Accession_Num = ?";
             
-            try(PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql)){
-            	updateBookStatusStmt.setString(1, status);
-            	updateBookStatusStmt.setString(2, bn);
-            	updateBookStatusStmt.setInt(3, acc);
-            	
-            	//Execute query
-            	int rowAffected = updateBookStatusStmt.executeUpdate();
-            	String borrId = txtBorrID.getText();
-            	
-            	String userType = getUserType(borrId);
-            	
-            	if ("Faculty".equals(userType) || "Staff".equals(userType)) {                  
-                    String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id) " +
-                            "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), 'IND', ?)";
-
-                    try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-                        pstmt.setString(1, bn);
-                        pstmt.setString(2, tl);
-                        pstmt.setInt(3, acc);
-                        pstmt.setString(4, borrowerName);
-                        pstmt.setString(5, status);
-                        pstmt.setString(6, userId);
-
-                        // Execute the update
-                        int rowsAffected = pstmt.executeUpdate();
-                        
-                        JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
-                        
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    // If user ID does not start with "1", set return date to three days from the transaction date
-                    String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id) " +
-                            "VALUES (?, ?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY), ?)";
-
-                    try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-                        pstmt.setString(1, bn);
-                        pstmt.setString(2, tl);
-                        pstmt.setInt(3, acc);
-                        pstmt.setString(4, borrowerName);
-                        pstmt.setString(5, status);
-                        pstmt.setString(6, userId);
-
-                        // Execute the update
-                        int rowsAffected = pstmt.executeUpdate();
-                        
-                        JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
-                        
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-         
-                }
-            	
+            // Update book status in Books table
+            String updateBookStatusSql = "UPDATE Books SET book_status = 'Borrowed' WHERE Book_Num = ? AND Accession_Num = ?";
+            
+           
+            String bookStatus = getBookStatus(bn, acc);
+            
+            
+            if(bookStatus.equals("Borrowed")) {
+            	JOptionPane.showMessageDialog(rootPane, "This book is currently borrowed");
             }
-            catch(SQLException e) {
-            	e.printStackTrace();
+            else {
+            	try(PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql)){
+            		updateBookStatusStmt.setString(1, bn);
+            		updateBookStatusStmt.setInt(2, acc);      
+            		
+            		//Execute query
+            		int rowAffected = updateBookStatusStmt.executeUpdate();
+            		String borrId = txtBorrID.getText();
+            		
+            		String userType = getUserType(borrId);
+            		
+            		if ("Faculty".equals(userType) || "Staff".equals(userType)) {                  
+            			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id) " +
+            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), 'IND', ?)";
+            			
+            			try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+            				pstmt.setString(1, bn);
+            				pstmt.setString(2, tl);
+            				pstmt.setInt(3, acc);
+            				pstmt.setString(4, borrowerName);
+            				pstmt.setString(5, userId);
+            				
+            				
+            				// Execute the update
+            				int rowsAffected = pstmt.executeUpdate();
+            				
+            				JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
+            				
+            			} catch (SQLException e) {
+            				e.printStackTrace();
+            			}
+            		} else {
+            			// If user ID does not start with "1", set return date to three days from the transaction date
+            			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id) " +
+            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY), ?)";
+            			
+            			try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+            				pstmt.setString(1, bn);
+            				pstmt.setString(2, tl);
+            				pstmt.setInt(3, acc);
+            				pstmt.setString(4, borrowerName);
+            				pstmt.setString(5, userId);
+            				
+            				
+            				// Execute the update
+            				int rowsAffected = pstmt.executeUpdate();
+            				
+            				JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
+            				
+            			} catch (SQLException e) {
+            				e.printStackTrace();
+            			}
+            			
+            		}
+            		
+            	}
+            	catch(SQLException e) {
+            		e.printStackTrace();
+            	}
+            	
             }
             
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    //get book status
+    private String getBookStatus(String bookNum, int accNum) {
+    	String bookStatus = "";
+    	
+    	String checkBookStatusSql = "SELECT book_status FROM Books WHERE Book_NUM = ? AND Accession_Num = ?";
+    	
+    	try(PreparedStatement bookStatusStmt = conn.prepareStatement(checkBookStatusSql)){
+    		bookStatusStmt.setString(1, bookNum);
+    		bookStatusStmt.setInt(2, accNum);
+    		
+    		ResultSet bookStatusResult = bookStatusStmt.executeQuery();
+    		
+    		if(bookStatusResult.next()) {
+    			bookStatus = bookStatusResult.getString("book_status");
+    		}
+    	}
+    	catch(SQLException e) {
+    		e.printStackTrace();
+    	}
+    	
+    	return bookStatus;
     }
     
     //Get user type from both Employees and Students table
