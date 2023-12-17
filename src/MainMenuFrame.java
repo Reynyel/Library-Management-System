@@ -41,7 +41,7 @@ public class MainMenuFrame extends JFrame {
 		setResizable(false);
 		setTitle("Main Menu");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1072, 750);
+		setBounds(100, 100, 1072, 775);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(204, 255, 204));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -68,10 +68,11 @@ public class MainMenuFrame extends JFrame {
 				}
 			}
 		});
-		btnRegisterBooks.setBounds(10, 30, 500, 305);
+		btnRegisterBooks.setBounds(10, 55, 500, 305);
 		contentPane.add(btnRegisterBooks);
 		
 		JButton btnSearchBooks = new JButton("Search");
+		btnSearchBooks.setEnabled(false);
 		btnSearchBooks.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 60));
 		btnSearchBooks.setBackground(new Color(153, 255, 153));
 		btnSearchBooks.setBorderPainted(false);
@@ -82,7 +83,7 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnSearchBooks.setBounds(539, 30, 500, 305);
+		btnSearchBooks.setBounds(539, 55, 500, 305);
 		contentPane.add(btnSearchBooks);
 		
 		JButton btnRegisterUser = new JButton("Manage Users");
@@ -96,7 +97,7 @@ public class MainMenuFrame extends JFrame {
 		});
 		btnRegisterUser.setBackground(new Color(102, 255, 153));
 		btnRegisterUser.setBorderPainted(false);
-		btnRegisterUser.setBounds(10, 366, 500, 290);
+		btnRegisterUser.setBounds(10, 391, 500, 290);
 		contentPane.add(btnRegisterUser);
 		
 		JButton btnLogOut = new JButton("Log out");
@@ -111,7 +112,7 @@ public class MainMenuFrame extends JFrame {
 			}
 		});
 		btnLogOut.setBorderPainted(false);
-		btnLogOut.setBounds(10, 667, 93, 33);
+		btnLogOut.setBounds(10, 692, 93, 33);
 		contentPane.add(btnLogOut);
 		
 		JButton btnTransac = new JButton("Transactions");
@@ -125,7 +126,12 @@ public class MainMenuFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnTransac.setBounds(539, 366, 500, 290);
+		btnTransac.setBounds(539, 391, 500, 290);
 		contentPane.add(btnTransac);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblNewLabel.setBounds(10, 11, 115, 14);
+		contentPane.add(lblNewLabel);
 	}
 }
