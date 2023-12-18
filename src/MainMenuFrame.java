@@ -71,20 +71,19 @@ public class MainMenuFrame extends JFrame {
 		btnRegisterBooks.setBounds(10, 55, 500, 305);
 		contentPane.add(btnRegisterBooks);
 		
-		JButton btnSearchBooks = new JButton("Search");
-		btnSearchBooks.setEnabled(false);
-		btnSearchBooks.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 60));
-		btnSearchBooks.setBackground(new Color(153, 255, 153));
-		btnSearchBooks.setBorderPainted(false);
-		btnSearchBooks.addActionListener(new ActionListener() {
+		JButton btnReturnBooks = new JButton("Returning");
+		btnReturnBooks.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 60));
+		btnReturnBooks.setBackground(new Color(153, 255, 153));
+		btnReturnBooks.setBorderPainted(false);
+		btnReturnBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SearchType searchType = new SearchType();
-				searchType.setVisible(true);
+				LendingBooksFrame returning = new LendingBooksFrame();
+				returning.setVisible(true);
 				dispose();
 			}
 		});
-		btnSearchBooks.setBounds(539, 55, 500, 305);
-		contentPane.add(btnSearchBooks);
+		btnReturnBooks.setBounds(539, 55, 500, 305);
+		contentPane.add(btnReturnBooks);
 		
 		JButton btnRegisterUser = new JButton("Manage Users");
 		btnRegisterUser.setFont(new Font("Microsoft YaHei UI Light", Font.BOLD, 60));

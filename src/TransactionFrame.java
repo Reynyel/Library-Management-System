@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -18,6 +19,7 @@ import java.sql.Statement;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -73,7 +75,7 @@ public class TransactionFrame extends JFrame {
 		setTitle("Transaction Module");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1257, 750);
+		setBounds(100, 100, 1687, 743);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(127, 255, 212));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -141,11 +143,11 @@ public class TransactionFrame extends JFrame {
 		
 		JScrollPane js = new JScrollPane(tblTransac);
 		js.setVisible(true);
-		js.setBounds(24, 355, 1207, 276); // Adjust the bounds to match the table
+		js.setBounds(26, 370, 1207, 276); // Adjust the bounds to match the table
 		contentPane.add(js);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(24, 279, 1207, 65);
+		panel.setBounds(26, 294, 1207, 65);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -206,11 +208,15 @@ public class TransactionFrame extends JFrame {
 				dispose();
 			}
 		});
-		btnBack.setBounds(34, 642, 128, 40);
+		btnBack.setBounds(26, 657, 128, 40);
 		contentPane.add(btnBack);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(24, 33, 1207, 235);
+		panel_1.setBounds(24, 33, 788, 250);
+		
+		String title = "Borrow Book";
+		Border border = BorderFactory.createTitledBorder(title);
+		panel_1.setBorder(border);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -245,6 +251,8 @@ public class TransactionFrame extends JFrame {
 		btnSearchBook.setBounds(618, 167, 128, 40);
 		panel_1.add(btnSearchBook);
 		btnSearchBook.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
+		String title2 = "Return Book";
+		Border border2 = BorderFactory.createTitledBorder(title2);
 		btnSearchBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
@@ -252,13 +260,7 @@ public class TransactionFrame extends JFrame {
 		});
 		
 		fetchAndDisplayData();
-		
-		
-	
 	}
-	
-	
-
 	
 	Connection conn;
 	PreparedStatement pst;
@@ -376,11 +378,25 @@ public class TransactionFrame extends JFrame {
             	int acc = Integer.parseInt(cbAccession.getSelectedItem().toString());
             	// Check if the user is a student or faculty/school staff based on ID number
             	if ("Student".equals(userType)) {
+            	      			
             		String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
             		try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
             			borrowerNameStmt.setString(1, borrId);
             			ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
             			
+            			int borrowedBooksCount = getBorrowedBooksCount(userId);
+            			
+            			// Check if the student has already borrowed the same title
+            		    if (hasBorrowedSameTitle(userId, tl)) {
+            		        JOptionPane.showMessageDialog(rootPane, "This student cannot borrow the same title twice.");
+            		        return; // Exit the method without proceeding with the transaction
+            		    } 
+            		    if(borrowedBooksCount >= 3) {
+            		    	JOptionPane.showMessageDialog(rootPane, "This student cannot borrow more than 3 books.");
+            		        return; // Exit the method without proceeding with the transaction
+            		    	
+            		    }
+            		    
             			if(borrowerNameResult.next()) {
             				String borrowerName = borrowerNameResult.getString("LastName") + 
             						", " + borrowerNameResult.getString("FirstName") +
@@ -483,9 +499,11 @@ public class TransactionFrame extends JFrame {
             				e.printStackTrace();
             			}
             		} else {
+            			        			
             			// If user ID does not start with "1", set return date to three days from the transaction date
             			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id) " +
             					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY), ?)";
+            			
             			
             			try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
             				pstmt.setString(1, bn);
@@ -493,7 +511,7 @@ public class TransactionFrame extends JFrame {
             				pstmt.setInt(3, acc);
             				pstmt.setString(4, borrowerName);
             				pstmt.setString(5, userId);
-            				
+            			
             				
             				// Execute the update
             				int rowsAffected = pstmt.executeUpdate();
@@ -516,6 +534,43 @@ public class TransactionFrame extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }   
+    
+    //check if the student has already borrowed the same title
+    private boolean hasBorrowedSameTitle(String userId, String title) {
+        boolean alreadyBorrowed = false;
+
+        String checkSql = "SELECT * FROM Transactions WHERE user_id = ? AND Title = ? AND BookStatus = 'Borrowed'";
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+            checkStmt.setString(1, userId);
+            checkStmt.setString(2, title);
+            ResultSet checkResult = checkStmt.executeQuery();
+
+            alreadyBorrowed = checkResult.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return alreadyBorrowed;
+    }
+    
+    //get the count of books already borrowed by the student
+    private int getBorrowedBooksCount(String userId) {
+        int count = 0;
+
+        String countSql = "SELECT COUNT(*) AS bookCount FROM Transactions WHERE user_id = ? AND BookStatus = 'Borrowed'";
+        try (PreparedStatement countStmt = conn.prepareStatement(countSql)) {
+            countStmt.setString(1, userId);
+            ResultSet countResult = countStmt.executeQuery();
+
+            if (countResult.next()) {
+                count = countResult.getInt("bookCount");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return count;
     }
     
     //get book status
@@ -564,7 +619,7 @@ public class TransactionFrame extends JFrame {
     	
     }
     
-	
+	//search books table and returns all available titles
     public void search() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
