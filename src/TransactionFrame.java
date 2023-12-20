@@ -479,8 +479,8 @@ public class TransactionFrame extends JFrame {
             		String userType = getUserType(borrId);
             		
             		if ("Faculty".equals(userType) || "Staff".equals(userType)) {                  
-            			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id) " +
-            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), 'IND', ?)";
+            			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id, user_type) " +
+            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), 'IND', ?, ?)";
             			
             			try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
             				pstmt.setString(1, bn);
@@ -488,7 +488,7 @@ public class TransactionFrame extends JFrame {
             				pstmt.setInt(3, acc);
             				pstmt.setString(4, borrowerName);
             				pstmt.setString(5, userId);
-            				
+            				pstmt.setString(6, userType);            				
             				
             				// Execute the update
             				int rowsAffected = pstmt.executeUpdate();
@@ -501,8 +501,8 @@ public class TransactionFrame extends JFrame {
             		} else {
             			        			
             			// If user ID does not start with "1", set return date to three days from the transaction date
-            			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id) " +
-            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY), ?)";
+            			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id, user_type) " +
+            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY), ?, ?)";
             			
             			
             			try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
@@ -511,7 +511,7 @@ public class TransactionFrame extends JFrame {
             				pstmt.setInt(3, acc);
             				pstmt.setString(4, borrowerName);
             				pstmt.setString(5, userId);
-            			
+            				pstmt.setString(6, userType);
             				
             				// Execute the update
             				int rowsAffected = pstmt.executeUpdate();
@@ -710,7 +710,7 @@ public class TransactionFrame extends JFrame {
 	            tblModel.setRowCount(0);
 	            
 	            // Define new column names
-	            String[] newColumnNames = {"Transaction ID", "Book Num", "Title", "Accession", "Status", "Transaction Date", "Return Date", "Borrower", "ID"};
+	            String[] newColumnNames = {"Transaction ID", "Book Num", "Title", "Accession", "Status", "Transaction Date", "Return Date", "Borrower", "ID", "User Type"};
 
 	            // Set new column names
 	            tblModel.setColumnIdentifiers(newColumnNames);
@@ -726,9 +726,9 @@ public class TransactionFrame extends JFrame {
 	                String returnDate = rs.getString("return_date");
 	                String borrower = rs.getString("Borrower");
 	                String userId = rs.getString("user_id");
-
+	                String userType = rs.getString("user_type");
 	                // array to store data into JTable
-	                String tbData[] = {transacId, bookNum, title, accession, status, transacDate, returnDate, borrower, userId};
+	                String tbData[] = {transacId, bookNum, title, accession, status, transacDate, returnDate, borrower, userId, userType};
 
 	                // add string array data to JTable
 	                tblModel.addRow(tbData);

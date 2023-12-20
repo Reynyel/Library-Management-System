@@ -9,8 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -109,7 +112,7 @@ public class LendingBooksFrame extends JFrame {
 			}
 		));
 		Object[][] data = {null, null, null, null, null, null, null, null, null};
-		Object[] columnNames = {"Transaction ID", "Book Num", "Title", "Accession", "Status", "Transaction Date", "Return Date", "Borrower", "ID"};
+		Object[] columnNames = {"Transaction ID", "Book Num", "Title", "Accession", "Status", "Transaction Date", "Return Date", "Borrower", "ID", "User Type"};
 		NonEditTableModel model;
 		Set<Integer> editableColumns = new HashSet<>();
 		tblTransac.setModel(new NonEditTableModel(data, columnNames, editableColumns));
@@ -330,9 +333,10 @@ public class LendingBooksFrame extends JFrame {
                     String returnDate = rs.getString("return_date");
                     String userName = rs.getString("Borrower");
                     String userId = rs.getString("user_id");
+                    String userType = rs.getString("user_type");
                     // array to store data into jtable
                     String tbData[] = {transacId, bookNum, title, accNum, bookStatus,
-                            transactionDate, returnDate, userName, userId};
+                            transactionDate, returnDate, userName, userId, userType};
 
                     // add string array data to jtable
                     tblModel.addRow(tbData);
@@ -343,81 +347,118 @@ public class LendingBooksFrame extends JFrame {
         }
     }
     
+    public void updatePenalty(String transactionId) {
+    	try {
+    		// Load the JDBC driver (version 4.0 or later)
+            Class.forName("com.mysql.cj.jdbc.Driver");           
+            // Establish a connection
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB?useSSL=false", "root", "ranielle25");
+            conn.setAutoCommit(true);
+            System.out.println("Connected");
+            
+         // Get the selected row from the table
+            int selectedRow = tblTransac.getSelectedRow();
+
+            // Check if a row is selected
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(rootPane, "Please select a book from the table for return.");
+                return;
+            }
+            
+            
+            String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = '10' WHERE transaction_id = ?";
+            
+            try(PreparedStatement updatePenaltyFeeStmt = conn.prepareStatement(updatePenaltyFeeSql)){
+            	// Set parameters for updatePenaltyFeeStmt
+                updatePenaltyFeeStmt.setString(1, transactionId);
+                
+                int rowsPenaltyAffected = updatePenaltyFeeStmt.executeUpdate();
+                
+                if(rowsPenaltyAffected > 0) {
+                	JOptionPane.showMessageDialog(rootPane, "PEEEEEEEEEEE");
+                }
+                else {
+                	JOptionPane.showMessageDialog(rootPane, "Error with updatePenalty() method");
+                }
+            }
+            catch(SQLException e) {
+            	e.printStackTrace();
+            }
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
     //update records
     public void update() {
     	try {
-	        // Load the JDBC driver (version 4.0 or later)
-	        Class.forName("com.mysql.cj.jdbc.Driver");
+            // Load the JDBC driver (version 4.0 or later)
+            Class.forName("com.mysql.cj.jdbc.Driver");           
+            // Establish a connection
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB?useSSL=false", "root", "ranielle25");
+            conn.setAutoCommit(true);
+            System.out.println("Connected");
+            // Get the selected row from the table
+            int selectedRow = tblTransac.getSelectedRow();
 
-	        // Establish a connection
-	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB?useSSL=false", "root", "ranielle25");
-	        System.out.println("Connected");
+            // Check if a row is selected
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(rootPane, "Please select a book from the table for return.");
+                return;
+            }
 
-	        // Get the selected row from the table
-	        int selectedRow = tblTransac.getSelectedRow();
-	        
-	        // Check if a row is selected
-	        if (selectedRow == -1) {
-	            JOptionPane.showMessageDialog(rootPane, "Please select a book from the table for return.");
-	            return;
-	        }
+            // Get the transaction ID from the selected row
+            String transacId = tblTransac.getValueAt(selectedRow, 0).toString();
 
-	        // Get the transaction ID from the selected row
-	        String transacId = tblTransac.getValueAt(selectedRow, 0).toString();
-	        	        	        		     
-	        // Update the book and transaction status
-	        String updateBookStatusSql = "UPDATE Books SET book_status = 'Available' WHERE Book_Num = (SELECT BooNum FROM Transactions WHERE transaction_id = ?)";
-	        String updateTransactionStatusSql = "UPDATE Transactions SET BookStatus = 'Returned' WHERE transaction_id = ?";
-	        try (PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql);
-	             PreparedStatement updateTransactionStatusStmt = conn.prepareStatement(updateTransactionStatusSql)) {
+            // Update the book and transaction status
+            String updateBookStatusSql = "UPDATE Books SET book_status = 'Available' WHERE Book_Num = (SELECT BooNum FROM Transactions WHERE transaction_id = ?)";
+            String updateTransactionStatusSql = "UPDATE Transactions SET BookStatus = 'Returned' WHERE transaction_id = ?";
+            //String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = '10' WHERE transaction_id = ?";
 
-	            updateBookStatusStmt.setString(1, transacId);
-	            updateTransactionStatusStmt.setString(1, transacId);
+            try (PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql);
+                 PreparedStatement updateTransactionStatusStmt = conn.prepareStatement(updateTransactionStatusSql)
+                 ) {
 
-	            // Execute queries
-	            int rowsAffectedBook = updateBookStatusStmt.executeUpdate();
-	            int rowsAffectedTransaction = updateTransactionStatusStmt.executeUpdate();
+                // Set parameters for updateBookStatusStmt
+                updateBookStatusStmt.setString(1, transacId);
 
-	            if (rowsAffectedBook > 0 && rowsAffectedTransaction > 0) {
-	                JOptionPane.showMessageDialog(rootPane, "Book returned successfully.");
-	            } else {
-	                JOptionPane.showMessageDialog(rootPane, "Error updating book and transaction status.");
-	            }
-	        }
-	        	       
-	        // Record the returned book in Returned table
-	        recordReturnedBook(transacId);
-	        // Remove the borrowed book from Transactions table
-	        removeBorrowedBook(transacId);
+                // Set parameters for updateTransactionStatusStmt
+                updateTransactionStatusStmt.setString(1, transacId);
 
-	        
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+                // Set parameters for updatePenaltyFeeStmt
+                //updatePenaltyFeeStmt.setString(1, transacId);
+
+                // Execute queries
+                int rowsAffectedBook = updateBookStatusStmt.executeUpdate();
+                int rowsAffectedTransaction = updateTransactionStatusStmt.executeUpdate();
+                //int rowsAffectedPenalty = updatePenaltyFeeStmt.executeUpdate();
+                
+                if (rowsAffectedBook > 0 && rowsAffectedTransaction > 0) {
+                    JOptionPane.showMessageDialog(rootPane, "Book returned successfully. Penalty Fee: 0 pesos");
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Error updating book and transaction status with penalty fee.");
+                }
+                
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            // Record the returned book in Returned table
+            recordReturnedBook(transacId);
+            // Remove the borrowed book from Transactions table
+            removeBorrowedBook(transacId);
+            
+            updatePenalty(transacId);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    	
+    	
     }
-    
-  //get book status
-    private String getBookStatus(String bookNum, int accNum) {
-    	String bookStatus = "";
-    	
-    	String checkBookStatusSql = "SELECT book_status FROM Books WHERE Book_NUM = ? AND Accession_Num = ?";
-    	
-    	try(PreparedStatement bookStatusStmt = conn.prepareStatement(checkBookStatusSql)){
-    		bookStatusStmt.setString(1, bookNum);
-    		bookStatusStmt.setInt(2, accNum);
-    		
-    		ResultSet bookStatusResult = bookStatusStmt.executeQuery();
-    		
-    		if(bookStatusResult.next()) {
-    			bookStatus = bookStatusResult.getString("book_status");
-    		}
-    	}
-    	catch(SQLException e) {
-    		e.printStackTrace();
-    	}
-    	
-    	return bookStatus;
-    }
+
     
 	public void search() {
 		try {
@@ -494,7 +535,7 @@ public class LendingBooksFrame extends JFrame {
 	            tblModel.setRowCount(0); 
 	            
 	            // Define new column names
-	            String[] newColumnNames = {"Transaction ID", "Book Num", "Title", "Accession", "Status", "Transaction Date", "Return Date", "Borrower", "ID"};
+	            String[] newColumnNames = {"Transaction ID", "Book Num", "Title", "Accession", "Status", "Transaction Date", "Return Date", "Borrower", "ID", "User Type"};
 
 	            // Set new column names
 	            tblModel.setColumnIdentifiers(newColumnNames);
@@ -511,9 +552,10 @@ public class LendingBooksFrame extends JFrame {
 	                String returnDate = rs.getString("return_date");
 	                String borrower = rs.getString("Borrower");
 	                String userId = rs.getString("user_id");
+	                String userType = rs.getString("user_type");
 
 	                // array to store data into JTable
-	                String tbData[] = {transacId, bookNum, title, accession, status, transacDate, returnDate, borrower, userId};
+	                String tbData[] = {transacId, bookNum, title, accession, status, transacDate, returnDate, borrower, userId, userType};
 
 	                // add string array data to JTable
 	                tblModel.addRow(tbData);
@@ -548,7 +590,7 @@ public class LendingBooksFrame extends JFrame {
 	            tblModel.setRowCount(0);
 	            
 	            // Define new column names
-	            String[] newColumnNames = {"Transaction ID", "Book Num", "Title", "Accession", "Status", "Due Date", "Date Returned", "Borrower", "ID"};
+	            String[] newColumnNames = {"Transaction ID", "Book Num", "Title", "Accession", "Status", "Due Date", "Date Returned", "Borrower", "ID", "Penalty Fee"};
 
 	            // Set new column names
 	            tblModel.setColumnIdentifiers(newColumnNames);
@@ -564,9 +606,10 @@ public class LendingBooksFrame extends JFrame {
 	                String dateReturned = rs.getString("date_returned");
 	                String borrower = rs.getString("Borrower");
 	                String userId = rs.getString("id");
+	                String penaltyFee = String.valueOf(rs.getInt("penalty_fee"));
 
 	                // array to store data into JTable
-	                String tbData[] = {transacId, bookNum, title, accession, status, dueDate, dateReturned, borrower, userId};
+	                String tbData[] = {transacId, bookNum, title, accession, status, dueDate, dateReturned, borrower, userId, penaltyFee};
 
 	                // add string array data to JTable
 	                tblModel.addRow(tbData);
@@ -622,6 +665,8 @@ public class LendingBooksFrame extends JFrame {
 	            
 	            if(rs.next()) {
 	            	// Insert the details into the Returned table
+	            	
+	            	//WORK ON DIS
 	            	String insertReturnedSql = "INSERT INTO Returned (transaction_id, book_num, title, accession, status, due_date, date_returned, borrower, id)"
 	            			+ " VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE(), ?, ?)";
 	            	
@@ -634,7 +679,6 @@ public class LendingBooksFrame extends JFrame {
 	                    insertReturnedStmt.setString(6, rs.getString("return_date"));	                    
 	                    insertReturnedStmt.setString(7, rs.getString("Borrower"));
 	                    insertReturnedStmt.setString(8, rs.getString("user_id"));
-	                    
 	                    
 	                    //executeeee
 	                    int rowsAffected = insertReturnedStmt.executeUpdate();
