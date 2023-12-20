@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import javax.swing.UIManager;
 
 public class LogInFrame extends JFrame {
 
@@ -47,7 +48,7 @@ public class LogInFrame extends JFrame {
 	 */
 	public LogInFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1072, 750);
+		setBounds(100, 100, 765, 524);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		this.setTitle("LogIn"); //Sets title for this frame
@@ -57,22 +58,22 @@ public class LogInFrame extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel userLabel = new JLabel("Username");
-		userLabel.setBackground(new Color(255, 255, 255));
-		userLabel.setForeground(new Color(255, 255, 255));
-		userLabel.setBounds(101, 310, 71, 30);
+		userLabel.setBackground(new Color(0, 0, 0));
+		userLabel.setForeground(new Color(0, 0, 0));
+		userLabel.setBounds(44, 219, 207, 19);
 		userLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(userLabel);
 		
 		JLabel passLabel = new JLabel("Password");
-		passLabel.setForeground(new Color(255, 255, 255));
-		passLabel.setBounds(101, 392, 71, 30);
+		passLabel.setForeground(new Color(0, 0, 0));
+		passLabel.setBounds(44, 291, 207, 19);
 		passLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(passLabel);
 		
 		JButton logBtn = new JButton("Log In");
-		logBtn.setBounds(292, 477, 107, 43);
-		logBtn.setForeground(new Color(0, 0, 0));
-		logBtn.setBackground(new Color(188, 143, 143));
+		logBtn.setBounds(44, 375, 207, 40);
+		logBtn.setForeground(new Color(255, 250, 250));
+		logBtn.setBackground(new Color(65, 105, 225));
 		logBtn.addActionListener(new ActionListener() {
 			/*
 			 * Invoked when the log in button is clicked.
@@ -84,7 +85,7 @@ public class LogInFrame extends JFrame {
 				dispose();
 			}
 		});
-		logBtn.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		logBtn.setFont(new Font("Verdana", Font.PLAIN, 16));
 		logBtn.setBorderPainted(false);
 		
 	
@@ -92,15 +93,15 @@ public class LogInFrame extends JFrame {
 		contentPane.add(logBtn);
 		
 		usernameTxt = new JTextField();
-		usernameTxt.setBackground(new Color(192, 192, 192));
-		usernameTxt.setBounds(101, 351, 298, 30);
+		usernameTxt.setBackground(new Color(173, 216, 230));
+		usernameTxt.setBounds(44, 249, 207, 30);
 		usernameTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(usernameTxt);
 		usernameTxt.setColumns(10);
 		
 		passwordTxt = new JPasswordField();
-		passwordTxt.setBackground(new Color(192, 192, 192));
-		passwordTxt.setBounds(101, 433, 298, 33);
+		passwordTxt.setBackground(new Color(173, 216, 230));
+		passwordTxt.setBounds(44, 321, 207, 30);
 		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(passwordTxt);
 		
@@ -122,23 +123,9 @@ public class LogInFrame extends JFrame {
 		btnHidden.setBorderPainted(false);
 		contentPane.add(btnHidden);
 		
-		JLabel lblTitle = new JLabel("Santa Rosa Educational Institution");
-		lblTitle.setBackground(new Color(255, 255, 255));
-		lblTitle.setForeground(new Color(255, 255, 255));
-		lblTitle.setFont(new Font("Microsoft JhengHei UI Light", Font.BOLD, 38));
-		lblTitle.setBounds(101, 150, 636, 77);
-		contentPane.add(lblTitle);
-		
-		JLabel lblBottomTitle = new JLabel("Library Management System");
-		lblBottomTitle.setForeground(new Color(255, 255, 255));
-		lblBottomTitle.setFont(new Font("Microsoft JhengHei UI", Font.BOLD, 20));
-		lblBottomTitle.setBounds(111, 218, 283, 43);
-		contentPane.add(lblBottomTitle);
-		
-		JLabel lblNewLabel = new JLabel();
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\bg1.jpg"));
-		lblNewLabel.setBackground(new Color(192, 192, 192));
-		lblNewLabel.setBounds(10, 11, 1036, 689);
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Downloads\\Library Management System.png"));
+		lblNewLabel.setBounds(0, 0, 750, 487);
 		contentPane.add(lblNewLabel);
 		
 		ImageIcon icon = new ImageIcon("download(1).jpg");
