@@ -9,7 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -347,7 +351,7 @@ public class LendingBooksFrame extends JFrame {
         }
     }
     
-    public void updatePenalty(String transactionId) {
+    public void updatePenaltyEmployee(String transactionId) {
     	try {
     		// Load the JDBC driver (version 4.0 or later)
             Class.forName("com.mysql.cj.jdbc.Driver");           
@@ -355,7 +359,7 @@ public class LendingBooksFrame extends JFrame {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB?useSSL=false", "root", "ranielle25");
             conn.setAutoCommit(true);
             System.out.println("Connected");
-            
+
          // Get the selected row from the table
             int selectedRow = tblTransac.getSelectedRow();
 
@@ -364,16 +368,16 @@ public class LendingBooksFrame extends JFrame {
                 JOptionPane.showMessageDialog(rootPane, "Please select a book from the table for return.");
                 return;
             }
-            
-            
-            String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = '10' WHERE transaction_id = ?";
-            
+
+
+            String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = 0.0 WHERE transaction_id = ?";
+
             try(PreparedStatement updatePenaltyFeeStmt = conn.prepareStatement(updatePenaltyFeeSql)){
             	// Set parameters for updatePenaltyFeeStmt
                 updatePenaltyFeeStmt.setString(1, transactionId);
-                
+
                 int rowsPenaltyAffected = updatePenaltyFeeStmt.executeUpdate();
-                
+
                 if(rowsPenaltyAffected > 0) {
                 	JOptionPane.showMessageDialog(rootPane, "PEEEEEEEEEEE");
                 }
@@ -388,6 +392,126 @@ public class LendingBooksFrame extends JFrame {
     	catch(Exception e) {
     		e.printStackTrace();
     	}
+    }
+    
+
+    public void updatePenaltyStudent(String transactionId) {
+    	try {
+    		// Load the JDBC driver (version 4.0 or later)
+            Class.forName("com.mysql.cj.jdbc.Driver");           
+            // Establish a connection
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB?useSSL=false", "root", "ranielle25");
+            conn.setAutoCommit(true);
+            System.out.println("Connected");
+
+            // Get the selected row from the table
+            int selectedRow = tblTransac.getSelectedRow();
+
+            // Check if a row is selected
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(rootPane, "Please select a book from the table for return.");
+                return;
+            }
+
+
+            String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = ? WHERE transaction_id = ?";
+            
+            double fee = calculateFee();
+                     
+            try(PreparedStatement updatePenaltyFeeStmt = conn.prepareStatement(updatePenaltyFeeSql)){
+            	// Set parameters for updatePenaltyFeeStmt
+                updatePenaltyFeeStmt.setDouble(1, fee);
+                updatePenaltyFeeStmt.setString(2, transactionId);
+                
+                int rowsPenaltyAffected = updatePenaltyFeeStmt.executeUpdate();
+                System.out.println("pelase fucking wodsdrk");
+
+                if(rowsPenaltyAffected > 0) {
+                	JOptionPane.showMessageDialog(rootPane, "PEEEEEEEEEEE");
+                }
+                else {
+                	JOptionPane.showMessageDialog(rootPane, "Error with updatePenalty() method");
+                }
+            }
+            catch(SQLException e) {
+            	e.printStackTrace();
+            }
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+    
+    public double calculateFee() {
+        double penaltyFee = 0.0;
+
+        // Get the selected row from the table
+        int selectedRow = tblTransac.getSelectedRow();
+
+        // Check if a row is selected
+        if (selectedRow != -1) {
+            // Assuming the return date is in the seventh column (index 6)
+            Object returnDateObj = tblTransac.getValueAt(selectedRow, 6);
+
+            if (returnDateObj != null) {
+                String returnDateStr = returnDateObj.toString();
+
+                try {
+                    // Parse return date to a Date object
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date returnDate = dateFormat.parse(returnDateStr);
+
+                    // Get the current date
+                    Date currentDate = new Date();
+
+//                    Set a custom date, 11 days from now
+//                    
+//                    CHANGE THIS TO BACK TO CURRENT TIME BEFORE PRODUCTION
+                    LocalDate customDate = LocalDate.now().plusDays(11);
+                    Date customDateAsDate = Date.from(customDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+                    // Calculate the penalty fee based on the number of overdue days
+                    long overdueDays = TimeUnit.DAYS.convert(customDateAsDate.getTime() - returnDate.getTime(), TimeUnit.MILLISECONDS);
+                    penaltyFee = Math.max(0, overdueDays * 5.0);
+
+                    //DEBUUGER (DELETE THIS)
+                    System.out.println("Penalty Fee calculated successfully: " + penaltyFee);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Return date is null for the selected row.");
+            }
+        } else {
+            System.out.println("No row selected in tblTransac.");
+        }
+
+        return penaltyFee;
+    }
+
+    
+    //Get user type from both Employees and Students table
+    private String getUserType(String transactionId) {
+    	String userType = "";
+    	
+		String userTypeSql = "SELECT user_type FROM Transactions WHERE transaction_id = ?";
+		try(PreparedStatement userTypeStmt = conn.prepareStatement(userTypeSql)) {
+			userTypeStmt.setString(1, transactionId);
+
+			
+			ResultSet userTypeResult = userTypeStmt.executeQuery();
+			
+			if(userTypeResult.next()) {
+				userType = userTypeResult.getString("user_type");
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return userType;
+    	
     }
     
     //update records
@@ -410,7 +534,10 @@ public class LendingBooksFrame extends JFrame {
 
             // Get the transaction ID from the selected row
             String transacId = tblTransac.getValueAt(selectedRow, 0).toString();
+            
+            String userType = getUserType(transacId);
 
+            
             // Update the book and transaction status
             String updateBookStatusSql = "UPDATE Books SET book_status = 'Available' WHERE Book_Num = (SELECT BooNum FROM Transactions WHERE transaction_id = ?)";
             String updateTransactionStatusSql = "UPDATE Transactions SET BookStatus = 'Returned' WHERE transaction_id = ?";
@@ -435,7 +562,7 @@ public class LendingBooksFrame extends JFrame {
                 //int rowsAffectedPenalty = updatePenaltyFeeStmt.executeUpdate();
                 
                 if (rowsAffectedBook > 0 && rowsAffectedTransaction > 0) {
-                    JOptionPane.showMessageDialog(rootPane, "Book returned successfully. Penalty Fee: 0 pesos");
+                    JOptionPane.showMessageDialog(rootPane, "Book returned successfully.");
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "Error updating book and transaction status with penalty fee.");
                 }
@@ -450,13 +577,19 @@ public class LendingBooksFrame extends JFrame {
             // Remove the borrowed book from Transactions table
             removeBorrowedBook(transacId);
             
-            updatePenalty(transacId);
+            if ("Student".equals(userType)) {
+            	updatePenaltyStudent(transacId);            	
+            }
+            
+            else if("Faculty".equals(userType) || "Staff".equals(userType)) {
+            	//to call penalty fee
+            	updatePenaltyEmployee(transacId);      	
+            }
             
         } catch (Exception e) {
             e.printStackTrace();
         }
-    	
-    	
+    	    	
     }
 
     
