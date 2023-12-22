@@ -468,7 +468,8 @@ public class LendingBooksFrame extends JFrame {
 //                    Set a custom date, 11 days from now
 //                    
 //                    CHANGE THIS TO BACK TO CURRENT TIME BEFORE PRODUCTION
-                    LocalDate customDate = LocalDate.now().plusDays(11);
+//                    SUBTRACTS BY 2
+                    LocalDate customDate = LocalDate.now().plusDays(4);
                     Date customDateAsDate = Date.from(customDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
                     // Calculate the penalty fee based on the number of overdue days

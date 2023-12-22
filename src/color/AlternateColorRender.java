@@ -24,6 +24,8 @@ public class AlternateColorRender extends DefaultTableCellRenderer{
 
 	        return component;
 	    }
+	    
+	    
 
 }
 

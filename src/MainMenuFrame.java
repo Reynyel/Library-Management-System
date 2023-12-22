@@ -12,6 +12,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 
 public class MainMenuFrame extends JFrame {
 
@@ -140,18 +145,27 @@ public class MainMenuFrame extends JFrame {
 			}
 		});
 		
+		JPanel contentPanel = new JPanel();
+		contentPanel.setBounds(239, 50, 1256, 686);
+		contentPane.add(contentPanel);
+		contentPanel.setLayout(null);
+		
 		btnRegisterBooks.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				RegisterBooksFrame registerFrame;
 				try {
-					registerFrame = new RegisterBooksFrame();
-					registerFrame.setVisible(true);
-					dispose();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+		            registerFrame = new RegisterBooksFrame();
+		            registerFrame.setBounds(25, 25, 1256, 686);
+		            registerFrame.setLayout(null);  // Set layout to null
+		            contentPanel.removeAll();  // Remove existing components
+		            contentPanel.add(registerFrame);
+		            contentPanel.revalidate();  // Revalidate the panel to reflect changes
+		            contentPanel.repaint();  // Repaint the panel
+		        } catch (SQLException e1) {
+		            e1.printStackTrace();
+		        }
+				
 			}
 		});
 		
@@ -172,10 +186,7 @@ public class MainMenuFrame extends JFrame {
 		btnNotif.setBorderPainted(false);
 		panel_1.add(btnNotif);
 		
-		JPanel contentPanel = new JPanel();
-		contentPanel.setBounds(239, 50, 1256, 686);
-		contentPane.add(contentPanel);
-		contentPanel.setLayout(null);
+		
 		
 	}
 }
