@@ -81,8 +81,7 @@ public class RegisterBooksFrame extends JPanel {
 	public RegisterBooksFrame() throws SQLException {				
 		setPreferredSize(new Dimension(1256, 686));
 	    setLayout(null);
-		
-		
+				
 		Object[][] data = {null, null, null, null, null, null, null, null, null, null, null};
 		Object[] columnNames = {"Book Number", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Dewey", "Accession", "Status", "Date Registered"};
 		NonEditTableModel model;
@@ -311,11 +310,7 @@ public class RegisterBooksFrame extends JPanel {
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtTitle.setBounds(212, 322, 304, 25);
 		txtTitle.setColumns(10);
-		
-		
-		
-		
-		
+										
 		displayLatestData();
 	}
 	

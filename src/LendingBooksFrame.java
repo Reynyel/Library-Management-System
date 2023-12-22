@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -41,9 +42,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JRadioButton;
 
-public class LendingBooksFrame extends JFrame {
+public class LendingBooksFrame extends JPanel {
 
 	private JPanel contentPane;
+	private JPanel panel;
 	private JTextField txtBookNum;
 	private JTextField txtTitle;
 	private JTable tblTransac;
@@ -68,39 +70,14 @@ public class LendingBooksFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public LendingBooksFrame() {
-		setTitle("Lending Module");
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1130, 750);
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(127, 255, 212));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setPreferredSize(new Dimension(1256, 686));
+	    setLayout(null);
+		setBounds(100, 100, 1687, 743);
 		
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JLabel lblBookNumber = new JLabel("Book Number");
-		lblBookNumber.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBookNumber.setBounds(47, 54, 113, 28);
-		contentPane.add(lblBookNumber);
-		
-		txtBookNum = new JTextField();
-		txtBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtBookNum.setColumns(10);
-		txtBookNum.setBounds(150, 55, 621, 27);
-		contentPane.add(txtBookNum);
-		
-		txtTitle = new JTextField();
-		txtTitle.setEditable(false);
-		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtTitle.setColumns(10);
-		txtTitle.setBounds(150, 94, 621, 27);
-		contentPane.add(txtTitle);
-		
-		JLabel lblNewLabel = new JLabel("Book Title");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(47, 93, 90, 28);
-		contentPane.add(lblNewLabel);
+		panel = new JPanel();
+        panel.setBounds(-67, 22, 1288, 686);
+        add(panel);
+        panel.setLayout(null);
 		
 		tblTransac = new JTable();
 		tblTransac.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -148,77 +125,26 @@ public class LendingBooksFrame extends JFrame {
 				}
 			}
 		});
-		tblTransac.setBounds(126, 598, 632, -215);
+		tblTransac.setBounds(1, 26, 89, 144);
 		
 		AlternateColorRender alternate = new AlternateColorRender();
 		tblTransac.setDefaultRenderer(Object.class, alternate);
-		contentPane.add(tblTransac);
+		panel.add(tblTransac);
 		
 		JScrollPane js = new JScrollPane(tblTransac);
 		js.setVisible(true);
-		js.setBounds(24, 355, 1059, 276); // Adjust the bounds to match the table
-		contentPane.add(js);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(24, 279, 1059, 65);
-		contentPane.add(panel);
-		panel.setLayout(null);
-		
-		txtBorrID = new JTextField();
-		txtBorrID.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtBorrID.setColumns(10);
-		txtBorrID.setBounds(130, 23, 621, 30);
-		panel.add(txtBorrID);
-		
-		JLabel lblBorrowersName = new JLabel("Borrower's ID");
-		lblBorrowersName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBorrowersName.setBounds(10, 22, 113, 30);
-		panel.add(lblBorrowersName);
-		
-		JRadioButton radioBorrowed = new JRadioButton("Borrowed Books");
-		radioBorrowed.setBounds(774, 28, 109, 23);
-		radioBorrowed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				displayTransactionHistory();
-			}
-		});
-		panel.add(radioBorrowed);
-		
-		JRadioButton radioReturned = new JRadioButton("Returned Books");
-		radioReturned.setBounds(885, 28, 109, 23);
-		radioReturned.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				displayReturnedBooks();
-			}
-		});
-		panel.add(radioReturned);
+		js.setBounds(69, 281, 1059, 276); // Adjust the bounds to match the table
+		panel.add(js);
 		
 		ButtonGroup radioGroup = new ButtonGroup();
-	    radioGroup.add(radioBorrowed);
-	    radioGroup.add(radioReturned);
-		
-		JButton btnBack = new JButton("Back");
-		btnBack.setForeground(new Color(255, 255, 255));
-		btnBack.setBackground(new Color(65, 105, 225));
-		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnBack.setBorderPainted(false);
-		btnBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MainMenuFrame menu = new MainMenuFrame();
-				menu.setVisible(true);
-				dispose();
-			}
-		});
-		btnBack.setBounds(34, 642, 128, 40);
-		contentPane.add(btnBack);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(24, 33, 1059, 235);
-		contentPane.add(panel_1);
+		panel_1.setBounds(69, -22, 1059, 235);
+		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		JLabel lblAccession = new JLabel("Accession");
-		lblAccession.setBounds(25, 98, 80, 24);
+		lblAccession.setBounds(10, 103, 80, 24);
 		panel_1.add(lblAccession);
 		lblAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
@@ -231,7 +157,7 @@ public class LendingBooksFrame extends JFrame {
 		
 		JLabel lblBorrowedDate = new JLabel("Lending Date");
 		lblBorrowedDate.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBorrowedDate.setBounds(25, 143, 107, 20);
+		lblBorrowedDate.setBounds(10, 143, 107, 20);
 		panel_1.add(lblBorrowedDate);
 		
 		txtReturnDate = new JTextField();
@@ -243,7 +169,7 @@ public class LendingBooksFrame extends JFrame {
 		
 		JLabel lblReturnDate = new JLabel("Return Date");
 		lblReturnDate.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblReturnDate.setBounds(22, 178, 80, 20);
+		lblReturnDate.setBounds(10, 181, 80, 20);
 		panel_1.add(lblReturnDate);
 		
 		txtAccession = new JTextField();
@@ -285,6 +211,61 @@ public class LendingBooksFrame extends JFrame {
 		btnSearchBook.setBounds(777, 184, 128, 40);
 		panel_1.add(btnSearchBook);
 		btnSearchBook.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
+		
+		JLabel lblNewLabel = new JLabel("Book Title");
+		lblNewLabel.setBounds(10, 59, 90, 28);
+		panel_1.add(lblNewLabel);
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		txtTitle = new JTextField();
+		txtTitle.setBounds(122, 64, 621, 27);
+		panel_1.add(txtTitle);
+		txtTitle.setEditable(false);
+		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtTitle.setColumns(10);
+		
+		JLabel lblBookNumber = new JLabel("Book Number");
+		lblBookNumber.setBounds(10, 25, 113, 28);
+		panel_1.add(lblBookNumber);
+		lblBookNumber.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		txtBookNum = new JTextField();
+		txtBookNum.setBounds(122, 26, 621, 27);
+		panel_1.add(txtBookNum);
+		txtBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtBookNum.setColumns(10);
+		
+		
+		txtBorrID = new JTextField();
+		txtBorrID.setBounds(191, 216, 621, 30);
+		panel.add(txtBorrID);
+		txtBorrID.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtBorrID.setColumns(10);
+		
+		JLabel lblBorrowersName = new JLabel("Borrower's ID");
+		lblBorrowersName.setBounds(76, 216, 113, 30);
+		panel.add(lblBorrowersName);
+		lblBorrowersName.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		JRadioButton radioBorrowed = new JRadioButton("Borrowed Books");
+		radioBorrowed.setBounds(839, 221, 122, 23);
+		panel.add(radioBorrowed);
+		radioBorrowed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				displayTransactionHistory();
+			}
+		});
+		radioGroup.add(radioBorrowed);
+		
+		JRadioButton radioReturned = new JRadioButton("Returned Books");
+		radioReturned.setBounds(981, 220, 147, 23);
+		panel.add(radioReturned);
+		radioReturned.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				displayReturnedBooks();
+			}
+		});
+		radioGroup.add(radioReturned);
 		btnSearchBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
@@ -365,7 +346,7 @@ public class LendingBooksFrame extends JFrame {
 
             // Check if a row is selected
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(rootPane, "Please select a book from the table for return.");
+                JOptionPane.showMessageDialog(getRootPane(), "Please select a book from the table for return.");
                 return;
             }
 
@@ -379,10 +360,10 @@ public class LendingBooksFrame extends JFrame {
                 int rowsPenaltyAffected = updatePenaltyFeeStmt.executeUpdate();
 
                 if(rowsPenaltyAffected > 0) {
-                	JOptionPane.showMessageDialog(rootPane, "PEEEEEEEEEEE");
+                	JOptionPane.showMessageDialog(getRootPane(), "PEEEEEEEEEEE");
                 }
                 else {
-                	JOptionPane.showMessageDialog(rootPane, "Error with updatePenalty() method");
+                	JOptionPane.showMessageDialog(getRootPane(), "Error with updatePenalty() method");
                 }
             }
             catch(SQLException e) {
@@ -409,7 +390,7 @@ public class LendingBooksFrame extends JFrame {
 
             // Check if a row is selected
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(rootPane, "Please select a book from the table for return.");
+                JOptionPane.showMessageDialog(getRootPane(), "Please select a book from the table for return.");
                 return;
             }
 
@@ -427,10 +408,10 @@ public class LendingBooksFrame extends JFrame {
                 System.out.println("pelase fucking wodsdrk");
 
                 if(rowsPenaltyAffected > 0) {
-                	JOptionPane.showMessageDialog(rootPane, "PEEEEEEEEEEE");
+                	JOptionPane.showMessageDialog(getRootPane(), "PEEEEEEEEEEE");
                 }
                 else {
-                	JOptionPane.showMessageDialog(rootPane, "Error with updatePenalty() method");
+                	JOptionPane.showMessageDialog(getRootPane(), "Error with updatePenalty() method");
                 }
             }
             catch(SQLException e) {
@@ -529,7 +510,7 @@ public class LendingBooksFrame extends JFrame {
 
             // Check if a row is selected
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(rootPane, "Please select a book from the table for return.");
+                JOptionPane.showMessageDialog(getRootPane(), "Please select a book from the table for return.");
                 return;
             }
 
@@ -563,9 +544,9 @@ public class LendingBooksFrame extends JFrame {
                 //int rowsAffectedPenalty = updatePenaltyFeeStmt.executeUpdate();
                 
                 if (rowsAffectedBook > 0 && rowsAffectedTransaction > 0) {
-                    JOptionPane.showMessageDialog(rootPane, "Book returned successfully.");
+                    JOptionPane.showMessageDialog(getRootPane(), "Book returned successfully.");
                 } else {
-                    JOptionPane.showMessageDialog(rootPane, "Error updating book and transaction status with penalty fee.");
+                    JOptionPane.showMessageDialog(getRootPane(), "Error updating book and transaction status with penalty fee.");
                 }
                 
                 
@@ -768,9 +749,9 @@ public class LendingBooksFrame extends JFrame {
 	        	int rowsAffected = deleteStmt.executeUpdate();
 	        	
 	        	if (rowsAffected > 0) {
-	                JOptionPane.showMessageDialog(rootPane, "Book removed from transactions successfully.");
+	                JOptionPane.showMessageDialog(getRootPane(), "Book removed from transactions successfully.");
 	            } else {
-	                JOptionPane.showMessageDialog(rootPane, "Error removing book from transactions.");
+	                JOptionPane.showMessageDialog(getRootPane(), "Error removing book from transactions.");
 	            }
 	        	
 	        }
@@ -818,9 +799,9 @@ public class LendingBooksFrame extends JFrame {
 	                    int rowsAffected = insertReturnedStmt.executeUpdate();
 	                    
 	                    if (rowsAffected > 0) {
-	                        JOptionPane.showMessageDialog(rootPane, "Returned Book was recorded successfully.");
+	                        JOptionPane.showMessageDialog(getRootPane(), "Returned Book was recorded successfully.");
 	                    } else {
-	                        JOptionPane.showMessageDialog(rootPane, "Error recording book as returned.");
+	                        JOptionPane.showMessageDialog(getRootPane(), "Error recording book as returned.");
 	                    }
 	            		
 	            	}

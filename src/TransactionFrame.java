@@ -6,6 +6,8 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -34,9 +36,10 @@ import javax.swing.JFormattedTextField.AbstractFormatter;
 import color.AlternateColorRender;
 import javax.swing.JRadioButton;
 
-public class TransactionFrame extends JFrame {
+public class TransactionFrame extends JPanel {
 
 	private JPanel contentPane;
+	private JPanel panel;	
 	private JTextField txtBookNum;
 	private JTextField txtTitle;
 	private JTextField txtAuthor;
@@ -72,48 +75,14 @@ public class TransactionFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public TransactionFrame() {
-		setTitle("Transaction Module");
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setPreferredSize(new Dimension(1256, 686));
+	    setLayout(null);
 		setBounds(100, 100, 1687, 743);
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(127, 255, 212));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
 		
-		JLabel lblAuthors = new JLabel("Author(s)");
-		lblAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAuthors.setBounds(47, 141, 77, 27);
-		contentPane.add(lblAuthors);
-		
-		txtAuthor = new JTextField();
-		txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtAuthor.setColumns(10);
-		txtAuthor.setBounds(150, 141, 621, 27);
-		contentPane.add(txtAuthor);
-		
-		cbAccession = new JComboBox();
-		cbAccession.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setStatusBasedOnAccession();
-			}
-		});
-		cbAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		cbAccession.setBackground(Color.WHITE);
-		cbAccession.setBounds(150, 183, 89, 28);
-		contentPane.add(cbAccession);
-		
-		JLabel lblAccession = new JLabel("Accession");
-		lblAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblAccession.setBounds(47, 187, 80, 24);
-		contentPane.add(lblAccession);
-		
-		JLabel lblStatus = new JLabel("Status");
-		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStatus.setBounds(47, 230, 80, 20);
-		contentPane.add(lblStatus);
+		panel = new JPanel();
+        panel.setBounds(-67, 22, 1288, 686);
+        add(panel);
+        panel.setLayout(null);
 		
 		tblTransac = new JTable();
 		tblTransac.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -139,33 +108,30 @@ public class TransactionFrame extends JFrame {
 		
 		AlternateColorRender alternate = new AlternateColorRender();
 		tblTransac.setDefaultRenderer(Object.class, alternate);
-		contentPane.add(tblTransac);
+		panel.add(tblTransac);
 		
 		JScrollPane js = new JScrollPane(tblTransac);
 		js.setVisible(true);
-		js.setBounds(26, 370, 1207, 276); // Adjust the bounds to match the table
-		contentPane.add(js);
+		js.setBounds(70, 317, 1207, 276); // Adjust the bounds to match the table
+		panel.add(js);
 		
-		JPanel panel = new JPanel();
-		panel.setBounds(26, 294, 1207, 65);
-		contentPane.add(panel);
-		panel.setLayout(null);
+
 		
 		txtBorrID = new JTextField();
 		txtBorrID.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtBorrID.setColumns(10);
-		txtBorrID.setBounds(130, 23, 621, 30);
+		txtBorrID.setBounds(193, 273, 621, 30);
 		panel.add(txtBorrID);
 		
 		JLabel lblBorrowersName = new JLabel("Borrower's ID");
 		lblBorrowersName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBorrowersName.setBounds(10, 22, 113, 30);
+		lblBorrowersName.setBounds(70, 272, 113, 30);
 		panel.add(lblBorrowersName);
 		
 				
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
-		btnUpdate.setBounds(779, 13, 128, 40);
+		btnUpdate.setBounds(837, 266, 128, 40);
 		panel.add(btnUpdate);
 		
 		JRadioButton radioTransaction = new JRadioButton("View Transactions");
@@ -174,7 +140,7 @@ public class TransactionFrame extends JFrame {
 				displayTransactionHistory();
 			}
 		});
-		radioTransaction.setBounds(933, 23, 113, 23);
+		radioTransaction.setBounds(978, 278, 137, 23);
 		panel.add(radioTransaction);
 		
 		JRadioButton radioBooks = new JRadioButton("View Books");
@@ -183,7 +149,7 @@ public class TransactionFrame extends JFrame {
 				viewBooks();
 			}
 		});
-		radioBooks.setBounds(1064, 23, 109, 23);
+		radioBooks.setBounds(1117, 278, 109, 23);
 		panel.add(radioBooks);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -194,63 +160,79 @@ public class TransactionFrame extends JFrame {
 		 ButtonGroup radioGroup = new ButtonGroup();
 		    radioGroup.add(radioTransaction);
 		    radioGroup.add(radioBooks);
-		    
-		
-		JButton btnBack = new JButton("Back");
-		btnBack.setForeground(new Color(255, 255, 255));
-		btnBack.setBackground(new Color(65, 105, 225));
-		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnBack.setBorderPainted(false);
-		btnBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MainMenuFrame menu = new MainMenuFrame();
-				menu.setVisible(true);
-				dispose();
-			}
-		});
-		btnBack.setBounds(26, 657, 128, 40);
-		contentPane.add(btnBack);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(24, 33, 788, 250);
+		panel_1.setBounds(70, 0, 788, 250);
 		
 		String title = "Borrow Book";
 		Border border = BorderFactory.createTitledBorder(title);
 		panel_1.setBorder(border);
-		contentPane.add(panel_1);
+		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		txtStatus = new JTextField();
 		txtStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtStatus.setColumns(10);
-		txtStatus.setBounds(123, 197, 91, 27);
+		txtStatus.setBounds(122, 191, 91, 27);
 		panel_1.add(txtStatus);
 		
 		txtTitle = new JTextField();
-		txtTitle.setBounds(125, 12, 621, 27);
+		txtTitle.setBounds(124, 36, 621, 27);
 		panel_1.add(txtTitle);
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtTitle.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("Book Title");
-		lblNewLabel.setBounds(22, 11, 90, 28);
+		lblNewLabel.setBounds(21, 35, 90, 28);
 		panel_1.add(lblNewLabel);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		txtBookNum = new JTextField();
-		txtBookNum.setBounds(123, 58, 621, 27);
+		txtBookNum.setBounds(124, 75, 621, 27);
 		panel_1.add(txtBookNum);
 		txtBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtBookNum.setColumns(10);
 		
 		JLabel lblBookNumber = new JLabel("Book Number");
-		lblBookNumber.setBounds(22, 57, 113, 28);
+		lblBookNumber.setBounds(20, 74, 113, 28);
 		panel_1.add(lblBookNumber);
 		lblBookNumber.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		JButton btnSearchBook = new JButton("Search Book");
 		btnSearchBook.setBounds(618, 167, 128, 40);
 		panel_1.add(btnSearchBook);
 		btnSearchBook.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
+		
+		txtAuthor = new JTextField();
+		txtAuthor.setBounds(124, 113, 621, 27);
+		panel_1.add(txtAuthor);
+		txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtAuthor.setColumns(10);
+		
+		JLabel lblAuthors = new JLabel("Author(s)");
+		lblAuthors.setBounds(21, 113, 77, 27);
+		panel_1.add(lblAuthors);
+		lblAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		JLabel lblAccession = new JLabel("Accession");
+		lblAccession.setBounds(21, 151, 80, 24);
+		panel_1.add(lblAccession);
+		lblAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		cbAccession = new JComboBox();
+		cbAccession.setBounds(122, 152, 89, 28);
+		panel_1.add(cbAccession);
+		cbAccession.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setStatusBasedOnAccession();
+			}
+		});
+		cbAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		cbAccession.setBackground(Color.WHITE);
+		
+		JLabel lblStatus = new JLabel("Status");
+		lblStatus.setBounds(21, 194, 80, 20);
+		panel_1.add(lblStatus);
+		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		String title2 = "Return Book";
 		Border border2 = BorderFactory.createTitledBorder(title2);
 		btnSearchBook.addActionListener(new ActionListener() {
@@ -371,7 +353,7 @@ public class TransactionFrame extends JFrame {
             
             // check if the user has inserted a book title
             if(tl.isEmpty() && bn.isEmpty() && obAcc == null) {
-            	JOptionPane.showMessageDialog(rootPane, "Please search for the book first");       
+            	JOptionPane.showMessageDialog(getRootPane(), "Please search for the book first");       
             }
             
             else {
@@ -388,11 +370,11 @@ public class TransactionFrame extends JFrame {
             			
             			// Check if the student has already borrowed the same title
             		    if (hasBorrowedSameTitle(userId, tl)) {
-            		        JOptionPane.showMessageDialog(rootPane, "This student cannot borrow the same title twice.");
+            		        JOptionPane.showMessageDialog(getRootPane(), "This student cannot borrow the same title twice.");
             		        return; // Exit the method without proceeding with the transaction
             		    } 
             		    if(borrowedBooksCount >= 3) {
-            		    	JOptionPane.showMessageDialog(rootPane, "This student cannot borrow more than 3 books.");
+            		    	JOptionPane.showMessageDialog(getRootPane(), "This student cannot borrow more than 3 books.");
             		        return; // Exit the method without proceeding with the transaction
             		    	
             		    }
@@ -405,7 +387,7 @@ public class TransactionFrame extends JFrame {
             				insertTransaction(bn, tl, acc, borrowerName);          			
             			}
             			else {
-            				JOptionPane.showMessageDialog(rootPane, "Name not found!");
+            				JOptionPane.showMessageDialog(getRootPane(), "Name not found!");
             			}
             		}
             		
@@ -425,13 +407,13 @@ public class TransactionFrame extends JFrame {
             				
             			}
             			else {
-            				JOptionPane.showMessageDialog(rootPane, "Name not found!");
+            				JOptionPane.showMessageDialog(getRootPane(), "Name not found!");
             			}
             		}
             		
             		
             	} else {
-            		JOptionPane.showMessageDialog(rootPane, "Invalid user ID format!");
+            		JOptionPane.showMessageDialog(getRootPane(), "Invalid user ID format!");
             	}
             	
             }
@@ -465,7 +447,7 @@ public class TransactionFrame extends JFrame {
             
             
             if(bookStatus.equals("Borrowed")) {
-            	JOptionPane.showMessageDialog(rootPane, "This book is currently borrowed");
+            	JOptionPane.showMessageDialog(getRootPane(), "This book is currently borrowed");
             }
             else {
             	try(PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql)){
@@ -493,7 +475,7 @@ public class TransactionFrame extends JFrame {
             				// Execute the update
             				int rowsAffected = pstmt.executeUpdate();
             				
-            				JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
+            				JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!");
             				
             			} catch (SQLException e) {
             				e.printStackTrace();
@@ -516,7 +498,7 @@ public class TransactionFrame extends JFrame {
             				// Execute the update
             				int rowsAffected = pstmt.executeUpdate();
             				
-            				JOptionPane.showMessageDialog(rootPane, "Transaction Recorded!");
+            				JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!");
             				
             			} catch (SQLException e) {
             				e.printStackTrace();

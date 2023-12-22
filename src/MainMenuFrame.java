@@ -9,7 +9,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BoxLayout;
@@ -60,6 +62,11 @@ public class MainMenuFrame extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
+		JPanel contentPanel = new JPanel();
+		contentPanel.setBounds(239, 50, 1256, 686);
+		contentPane.add(contentPanel);
+		contentPanel.setLayout(null);
+		
 		JButton btnLogOut = new JButton("Sign Out");
 		btnLogOut.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\exit (3).png"));
 		btnLogOut.setBounds(10, 667, 220, 32);
@@ -92,6 +99,13 @@ public class MainMenuFrame extends JFrame {
 		btnRegisterBooks.setBackground(new Color(0, 51, 102));
 		btnRegisterBooks.setBorderPainted(false);
 		
+		JPopupMenu popupMenu = new JPopupMenu();
+		JMenuItem btnStudents = new JMenuItem("Students");
+        JMenuItem btnStaff = new JMenuItem("Faculty/Staff");
+        
+        popupMenu.add(btnStudents);
+        popupMenu.add(btnStaff);
+        
 		JButton btnRegisterUser = new JButton(" Manage Users");
 		btnRegisterUser.setBounds(10, 199, 220, 40);
 		panel.add(btnRegisterUser);
@@ -102,14 +116,41 @@ public class MainMenuFrame extends JFrame {
 		
 		btnRegisterUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				UserTypeFrame user = new UserTypeFrame();
-				user.setVisible(true);
-				dispose();
+				popupMenu.show(btnRegisterUser, 0, btnRegisterUser.getHeight());
 			}
 		});
 		btnRegisterUser.setBackground(new Color(0, 51, 102));
 		btnRegisterUser.setBorderPainted(false);
 		
+		btnStudents.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	RegisterStudent student = new RegisterStudent();
+            	student = new RegisterStudent();
+            	student.setBounds(25, 0, 1256, 686);
+            	student.setLayout(null);  // Set layout to null
+	            contentPanel.removeAll();  // Remove existing components
+	            contentPanel.add(student);
+	            contentPanel.revalidate();  // Revalidate the panel to reflect changes
+	            contentPanel.repaint();  // Repaint the panel
+            }
+        });
+
+		btnStaff.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	RegisterStaff staff = new RegisterStaff();
+            	staff = new RegisterStaff();
+            	staff.setBounds(25, 0, 1256, 686);
+            	staff.setLayout(null);  // Set layout to null
+	            contentPanel.removeAll();  // Remove existing components
+	            contentPanel.add(staff);
+	            contentPanel.revalidate();  // Revalidate the panel to reflect changes
+	            contentPanel.repaint();  // Repaint the panel
+
+            }
+        });
+        
 		JButton btnTransac = new JButton(" Transactions");
 		btnTransac.setBounds(10, 250, 220, 40);
 		panel.add(btnTransac);
@@ -128,28 +169,34 @@ public class MainMenuFrame extends JFrame {
 		btnReturnBooks.setForeground(new Color(255, 255, 255));
 		btnReturnBooks.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnReturnBooks.setBackground(new Color(0, 51, 102));
-		btnReturnBooks.setBorderPainted(false);
-		
+		btnReturnBooks.setBorderPainted(false);			                  		
 		btnReturnBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LendingBooksFrame returning = new LendingBooksFrame();
-				returning.setVisible(true);
-				dispose();
+				returning = new LendingBooksFrame();
+				returning.setBounds(25, 0, 1256, 686);
+				returning.setLayout(null);  // Set layout to null
+	            contentPanel.removeAll();  // Remove existing components
+	            contentPanel.add(returning);
+	            contentPanel.revalidate();  // Revalidate the panel to reflect changes
+	            contentPanel.repaint();  // Repaint the panel
 			}
 		});
 		
 		btnTransac.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TransactionFrame transacFrame = new TransactionFrame();
-				transacFrame.setVisible(true);
+				TransactionFrame transacFrame;
+				transacFrame = new TransactionFrame();
+				transacFrame.setBounds(25, 0, 1256, 686);
+				transacFrame.setLayout(null);  // Set layout to null
+	            contentPanel.removeAll();  // Remove existing components
+	            contentPanel.add(transacFrame);
+	            contentPanel.revalidate();  // Revalidate the panel to reflect changes
+	            contentPanel.repaint();  // Repaint the panel
+
 			}
 		});
-		
-		JPanel contentPanel = new JPanel();
-		contentPanel.setBounds(239, 50, 1256, 686);
-		contentPane.add(contentPanel);
-		contentPanel.setLayout(null);
-		
+						
 		btnRegisterBooks.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {

@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -33,9 +35,9 @@ import javax.swing.table.DefaultTableModel;
 import color.AlternateColorRender;
 import tablemodel.NonEditTableModel;
 
-public class RegisterStudent extends JFrame {
+public class RegisterStudent extends JPanel {
 
-	private JPanel contentPane;
+	private JPanel panel;
 	private JTextField txtLastName;
 	private JTextField txtFirstName;
 	private JTextField txtMiddleName;
@@ -67,70 +69,68 @@ public class RegisterStudent extends JFrame {
 	 * Create the frame.
 	 */
 	public RegisterStudent() {
-		setResizable(false);
-		setTitle("Register User");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1072, 750);
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(176, 224, 230));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		setPreferredSize(new Dimension(1256, 686));
+	    setLayout(null);
+		setBounds(100, 100, 1687, 743);
+		
+		panel = new JPanel();
+        panel.setBounds(-67, 22, 1288, 686);
+        add(panel);
+        panel.setLayout(null);
 		
 		JLabel lblLastName = new JLabel("Last Name");
 		lblLastName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblLastName.setBounds(149, 426, 77, 30);
-		contentPane.add(lblLastName);
+		lblLastName.setBounds(149, 402, 77, 30);
+		panel.add(lblLastName);
 		
 		JLabel lblFirstName = new JLabel("First Name");
 		lblFirstName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblFirstName.setBounds(149, 467, 77, 30);
-		contentPane.add(lblFirstName);
+		lblFirstName.setBounds(149, 443, 77, 30);
+		panel.add(lblFirstName);
 		
 		JLabel lblMiddleName = new JLabel("Middle Name");
 		lblMiddleName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblMiddleName.setBounds(149, 508, 108, 30);
-		contentPane.add(lblMiddleName);
+		lblMiddleName.setBounds(149, 484, 108, 30);
+		panel.add(lblMiddleName);
 		
 		JLabel lblStudentNo = new JLabel("Student Number: ");
 		lblStudentNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStudentNo.setBounds(149, 385, 133, 30);
-		contentPane.add(lblStudentNo);
+		lblStudentNo.setBounds(149, 361, 133, 30);
+		panel.add(lblStudentNo);
 		
 		JLabel lblGrade = new JLabel("Level");
 		lblGrade.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblGrade.setBounds(149, 549, 77, 30);
-		contentPane.add(lblGrade);
+		lblGrade.setBounds(149, 525, 77, 30);
+		panel.add(lblGrade);
 		
 		JLabel lblSection = new JLabel("Section");
 		lblSection.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblSection.setBounds(149, 590, 77, 30);
-		contentPane.add(lblSection);
+		lblSection.setBounds(149, 566, 77, 30);
+		panel.add(lblSection);
 		
 		txtLastName = new JTextField();
 		txtLastName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtLastName.setColumns(10);
-		txtLastName.setBounds(292, 427, 629, 30);
-		contentPane.add(txtLastName);
+		txtLastName.setBounds(292, 403, 629, 30);
+		panel.add(txtLastName);
 		
 		txtFirstName = new JTextField();
 		txtFirstName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtFirstName.setColumns(10);
-		txtFirstName.setBounds(292, 468, 629, 30);
-		contentPane.add(txtFirstName);
+		txtFirstName.setBounds(292, 444, 629, 30);
+		panel.add(txtFirstName);
 		
 		txtMiddleName = new JTextField();
 		txtMiddleName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtMiddleName.setColumns(10);
-		txtMiddleName.setBounds(292, 509, 629, 30);
-		contentPane.add(txtMiddleName);
+		txtMiddleName.setBounds(292, 485, 629, 30);
+		panel.add(txtMiddleName);
 		
 		txtStudentNum = new JTextField();
 		txtStudentNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtStudentNum.setColumns(10);
-		txtStudentNum.setBounds(292, 386, 217, 30);
-		contentPane.add(txtStudentNum);
+		txtStudentNum.setBounds(292, 362, 217, 30);
+		panel.add(txtStudentNum);
 		
 		JButton btnRegister = new JButton("Register");
 		btnRegister.addActionListener(new ActionListener() {
@@ -143,15 +143,14 @@ public class RegisterStudent extends JFrame {
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
 		btnRegister.setBackground(new Color(220, 20, 60));
-		btnRegister.setBounds(828, 589, 93, 33);
-		contentPane.add(btnRegister);
+		btnRegister.setBounds(828, 565, 93, 33);
+		panel.add(btnRegister);
 		
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				UserTypeFrame type = new UserTypeFrame();
 				type.setVisible(true);
-				dispose();
 			}
 		});
 		btnBack.setForeground(Color.WHITE);
@@ -159,7 +158,7 @@ public class RegisterStudent extends JFrame {
 		btnBack.setBorderPainted(false);
 		btnBack.setBackground(new Color(65, 105, 225));
 		btnBack.setBounds(10, 667, 93, 33);
-		contentPane.add(btnBack);
+		panel.add(btnBack);
 		
 		gradeComboBox = new JComboBox();
 		gradeComboBox.addActionListener(new ActionListener() {
@@ -167,14 +166,14 @@ public class RegisterStudent extends JFrame {
 				updateSectionComboBox();
 			}
 		});
-		gradeComboBox.setBounds(292, 551, 108, 30);
+		gradeComboBox.setBounds(292, 527, 108, 30);
 		gradeComboBox.setBackground(new Color(255, 255, 255));
 		
 		section = new StudentSections();
 		
 		sectionComboBox = new JComboBox();
-		sectionComboBox.setBounds(292, 592, 108, 30);
-		contentPane.add(sectionComboBox);
+		sectionComboBox.setBounds(292, 568, 108, 30);
+		panel.add(sectionComboBox);
 		
 		int[] level = new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
 	
@@ -188,7 +187,7 @@ public class RegisterStudent extends JFrame {
 			e.printStackTrace();
 		}
 		
-		contentPane.add(gradeComboBox);
+		panel.add(gradeComboBox);
 		
 		tblStudents = new JTable();
 		tblStudents.setColumnSelectionAllowed(true);
@@ -202,7 +201,7 @@ public class RegisterStudent extends JFrame {
 			}
 		));
 		tblStudents.setBorder(new LineBorder(new Color(0, 0, 0)));
-		tblStudents.setBounds(10, 11, 1036, 350);
+		tblStudents.setBounds(149, 0, 1036, 350);
 		AlternateColorRender alternate = new AlternateColorRender();
 		tblStudents.setDefaultRenderer(Object.class, alternate);
 		
@@ -238,7 +237,7 @@ public class RegisterStudent extends JFrame {
 				}
 			}
 		});
-		contentPane.add(tblStudents);
+		panel.add(tblStudents);
 		
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener() {
@@ -250,8 +249,8 @@ public class RegisterStudent extends JFrame {
 		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnUpdate.setBorderPainted(false);
 		btnUpdate.setBackground(new Color(32, 178, 170));
-		btnUpdate.setBounds(714, 590, 93, 33);
-		contentPane.add(btnUpdate);
+		btnUpdate.setBounds(714, 566, 93, 33);
+		panel.add(btnUpdate);
 		
 		displayData();
 	}
@@ -310,17 +309,17 @@ public class RegisterStudent extends JFrame {
 				
 				int rowsAffected = pstmt.executeUpdate();
 				if(rowsAffected > 0) {
-					JOptionPane.showMessageDialog(rootPane, "Updated succesfully");
+					JOptionPane.showMessageDialog(getRootPane(), "Updated succesfully");
 					displayData();
 				}
 				
 				else {
-					JOptionPane.showMessageDialog(rootPane, "No rows updated");
+					JOptionPane.showMessageDialog(getRootPane(), "No rows updated");
 				}
 				
 			}
 			else {
-	            JOptionPane.showMessageDialog(rootPane, "No row selected");
+	            JOptionPane.showMessageDialog(getRootPane(), "No row selected");
 	        }
 			
 		}
@@ -415,7 +414,7 @@ public class RegisterStudent extends JFrame {
 				//Execute query
 				stmt.executeUpdate(sql);
 				
-				JOptionPane.showMessageDialog(rootPane, "Student Registered");
+				JOptionPane.showMessageDialog(getRootPane(), "Student Registered");
 				
 				
 			} catch (SQLException e1) {
