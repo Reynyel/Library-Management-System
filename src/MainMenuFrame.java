@@ -14,12 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-
-import notification.Notification;
-import panel.Backup;
-import raven.glasspanepopup.DefaultOption;
-import raven.glasspanepopup.GlassPanePopup;
-
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -176,27 +170,6 @@ public class MainMenuFrame extends JFrame {
 		btnReturnBooks.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnReturnBooks.setBackground(new Color(0, 51, 102));
 		btnReturnBooks.setBorderPainted(false);			                  		
-		
-		JButton btnBackupRecords = new JButton("Backup Records");
-		btnBackupRecords.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Backup backup = new Backup();
-				backup = new Backup();
-				backup.setBounds(250, 50, 1256, 686);
-				backup.setLayout(null);  // Set layout to null
-	            contentPanel.removeAll();  // Remove existing components
-	            contentPanel.add(backup);
-	            contentPanel.revalidate();  // Revalidate the panel to reflect changes
-	            contentPanel.repaint();  // Repaint the panel
-			}
-		});
-		btnBackupRecords.setHorizontalAlignment(SwingConstants.LEFT);
-		btnBackupRecords.setForeground(Color.WHITE);
-		btnBackupRecords.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBackupRecords.setBorderPainted(false);
-		btnBackupRecords.setBackground(new Color(0, 51, 102));
-		btnBackupRecords.setBounds(10, 344, 220, 40);
-		panel.add(btnBackupRecords);
 		btnReturnBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				LendingBooksFrame returning = new LendingBooksFrame();
@@ -250,19 +223,7 @@ public class MainMenuFrame extends JFrame {
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
-		GlassPanePopup.install(this);
 		JButton btnNotif = new JButton(" Notifications");
-		btnNotif.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Notification newNotifs = new Notification();
-				
-				GlassPanePopup.showPopup(newNotifs, new DefaultOption() {
-					public float opacity() {
-						return 0;
-					}
-				});
-			}
-		});
 		btnNotif.setForeground(new Color(255, 255, 255));
 		btnNotif.setBackground(new Color(0, 51, 102));
 		btnNotif.setFont(new Font("Verdana", Font.PLAIN, 14));
