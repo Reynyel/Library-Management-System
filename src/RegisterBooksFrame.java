@@ -16,6 +16,8 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -279,7 +281,7 @@ public class RegisterBooksFrame extends JPanel {
 		panel.add(lblAuthors_1);
 		
 		JButton btnSearch = new JButton("Search");
-		btnSearch.setBounds(909, 421, 113, 25);
+		btnSearch.setBounds(946, 421, 113, 25);
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
@@ -293,7 +295,7 @@ public class RegisterBooksFrame extends JPanel {
 		panel.add(btnSearch);
 		
 		JButton btnViewData = new JButton("View Data");
-		btnViewData.setBounds(1032, 421, 112, 25);
+		btnViewData.setBounds(1069, 421, 112, 25);
 		btnViewData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				view();
@@ -310,6 +312,19 @@ public class RegisterBooksFrame extends JPanel {
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtTitle.setBounds(212, 322, 304, 25);
 		txtTitle.setColumns(10);
+		
+		JButton btnExport = new JButton("Export to CSV");
+		btnExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				export();
+			}
+		});
+		btnExport.setForeground(Color.WHITE);
+		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnExport.setBorderPainted(false);
+		btnExport.setBackground(new Color(0, 128, 0));
+		btnExport.setBounds(786, 421, 150, 25);
+		panel.add(btnExport);
 										
 		displayLatestData();
 	}
@@ -319,6 +334,59 @@ public class RegisterBooksFrame extends JPanel {
 	ResultSet rs;
 	private JTextField txtSrTitle;
 	private JTextField txtSrBookNum;
+	
+	public void export() {
+		String fileName = "C:\\Users\\LINDELL\\Desktop\\export_test.csv";
+		String filePath = "C:\\Users\\LINDELL\\Desktop";
+		
+		try {
+			FileWriter fw = new FileWriter(fileName);
+			try {
+				pst = conn.prepareStatement("SELECT * From Books");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				fw.append(rs.getString(1));
+				fw.append(',');
+				fw.append(rs.getString(2));
+				fw.append(',');
+				fw.append(rs.getString(3));
+				fw.append(',');
+				fw.append(rs.getString(4));
+				fw.append(',');
+				fw.append(rs.getString(5));
+				fw.append(',');
+				fw.append(rs.getString(6));
+				fw.append(',');
+				fw.append(rs.getString(7));
+				fw.append(',');
+				fw.append(rs.getString(8));
+				fw.append(',');
+				fw.append(rs.getString(9));
+				fw.append(',');
+				fw.append(rs.getString(10));
+				fw.append(',');
+				fw.append(rs.getString(11));
+				fw.append(',');
+				fw.append(rs.getString(12));
+				fw.append('\n');
+				
+			}
+			JOptionPane.showMessageDialog(getRootPane(), "Export success");
+			fw.flush();
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	/*Update entries*/
 	public void update() throws SQLException {
@@ -598,6 +666,7 @@ public class RegisterBooksFrame extends JPanel {
 	        			String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
 	        			String accession = String.valueOf(rs.getInt("Accession_Num"));
 	        			String status = rs.getString("book_status");
+	        			String dateRegistered = rs.getString("date_registered");
 	        		
 	        			comboBoxModel.addElement(accession);
 	        			
@@ -606,7 +675,7 @@ public class RegisterBooksFrame extends JPanel {
 	        			
 	        			//array to store data into jtable
 	        			String tbData[] = {bookNum, title, author, isbn, publisher,
-	        					language, subject, dewey, accession, status};
+	        					language, subject, dewey, accession, status, dateRegistered};
 	        			
 	        			
 	        			//add string array data to jtable
