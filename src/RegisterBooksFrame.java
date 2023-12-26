@@ -47,6 +47,7 @@ import tablemodel.NonEditTableModel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.SpringLayout;
+import javax.swing.ImageIcon;
 
 
 public class RegisterBooksFrame extends JPanel {
@@ -80,7 +81,9 @@ public class RegisterBooksFrame extends JPanel {
 	 * Create the frame.
 	 * @throws SQLException 
 	 */
-	public RegisterBooksFrame() throws SQLException {				
+	public RegisterBooksFrame() throws SQLException {
+		setBackground(new Color(0, 255, 204));
+		setBorder(null);				
 		setPreferredSize(new Dimension(1256, 686));
 	    setLayout(null);
 				
@@ -90,60 +93,68 @@ public class RegisterBooksFrame extends JPanel {
 		Set<Integer> editableColumns = new HashSet<>();
 		
         panel = new JPanel();
-        panel.setBounds(-67, 22, 1256, 686);
+        panel.setBackground(new Color(0, 153, 255));
+        panel.setBounds(0, 0, 1256, 686);
         add(panel);
         panel.setLayout(null);
         
         JLabel lblNewLabel = new JLabel("Book Title");
-        lblNewLabel.setBounds(138, 325, 64, 19);
+        lblNewLabel.setForeground(new Color(255, 255, 255));
+        lblNewLabel.setBounds(76, 370, 72, 30);
         lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblNewLabel);
         
         JLabel lblAuthors = new JLabel("Author(s)");
-        lblAuthors.setBounds(138, 358, 62, 19);
+        lblAuthors.setForeground(new Color(255, 255, 255));
+        lblAuthors.setBounds(386, 370, 64, 30);
         lblAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblAuthors);
         
         txtAuthor = new JTextField();
-        txtAuthor.setBounds(210, 355, 304, 25);
+        txtAuthor.setBounds(386, 401, 284, 30);
         txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
         txtAuthor.setColumns(10);
         panel.add(txtAuthor);
         
         JLabel lblIsbn = new JLabel("ISBN");
-        lblIsbn.setBounds(148, 391, 33, 19);
+        lblIsbn.setHorizontalAlignment(SwingConstants.LEFT);
+        lblIsbn.setForeground(new Color(255, 255, 255));
+        lblIsbn.setBounds(386, 439, 72, 30);
         lblIsbn.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblIsbn);
         
         txtISBN = new JTextField();
-        txtISBN.setBounds(210, 388, 304, 25);
+        txtISBN.setBounds(386, 470, 284, 30);
         txtISBN.setFont(new Font("Tahoma", Font.PLAIN, 15));
         txtISBN.setColumns(10);
         panel.add(txtISBN);
         
         JLabel lblPublisher = new JLabel("Publisher");
-        lblPublisher.setBounds(136, 424, 56, 19);
+        lblPublisher.setForeground(new Color(255, 255, 255));
+        lblPublisher.setBounds(76, 442, 72, 30);
         lblPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblPublisher);
         
         txtPublisher = new JTextField();
-        txtPublisher.setBounds(210, 421, 304, 25);
+        txtPublisher.setBounds(76, 470, 300, 30);
         txtPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
         txtPublisher.setColumns(10);
         panel.add(txtPublisher);
         
         JLabel lblLanguage = new JLabel("Language");
-        lblLanguage.setBounds(136, 461, 63, 19);
+        lblLanguage.setForeground(new Color(255, 255, 255));
+        lblLanguage.setBounds(332, 511, 66, 30);
         lblLanguage.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblLanguage);
         
         JLabel lblSubject = new JLabel("Subject");
-        lblSubject.setBounds(138, 499, 48, 19);
+        lblSubject.setForeground(new Color(255, 255, 255));
+        lblSubject.setBounds(76, 511, 64, 30);
         lblSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblSubject);
         
         comboBoxSubject = new JComboBox();
-        comboBoxSubject.setBounds(210, 495, 148, 27);
+        comboBoxSubject.setBounds(76, 542, 246, 30);
         comboBoxSubject.setBackground(new Color(255, 255, 255));
         
         comboBoxSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -151,7 +162,7 @@ public class RegisterBooksFrame extends JPanel {
 		        
 		
 		JButton btnRegister = new JButton("Register");
-		btnRegister.setBounds(451, 595, 112, 25);
+		btnRegister.setBounds(558, 596, 112, 30);
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				registerBooks();
@@ -166,18 +177,19 @@ public class RegisterBooksFrame extends JPanel {
 		panel.add(btnRegister);
 		
 		JLabel lblQuantity = new JLabel("Quantity");
-		lblQuantity.setBounds(138, 529, 55, 19);
+		lblQuantity.setForeground(new Color(255, 255, 255));
+		lblQuantity.setBounds(491, 511, 66, 30);
 		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(lblQuantity);
 		
 		txtQuantity = new JTextField();
-		txtQuantity.setBounds(210, 533, 136, 25);
+		txtQuantity.setBounds(490, 541, 89, 30);
 		txtQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtQuantity.setColumns(10);
 		panel.add(txtQuantity);
 		
 		languageComboBox = new JComboBox();
-		languageComboBox.setBounds(210, 457, 148, 27);
+		languageComboBox.setBounds(332, 542, 148, 30);
 		languageComboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		languageComboBox.setBackground(Color.WHITE);
 		panel.add(languageComboBox);
@@ -196,7 +208,7 @@ public class RegisterBooksFrame extends JPanel {
 		}
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(136, 11, 1110, 264);
+		scrollPane.setBounds(10, 11, 1236, 321);
 		panel.add(scrollPane);
 		
 		table = new JTable();
@@ -240,7 +252,7 @@ public class RegisterBooksFrame extends JPanel {
 		scrollPane.setViewportView(table);
 		
 		JButton btnUpdate = new JButton("Update");
-		btnUpdate.setBounds(328, 595, 113, 25);
+		btnUpdate.setBounds(435, 596, 113, 30);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -259,29 +271,31 @@ public class RegisterBooksFrame extends JPanel {
 		panel.add(btnUpdate);
 		
 		txtSrTitle = new JTextField();
-		txtSrTitle.setBounds(835, 324, 259, 25);
+		txtSrTitle.setBounds(815, 400, 358, 30);
 		txtSrTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtSrTitle.setColumns(10);
 		panel.add(txtSrTitle);
 		
 		JLabel lblNewLabel_1 = new JLabel("Book Title");
-		lblNewLabel_1.setBounds(746, 327, 64, 19);
+		lblNewLabel_1.setForeground(new Color(255, 255, 255));
+		lblNewLabel_1.setBounds(815, 369, 64, 30);
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(lblNewLabel_1);
 		
 		txtSrBookNum = new JTextField();
-		txtSrBookNum.setBounds(835, 360, 259, 25);
+		txtSrBookNum.setBounds(815, 469, 358, 30);
 		txtSrBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtSrBookNum.setColumns(10);
 		panel.add(txtSrBookNum);
 		
 		JLabel lblAuthors_1 = new JLabel("Book Number");
-		lblAuthors_1.setBounds(736, 363, 89, 19);
+		lblAuthors_1.setForeground(new Color(255, 255, 255));
+		lblAuthors_1.setBounds(815, 438, 89, 30);
 		lblAuthors_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(lblAuthors_1);
 		
 		JButton btnSearch = new JButton("Search");
-		btnSearch.setBounds(946, 421, 113, 25);
+		btnSearch.setBounds(1002, 526, 125, 30);
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
@@ -295,7 +309,7 @@ public class RegisterBooksFrame extends JPanel {
 		panel.add(btnSearch);
 		
 		JButton btnViewData = new JButton("View Data");
-		btnViewData.setBounds(1069, 421, 112, 25);
+		btnViewData.setBounds(868, 526, 124, 30);
 		btnViewData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				view();
@@ -310,7 +324,7 @@ public class RegisterBooksFrame extends JPanel {
 		txtTitle = new JTextField();
 		panel.add(txtTitle);
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtTitle.setBounds(212, 322, 304, 25);
+		txtTitle.setBounds(76, 400, 300, 30);
 		txtTitle.setColumns(10);
 		
 		JButton btnExport = new JButton("Export to CSV");
@@ -323,8 +337,14 @@ public class RegisterBooksFrame extends JPanel {
 		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnExport.setBorderPainted(false);
 		btnExport.setBackground(new Color(0, 128, 0));
-		btnExport.setBounds(786, 421, 150, 25);
+		btnExport.setBounds(868, 567, 259, 30);
 		panel.add(btnExport);
+		
+		JLabel lblNewLabel_2 = new JLabel("New label");
+		lblNewLabel_2.setForeground(new Color(255, 255, 255));
+		lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\Untitled design.png"));
+		lblNewLabel_2.setBounds(0, 0, 1256, 686);
+		panel.add(lblNewLabel_2);
 										
 		displayLatestData();
 	}
