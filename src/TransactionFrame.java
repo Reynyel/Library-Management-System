@@ -18,6 +18,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -31,6 +33,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import color.AlternateColorRender;
@@ -233,6 +238,19 @@ public class TransactionFrame extends JPanel {
 		lblStatus.setBounds(21, 194, 80, 20);
 		panel_1.add(lblStatus);
 		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		JButton btnExport = new JButton("Export to CSV");
+		btnExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				export();
+			}
+		});
+		btnExport.setForeground(Color.WHITE);
+		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnExport.setBorderPainted(false);
+		btnExport.setBackground(new Color(0, 128, 0));
+		btnExport.setBounds(1038, 614, 150, 25);
+		panel.add(btnExport);
 		String title2 = "Return Book";
 		Border border2 = BorderFactory.createTitledBorder(title2);
 		btnSearchBook.addActionListener(new ActionListener() {
@@ -247,6 +265,78 @@ public class TransactionFrame extends JPanel {
 	Connection conn;
 	PreparedStatement pst;
 	ResultSet rs;
+	
+	public void export() {						
+			
+			// Create a format for the date in the file name
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	    // Get the current date and format it
+	    String currentDate = dateFormat.format(new Date());
+	
+	    // Construct the base file name with the current date
+	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\transactions_export_" + currentDate + ".csv";
+	
+	    // Initialize the file name
+	    String fileName = baseFileName;
+	
+	    // Check if the file already exists
+	    int fileIndex = 1;
+	    while (fileExists(fileName)) {
+	        // Append a suffix to make the file name unique
+	        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
+	        fileIndex++;
+	    }
+	
+	    try {
+	        FileWriter fw = new FileWriter(fileName);
+	        try {
+	            pst = conn.prepareStatement("SELECT * From Transactions");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        rs = pst.executeQuery();
+	
+	        while (rs.next()) {
+	        	fw.append(rs.getString(1));
+				fw.append(',');
+				fw.append(rs.getString(2));
+				fw.append(',');
+				fw.append(rs.getString(3));
+				fw.append(',');
+				fw.append(rs.getString(4));
+				fw.append(',');
+				fw.append(rs.getString(5));
+				fw.append(',');
+				fw.append(rs.getString(6));
+				fw.append(',');
+				fw.append(rs.getString(7));
+				fw.append(',');
+				fw.append(rs.getString(8));
+				fw.append(',');
+				fw.append(rs.getString(9));
+				fw.append(',');
+				fw.append(rs.getString(10));
+				fw.append('\n');
+	        }
+	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        fw.flush();
+	        fw.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+								
+		
+	}
+	
+	// check if file already exissts
+	private boolean fileExists(String fileName) {
+	    File file = new File(fileName);
+	    return file.exists();
+	}
+		
 	
 	// This method is to set the status based on the selected accession number
 	private void setStatusBasedOnAccession() {

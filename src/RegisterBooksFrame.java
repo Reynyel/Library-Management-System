@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
@@ -24,8 +25,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -316,7 +319,10 @@ public class RegisterBooksFrame extends JPanel {
 		JButton btnExport = new JButton("Export to CSV");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				export();
+
+				export();					
+
+				
 			}
 		});
 		btnExport.setForeground(Color.WHITE);
@@ -335,22 +341,39 @@ public class RegisterBooksFrame extends JPanel {
 	private JTextField txtSrTitle;
 	private JTextField txtSrBookNum;
 	
-	public void export() {
-		String fileName = "C:\\Users\\LINDELL\\Desktop\\export_test.csv";
-		String filePath = "C:\\Users\\LINDELL\\Desktop";
+	public void export() {						
 		
-		try {
-			FileWriter fw = new FileWriter(fileName);
-			try {
-				pst = conn.prepareStatement("SELECT * From Books");
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			rs = pst.executeQuery();
-			
-			while(rs.next()) {
-				fw.append(rs.getString(1));
+		// Create a format for the date in the file name
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	    // Get the current date and format it
+	    String currentDate = dateFormat.format(new Date());
+
+	    // Construct the base file name with the current date
+	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\books_export_" + currentDate + ".csv";
+
+	    // Initialize the file name
+	    String fileName = baseFileName;
+
+	    // Check if the file already exists
+	    int fileIndex = 1;
+	    while (fileExists(fileName)) {
+	        // Append a suffix to make the file name unique
+	        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
+	        fileIndex++;
+	    }
+
+	    try {
+	        FileWriter fw = new FileWriter(fileName);
+	        try {
+	            pst = conn.prepareStatement("SELECT * From Books");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        rs = pst.executeQuery();
+
+	        while (rs.next()) {
+	        	fw.append(rs.getString(1));
 				fw.append(',');
 				fw.append(rs.getString(2));
 				fw.append(',');
@@ -374,20 +397,26 @@ public class RegisterBooksFrame extends JPanel {
 				fw.append(',');
 				fw.append(rs.getString(12));
 				fw.append('\n');
-				
-			}
-			JOptionPane.showMessageDialog(getRootPane(), "Export success");
-			fw.flush();
-			fw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	        }
+	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        fw.flush();
+	        fw.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+								
+		
 	}
 	
+	// check if file already exissts
+	private boolean fileExists(String fileName) {
+	    File file = new File(fileName);
+	    return file.exists();
+	}
+		
+		
 	/*Update entries*/
 	public void update() throws SQLException {
 		String title = txtTitle.getText();
@@ -451,6 +480,7 @@ public class RegisterBooksFrame extends JPanel {
 		}
 		
 	}
+
 	//Clear components
 	private void clear() {
 		txtTitle.setText("");

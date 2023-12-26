@@ -40,6 +40,10 @@ import tablemodel.NonEditTableModel;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import javax.swing.JRadioButton;
 
 public class LendingBooksFrame extends JPanel {
@@ -266,6 +270,19 @@ public class LendingBooksFrame extends JPanel {
 			}
 		});
 		radioGroup.add(radioReturned);
+		
+		JButton btnExport = new JButton("Export to CSV");
+		btnExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				export();
+			}
+		});
+		btnExport.setForeground(Color.WHITE);
+		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnExport.setBorderPainted(false);
+		btnExport.setBackground(new Color(0, 128, 0));
+		btnExport.setBounds(981, 599, 150, 25);
+		panel.add(btnExport);
 		btnSearchBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
@@ -287,6 +304,77 @@ public class LendingBooksFrame extends JPanel {
 	private JTextField txtAccession;
 	private JTextField txtPenalty;
 	private JTextField txtDateReturned;
+	
+public void export() {						
+		
+		// Create a format for the date in the file name
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	    // Get the current date and format it
+	    String currentDate = dateFormat.format(new Date());
+
+	    // Construct the base file name with the current date
+	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\returned_books_export_" + currentDate + ".csv";
+
+	    // Initialize the file name
+	    String fileName = baseFileName;
+
+	    // Check if the file already exists
+	    int fileIndex = 1;
+	    while (fileExists(fileName)) {
+	        // Append a suffix to make the file name unique
+	        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
+	        fileIndex++;
+	    }
+
+	    try {
+	        FileWriter fw = new FileWriter(fileName);
+	        try {
+	            pst = conn.prepareStatement("SELECT * From Returned");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        rs = pst.executeQuery();
+
+	        while (rs.next()) {
+	        	fw.append(rs.getString(1));
+				fw.append(',');
+				fw.append(rs.getString(2));
+				fw.append(',');
+				fw.append(rs.getString(3));
+				fw.append(',');
+				fw.append(rs.getString(4));
+				fw.append(',');
+				fw.append(rs.getString(5));
+				fw.append(',');
+				fw.append(rs.getString(6));
+				fw.append(',');
+				fw.append(rs.getString(7));
+				fw.append(',');
+				fw.append(rs.getString(8));
+				fw.append(',');
+				fw.append(rs.getString(9));
+				fw.append(',');
+				fw.append(rs.getString(10));
+				fw.append('\n');
+	        }
+	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        fw.flush();
+	        fw.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+								
+		
+	}
+	
+	// check if file already exissts
+	private boolean fileExists(String fileName) {
+	    File file = new File(fileName);
+	    return file.exists();
+	}
 	
 	// New method to fetch and display data in the JTable
     private void fetchAndDisplayData() {

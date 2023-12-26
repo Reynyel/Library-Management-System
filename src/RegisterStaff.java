@@ -21,6 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,6 +36,10 @@ import color.AlternateColorRender;
 import tablemodel.NonEditTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import javax.swing.ListSelectionModel;
 
 public class RegisterStaff extends JPanel {
@@ -262,14 +268,93 @@ public class RegisterStaff extends JPanel {
 		btnUpdate.setBounds(697, 611, 93, 33);
 		panel.add(btnUpdate);
 		
+		JButton btnExport = new JButton("Export to CSV");
+		btnExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				export();
+			}
+		});
+		btnExport.setForeground(Color.WHITE);
+		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnExport.setBorderPainted(false);
+		btnExport.setBackground(new Color(0, 128, 0));
+		btnExport.setBounds(540, 617, 150, 25);
+		panel.add(btnExport);
+		
 		displayData();
 	}
 	
 	Connection conn;
 	PreparedStatement pst;
 	ResultSet rs;
-	private JButton btnUpdate;
 	
+	public void export() {						
+			
+			// Create a format for the date in the file name
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	    // Get the current date and format it
+	    String currentDate = dateFormat.format(new Date());
+	
+	    // Construct the base file name with the current date
+	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\employee_export_" + currentDate + ".csv";
+	
+	    // Initialize the file name
+	    String fileName = baseFileName;
+	
+	    // Check if the file already exists
+	    int fileIndex = 1;
+	    while (fileExists(fileName)) {
+	        // Append a suffix to make the file name unique
+	        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
+	        fileIndex++;
+	    }
+	
+	    try {
+	        FileWriter fw = new FileWriter(fileName);
+	        try {
+	            pst = conn.prepareStatement("SELECT * From Employees");
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	        rs = pst.executeQuery();
+	
+	        while (rs.next()) {
+	        	fw.append(rs.getString(1));
+				fw.append(',');
+				fw.append(rs.getString(2));
+				fw.append(',');
+				fw.append(rs.getString(3));
+				fw.append(',');
+				fw.append(rs.getString(4));
+				fw.append(',');
+				fw.append(rs.getString(5));
+				fw.append(',');
+				fw.append(rs.getString(6));
+				fw.append(',');
+				fw.append(rs.getString(7));
+				fw.append('\n');
+	        }
+	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        fw.flush();
+	        fw.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+								
+		
+	}
+	
+	// check if file already exissts
+	private boolean fileExists(String fileName) {
+	    File file = new File(fileName);
+	    return file.exists();
+	}
+	
+	private JButton btnUpdate;
+
 	public void updateUserData() {
 		String lastName = txtLastName.getText();
 		String firstName = txtFirstName.getText();
