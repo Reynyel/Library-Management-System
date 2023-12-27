@@ -186,7 +186,7 @@ public class RegisterStaff extends JPanel {
 		
 		radioStaff = new JRadioButton("Staff");
 		radioStaff.setForeground(new Color(255, 255, 255));
-		radioStaff.setBackground(new Color(0, 80, 174));
+		radioStaff.setBackground(new Color(0, 51, 153));
 		radioStaff.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		radioStaff.setBounds(151, 201, 109, 30);
 		panel.add(radioStaff);
@@ -277,7 +277,7 @@ public class RegisterStaff extends JPanel {
 		panel.add(btnUpdate);
 		
 		lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\Untitled design.png"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Untitled design.png"));
 		lblNewLabel.setBounds(0, 0, 1256, 686);
 		panel.add(lblNewLabel);
 		

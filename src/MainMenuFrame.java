@@ -94,20 +94,20 @@ public class MainMenuFrame extends JFrame {
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setBounds(0, 0, 240, 100);
 		panel.add(lblNewLabel);
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\Santa Rosa Educational Institution.png"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Santa Rosa Educational Institution.png"));
 		
 		JButton btnRegisterBooks = new JButton(" Register Books");
 		btnRegisterBooks.setBounds(14, 221, 218, 41);
 		panel.add(btnRegisterBooks);
 		btnRegisterBooks.setHorizontalAlignment(SwingConstants.LEFT);
-		btnRegisterBooks.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\book (1).png"));
+		btnRegisterBooks.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\book (1).png"));
 		btnRegisterBooks.setForeground(new Color(255, 255, 255));
 		btnRegisterBooks.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnRegisterBooks.setBackground(new Color(0, 51, 102));
 		btnRegisterBooks.setBorderPainted(false);
 		
 		JButton btnBackupRecords = new JButton(" Backup Records");
-		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\backup.png"));
+		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\backup.png"));
 		btnBackupRecords.setBounds(12, 426, 220, 40);
 		panel.add(btnBackupRecords);
 		btnBackupRecords.addActionListener(new ActionListener() {
@@ -133,16 +133,16 @@ public class MainMenuFrame extends JFrame {
 		btnReturnBooks.setBounds(12, 375, 220, 40);
 		panel.add(btnReturnBooks);
 		btnReturnBooks.setHorizontalAlignment(SwingConstants.LEFT);
-		btnReturnBooks.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\return.png"));
+		btnReturnBooks.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\return.png"));
 		btnReturnBooks.setForeground(new Color(255, 255, 255));
 		btnReturnBooks.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnReturnBooks.setBackground(new Color(0, 51, 102));
 		btnReturnBooks.setBorderPainted(false);			                  		
 		
-		JButton btnTransac = new JButton(" Transactions");
+		JButton btnTransac = new JButton(" Lending");
 		btnTransac.setBounds(12, 324, 220, 40);
 		panel.add(btnTransac);
-		btnTransac.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\transaction.png"));
+		btnTransac.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\transaction.png"));
 		btnTransac.setHorizontalAlignment(SwingConstants.LEFT);
 		btnTransac.setForeground(new Color(255, 255, 255));
 		btnTransac.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -153,7 +153,7 @@ public class MainMenuFrame extends JFrame {
 		btnRegisterUser.setBounds(12, 273, 220, 40);
 		panel.add(btnRegisterUser);
 		btnRegisterUser.setHorizontalAlignment(SwingConstants.LEFT);
-		btnRegisterUser.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\management.png"));
+		btnRegisterUser.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\management.png"));
 		btnRegisterUser.setForeground(new Color(255, 255, 255));
 		btnRegisterUser.setFont(new Font("Verdana", Font.PLAIN, 15));
 		
@@ -180,7 +180,7 @@ public class MainMenuFrame extends JFrame {
 		UserPanel.setLayout(null);
 		
 		JLabel lbluserIcon = new JLabel("");
-		lbluserIcon.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\librarian.png"));
+		lbluserIcon.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\librarian.png"));
 		lbluserIcon.setBounds(10, 11, 32, 32);
 		UserPanel.add(lbluserIcon);
 		
@@ -228,7 +228,7 @@ public class MainMenuFrame extends JFrame {
 		btnLogOut.setBorderPainted(false);
 		
 		JButton btnDashboard = new JButton(" Dashboard");
-		btnDashboard.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\webpage.png"));
+		btnDashboard.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\webpage.png"));
 		btnDashboard.setHorizontalAlignment(SwingConstants.LEFT);
 		btnDashboard.setForeground(Color.WHITE);
 		btnDashboard.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -258,7 +258,7 @@ public class MainMenuFrame extends JFrame {
 	            contentPanel.add(transacFrame);
 	            contentPanel.revalidate();  // Revalidate the panel to reflect changes
 	            contentPanel.repaint();  // Repaint the panel
-	            lblPageTitle.setText("Transactions");
+	            lblPageTitle.setText("Book Lending");
 			}
 		});
 		

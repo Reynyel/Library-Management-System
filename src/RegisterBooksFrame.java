@@ -270,7 +270,7 @@ public class RegisterBooksFrame extends JPanel {
 		btnUpdate.setForeground(new Color(245, 255, 250));
 		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnUpdate.setBorderPainted(false);
-		btnUpdate.setBackground(new Color(32, 178, 170));
+		btnUpdate.setBackground(new Color(0, 153, 0));
 		panel.add(btnUpdate);
 		
 		txtSrTitle = new JTextField();
@@ -348,7 +348,7 @@ public class RegisterBooksFrame extends JPanel {
 		
 		JLabel lblNewLabel_2 = new JLabel("New label");
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
-		lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\Untitled design.png"));
+		lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Untitled design.png"));
 		lblNewLabel_2.setBounds(0, 0, 1256, 686);
 		panel.add(lblNewLabel_2);
 										

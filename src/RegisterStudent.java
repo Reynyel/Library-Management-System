@@ -155,7 +155,7 @@ public class RegisterStudent extends JPanel {
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
 		btnRegister.setBackground(new Color(220, 20, 60));
-		btnRegister.setBounds(331, 453, 150, 33);
+		btnRegister.setBounds(276, 453, 205, 33);
 		panel.add(btnRegister);
 		
 		gradeComboBox = new JComboBox();
@@ -264,11 +264,11 @@ public class RegisterStudent extends JPanel {
 		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnUpdate.setBorderPainted(false);
 		btnUpdate.setBackground(new Color(32, 178, 170));
-		btnUpdate.setBounds(171, 453, 150, 33);
+		btnUpdate.setBounds(62, 453, 205, 33);
 		panel.add(btnUpdate);
 		
 		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Downloads\\Untitled design.png"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Untitled design.png"));
 		lblNewLabel.setBounds(0, 0, 1256, 686);
 		panel.add(lblNewLabel);
 		
