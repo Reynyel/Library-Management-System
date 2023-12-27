@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.*;
 
 import java.awt.Font;
@@ -70,6 +71,9 @@ public class LogInFrame extends JFrame {
 		passLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(passLabel);
 		
+		String username[] = {"admin", "librarian"};
+		String password[] = {"admin123", "librarian123"};
+		
 		JButton logBtn = new JButton("Log In");
 		logBtn.setBounds(44, 375, 207, 40);
 		logBtn.setForeground(new Color(255, 250, 250));
@@ -80,9 +84,30 @@ public class LogInFrame extends JFrame {
 			 * Creates and shows the MainMenuFrame while
 			 * disposing the LogInFrame*/
 			public void actionPerformed(ActionEvent e) {
-				MainMenuFrame mainFrame = new MainMenuFrame(); 
-				mainFrame.setVisible(true);
-				dispose();
+				String enteredUsername = usernameTxt.getText();
+				char[] enteredPasswordChars = passwordTxt.getPassword();
+		        String enteredPassword = new String(enteredPasswordChars);
+		        String userType = "";
+		        
+		        boolean isValidUser = false;
+		        for (int i = 0; i < username.length; i++) {
+		            if (enteredUsername.equals(username[i]) && enteredPassword.equals(password[i])) {
+		                isValidUser = true;
+		                userType = username[i];
+		                break;
+		            }
+		        }
+		        
+		        if(isValidUser) {
+		        	MainMenuFrame mainFrame = new MainMenuFrame(userType); 
+		        	mainFrame.setVisible(true);
+		        	dispose();		        	
+		        }
+		        else {
+		        	 JOptionPane.showMessageDialog(getRootPane(), "Invalid username or password. Please try again.");
+		        }
+		        
+		        passwordTxt.setText("");
 			}
 		});
 		logBtn.setFont(new Font("Verdana", Font.PLAIN, 16));
@@ -103,7 +128,7 @@ public class LogInFrame extends JFrame {
 		passwordTxt.setBackground(new Color(173, 216, 230));
 		passwordTxt.setBounds(44, 321, 207, 30);
 		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		contentPane.add(passwordTxt);
+		contentPane.add(passwordTxt);				
 		
 		JButton btnHidden = new JButton("");
 		btnHidden.setBounds(430, 176, 15, 14);
@@ -113,7 +138,8 @@ public class LogInFrame extends JFrame {
 			 * show the main menu frame
 			 * when clicked*/
 			public void actionPerformed(ActionEvent e) {
-				MainMenuFrame mainFrame = new MainMenuFrame();
+				String userType = "";
+				MainMenuFrame mainFrame = new MainMenuFrame(userType);
 				mainFrame.setVisible(true);
 				dispose();
 			}

@@ -272,9 +272,86 @@ public class RegisterStudent extends JPanel {
 		lblNewLabel.setBounds(0, 0, 1256, 686);
 		panel.add(lblNewLabel);
 		
+		JButton btnExport = new JButton("Export to CSV");
+		btnExport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				export();
+			}
+		});
+		btnExport.setForeground(Color.WHITE);
+		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnExport.setBorderPainted(false);
+		btnExport.setBackground(new Color(0, 128, 0));
+		btnExport.setBounds(171, 497, 314, 30);
+		panel.add(btnExport);
+		
 		displayData();
 	}
 	
+	public void export() {						
+
+		// Create a format for the date in the file name
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    // Get the current date and format it
+    String currentDate = dateFormat.format(new Date());
+
+    // Construct the base file name with the current date
+    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\students_export_" + currentDate + ".csv";
+
+    // Initialize the file name
+    String fileName = baseFileName;
+
+    // Check if the file already exists
+    int fileIndex = 1;
+    while (fileExists(fileName)) {
+        // Append a suffix to make the file name unique
+        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
+        fileIndex++;
+    }
+
+    try {
+        FileWriter fw = new FileWriter(fileName);
+        try {
+            pst = conn.prepareStatement("SELECT * From Students");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        rs = pst.executeQuery();
+
+        while (rs.next()) {
+        	fw.append(rs.getString(1));
+			fw.append(',');
+			fw.append(rs.getString(2));
+			fw.append(',');
+			fw.append(rs.getString(3));
+			fw.append(',');
+			fw.append(rs.getString(4));
+			fw.append(',');
+			fw.append(rs.getString(5));
+			fw.append(',');
+			fw.append(rs.getString(6));
+			fw.append(',');
+			fw.append(rs.getString(7));
+			fw.append('\n');
+        }
+        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+        fw.flush();
+        fw.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+
+}
+
+// check if file already exissts
+private boolean fileExists(String fileName) {
+    File file = new File(fileName);
+    return file.exists();
+}
 
 	
 	public void updateSectionComboBox() {
