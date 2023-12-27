@@ -4,6 +4,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -13,6 +15,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 import notification.Notification;
@@ -32,7 +35,10 @@ public class MainMenuFrame extends JFrame {
 
 	private JPanel contentPane;
 	private Dashboard dash_1;
-
+	private String userType;
+	private String loginTime; // New variable to store login time
+	private JLabel l_date, l_time, l_log;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -40,7 +46,7 @@ public class MainMenuFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainMenuFrame frame = new MainMenuFrame();
+					MainMenuFrame frame = new MainMenuFrame("");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,11 +54,48 @@ public class MainMenuFrame extends JFrame {
 			}
 		});
 	}
+	
+	public void dt() {
+		// Create a format for the date in the file name
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	    // Get the current date and format it
+	    String currentDate = dateFormat.format(new Date());
+
+		l_date.setText(currentDate);
+		
+		
+	}
+	
+	public void updateTime() {
+	    Timer t;
+	    
+	    t = new Timer(100, new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            // Use try-catch to handle potential exceptions
+	            try {
+	                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+	                String currentTime = timeFormat.format(new Date());
+
+	                l_time.setText(currentTime);
+	            } catch (Exception ex) {
+	                ex.printStackTrace();
+	            }
+	        }
+	    });
+
+	    // Start the timer
+	    t.start();
+	}
 
 	/**
 	 * Create the frame.
 	 */
-	public MainMenuFrame() {
+	public MainMenuFrame(String userType) {
+
+		this.userType = userType;
+		
+		       
 		setBackground(new Color(255, 255, 255));
 		setResizable(false);
 		setTitle("Library Management System");
@@ -175,7 +218,7 @@ public class MainMenuFrame extends JFrame {
 		JPanel UserPanel = new JPanel();
 		UserPanel.setBackground(new Color(0, 51, 102));
 		UserPanel.setForeground(new Color(0, 51, 102));
-		UserPanel.setBounds(12, 558, 220, 167);
+		UserPanel.setBounds(12, 539, 220, 186);
 		panel.add(UserPanel);
 		UserPanel.setLayout(null);
 		
@@ -191,27 +234,29 @@ public class MainMenuFrame extends JFrame {
 		lblNewLabel_2.setBounds(51, 11, 42, 32);
 		UserPanel.add(lblNewLabel_2);
 		
-		JLabel lblNewLabel_2_1 = new JLabel("Date/Time:");
+		JLabel lblNewLabel_2_1 = new JLabel("Date:");
 		lblNewLabel_2_1.setForeground(Color.WHITE);
 		lblNewLabel_2_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_1.setBounds(10, 54, 83, 18);
+		lblNewLabel_2_1.setBounds(10, 54, 56, 18);
 		UserPanel.add(lblNewLabel_2_1);
 		
 		JLabel lblNewLabel_2_1_1 = new JLabel("Login Time:");
 		lblNewLabel_2_1_1.setForeground(Color.WHITE);
 		lblNewLabel_2_1_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_1_1.setBounds(10, 83, 83, 18);
+		lblNewLabel_2_1_1.setBounds(10, 112, 83, 18);
 		UserPanel.add(lblNewLabel_2_1_1);
 		
-		JLabel lblNewLabel_2_2 = new JLabel("Librarian");
-		lblNewLabel_2_2.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel_2_2.setForeground(Color.WHITE);
-		lblNewLabel_2_2.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_2.setBounds(91, 11, 107, 32);
-		UserPanel.add(lblNewLabel_2_2);
+		JLabel lblUserType = new JLabel("Librarian");
+		lblUserType.setHorizontalAlignment(SwingConstants.LEFT);
+		lblUserType.setForeground(Color.WHITE);
+		lblUserType.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblUserType.setBounds(91, 11, 107, 32);
+		lblUserType.setText(userType);
+		
+		UserPanel.add(lblUserType);
 		
 		JButton btnLogOut = new JButton("Sign Out");
-		btnLogOut.setBounds(0, 124, 220, 32);
+		btnLogOut.setBounds(0, 143, 220, 32);
 		UserPanel.add(btnLogOut);
 		btnLogOut.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\exit (3).png"));
 		btnLogOut.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -226,6 +271,33 @@ public class MainMenuFrame extends JFrame {
 			}
 		});
 		btnLogOut.setBorderPainted(false);
+		
+		JLabel lblNewLabel_2_1_2 = new JLabel("Time:");
+		lblNewLabel_2_1_2.setForeground(Color.WHITE);
+		lblNewLabel_2_1_2.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblNewLabel_2_1_2.setBounds(10, 83, 56, 18);
+		UserPanel.add(lblNewLabel_2_1_2);
+		
+		l_date = new JLabel("0");
+		l_date.setForeground(Color.WHITE);
+		l_date.setFont(new Font("Verdana", Font.PLAIN, 14));
+		l_date.setBounds(76, 54, 122, 18);
+		UserPanel.add(l_date);
+		
+		l_time = new JLabel("0");
+		l_time.setForeground(Color.WHITE);
+		l_time.setFont(new Font("Verdana", Font.PLAIN, 14));
+		l_time.setBounds(76, 83, 122, 18);
+		UserPanel.add(l_time);
+		
+		l_log = new JLabel("0");
+		l_log.setForeground(Color.WHITE);
+		l_log.setFont(new Font("Verdana", Font.PLAIN, 14));
+		l_log.setBounds(100, 112, 113, 18);
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        loginTime = timeFormat.format(new Date());
+        l_log.setText(loginTime);
+		UserPanel.add(l_log);
 		
 		JButton btnDashboard = new JButton(" Dashboard");
 		btnDashboard.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\webpage.png"));
@@ -341,6 +413,9 @@ public class MainMenuFrame extends JFrame {
 
             }
         });
+		
+		dt();
+		updateTime();
 		
 		/**
 		GlassPanePopup.install(this);

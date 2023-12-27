@@ -303,7 +303,7 @@ public class RegisterStaff extends JPanel {
 	
 	public void export() {						
 
-		// Create a format for the date in the file name
+	// Create a format for the date in the file name
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     // Get the current date and format it
