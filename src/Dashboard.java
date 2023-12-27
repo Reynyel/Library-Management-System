@@ -90,7 +90,7 @@ public class Dashboard extends JPanel {
 		
 		table_1 = new JTable();
 		table_1.setBackground(Color.WHITE);
-		table_1.setBounds(979, 50, 267, 312);
+		table_1.setBounds(969, 50, 277, 312);
 		panel.add(table_1);
 		
 		lblNewLabel_1_2 = new JLabel("Book Circulation History");
@@ -149,7 +149,7 @@ public class Dashboard extends JPanel {
 		
 		JLabel lblNewLabel = new JLabel("New label");
 		lblNewLabel.setBackground(new Color(0, 0, 0));
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\Untitled design.png"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Untitled design.png"));
 		lblNewLabel.setBounds(0, 0, 1256, 686);
 		panel.add(lblNewLabel);
 	}
