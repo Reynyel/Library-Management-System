@@ -274,10 +274,8 @@ public class RegisterStaff extends JPanel {
 	Connection conn;
 	PreparedStatement pst;
 	ResultSet rs;
-	
-	
 	private JButton btnUpdate;
-
+	
 	public void updateUserData() {
 		String lastName = txtLastName.getText();
 		String firstName = txtFirstName.getText();
