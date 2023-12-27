@@ -39,6 +39,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import color.AlternateColorRender;
 import tablemodel.NonEditTableModel;
+import javax.swing.ImageIcon;
 
 public class RegisterStudent extends JPanel {
 
@@ -79,62 +80,68 @@ public class RegisterStudent extends JPanel {
 		setBounds(100, 100, 1687, 743);
 		
 		panel = new JPanel();
-        panel.setBounds(-67, 22, 1288, 686);
+        panel.setBounds(0, 0, 1256, 686);
         add(panel);
         panel.setLayout(null);
 		
 		JLabel lblLastName = new JLabel("Last Name");
+		lblLastName.setForeground(new Color(255, 255, 255));
 		lblLastName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblLastName.setBounds(149, 402, 77, 30);
+		lblLastName.setBounds(62, 227, 77, 30);
 		panel.add(lblLastName);
 		
 		JLabel lblFirstName = new JLabel("First Name");
+		lblFirstName.setForeground(new Color(255, 255, 255));
 		lblFirstName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblFirstName.setBounds(149, 443, 77, 30);
+		lblFirstName.setBounds(205, 227, 77, 30);
 		panel.add(lblFirstName);
 		
 		JLabel lblMiddleName = new JLabel("Middle Name");
+		lblMiddleName.setForeground(new Color(255, 255, 255));
 		lblMiddleName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblMiddleName.setBounds(149, 484, 108, 30);
+		lblMiddleName.setBounds(348, 227, 108, 30);
 		panel.add(lblMiddleName);
 		
 		JLabel lblStudentNo = new JLabel("Student Number: ");
+		lblStudentNo.setForeground(new Color(255, 255, 255));
 		lblStudentNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStudentNo.setBounds(149, 361, 133, 30);
+		lblStudentNo.setBounds(62, 132, 133, 30);
 		panel.add(lblStudentNo);
 		
 		JLabel lblGrade = new JLabel("Level");
+		lblGrade.setForeground(new Color(255, 255, 255));
 		lblGrade.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblGrade.setBounds(149, 525, 77, 30);
+		lblGrade.setBounds(62, 330, 77, 30);
 		panel.add(lblGrade);
 		
 		JLabel lblSection = new JLabel("Section");
+		lblSection.setForeground(new Color(255, 255, 255));
 		lblSection.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblSection.setBounds(149, 566, 77, 30);
+		lblSection.setBounds(205, 330, 77, 30);
 		panel.add(lblSection);
 		
 		txtLastName = new JTextField();
 		txtLastName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtLastName.setColumns(10);
-		txtLastName.setBounds(292, 403, 629, 30);
+		txtLastName.setBounds(62, 268, 133, 30);
 		panel.add(txtLastName);
 		
 		txtFirstName = new JTextField();
 		txtFirstName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtFirstName.setColumns(10);
-		txtFirstName.setBounds(292, 444, 629, 30);
+		txtFirstName.setBounds(205, 268, 133, 30);
 		panel.add(txtFirstName);
 		
 		txtMiddleName = new JTextField();
 		txtMiddleName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtMiddleName.setColumns(10);
-		txtMiddleName.setBounds(292, 485, 629, 30);
+		txtMiddleName.setBounds(348, 268, 133, 30);
 		panel.add(txtMiddleName);
 		
 		txtStudentNum = new JTextField();
 		txtStudentNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtStudentNum.setColumns(10);
-		txtStudentNum.setBounds(292, 362, 217, 30);
+		txtStudentNum.setBounds(62, 173, 419, 30);
 		panel.add(txtStudentNum);
 		
 		JButton btnRegister = new JButton("Register");
@@ -148,22 +155,8 @@ public class RegisterStudent extends JPanel {
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
 		btnRegister.setBackground(new Color(220, 20, 60));
-		btnRegister.setBounds(828, 565, 93, 33);
+		btnRegister.setBounds(331, 453, 150, 33);
 		panel.add(btnRegister);
-		
-		JButton btnBack = new JButton("Back");
-		btnBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				UserTypeFrame type = new UserTypeFrame();
-				type.setVisible(true);
-			}
-		});
-		btnBack.setForeground(Color.WHITE);
-		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnBack.setBorderPainted(false);
-		btnBack.setBackground(new Color(65, 105, 225));
-		btnBack.setBounds(10, 667, 93, 33);
-		panel.add(btnBack);
 		
 		gradeComboBox = new JComboBox();
 		gradeComboBox.addActionListener(new ActionListener() {
@@ -171,13 +164,13 @@ public class RegisterStudent extends JPanel {
 				updateSectionComboBox();
 			}
 		});
-		gradeComboBox.setBounds(292, 527, 108, 30);
+		gradeComboBox.setBounds(62, 371, 133, 30);
 		gradeComboBox.setBackground(new Color(255, 255, 255));
 		
 		section = new StudentSections();
 		
 		sectionComboBox = new JComboBox();
-		sectionComboBox.setBounds(292, 568, 108, 30);
+		sectionComboBox.setBounds(205, 371, 108, 30);
 		panel.add(sectionComboBox);
 		
 		int[] level = new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
@@ -200,13 +193,30 @@ public class RegisterStudent extends JPanel {
 		tblStudents.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
 			},
 			new String[] {
-				"Student No.", "Last Name", "First Name", "Middle Name", "Grade Level", "Section", "User Type"
+				"Student No.", "Last Name", "First Name", "MiddleName", "Grade Level", "Section", "User Type"
 			}
-		));
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
 		tblStudents.setBorder(new LineBorder(new Color(0, 0, 0)));
-		tblStudents.setBounds(149, 0, 1036, 350);
+		tblStudents.setBounds(546, 11, 700, 664);
 		AlternateColorRender alternate = new AlternateColorRender();
 		tblStudents.setDefaultRenderer(Object.class, alternate);
 		
@@ -254,8 +264,13 @@ public class RegisterStudent extends JPanel {
 		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnUpdate.setBorderPainted(false);
 		btnUpdate.setBackground(new Color(32, 178, 170));
-		btnUpdate.setBounds(714, 566, 93, 33);
+		btnUpdate.setBounds(171, 453, 150, 33);
 		panel.add(btnUpdate);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Downloads\\Untitled design.png"));
+		lblNewLabel.setBounds(0, 0, 1256, 686);
+		panel.add(lblNewLabel);
 		
 		displayData();
 	}
