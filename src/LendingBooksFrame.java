@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -14,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
@@ -33,6 +35,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import color.AlternateColorRender;
@@ -80,7 +83,10 @@ public class LendingBooksFrame extends JPanel {
 	    setLayout(null);
 		setBounds(100, 100, 1687, 743);
 		
+		ButtonGroup radioGroup = new ButtonGroup();
+		
 		panel = new JPanel();
+		panel.setBackground(new Color(0, 153, 255));
         panel.setBounds(0, 0, 1256, 686);
         add(panel);
         panel.setLayout(null);
@@ -131,7 +137,7 @@ public class LendingBooksFrame extends JPanel {
 				}
 			}
 		});
-		tblTransac.setBounds(12, 191, 89, 144);
+		tblTransac.setBounds(0, 11, 89, 144);
 		
 		AlternateColorRender alternate = new AlternateColorRender();
 		tblTransac.setDefaultRenderer(Object.class, alternate);
@@ -251,7 +257,7 @@ public class LendingBooksFrame extends JPanel {
 		js.setBounds(10, 332, 1236, 306); // Adjust the bounds to match the table
 		panel.add(js);
 		
-		ButtonGroup radioGroup = new ButtonGroup();
+		
 		
 		JLabel lblBorrowersName = new JLabel("Borrower's ID");
 		lblBorrowersName.setForeground(new Color(255, 255, 255));
@@ -263,7 +269,7 @@ public class LendingBooksFrame extends JPanel {
 		radioBorrowed.setForeground(new Color(255, 255, 255));
 		radioBorrowed.setBackground(new Color(0, 0, 51));
 		radioBorrowed.setFont(new Font("Verdana", Font.PLAIN, 13));
-		radioBorrowed.setBounds(950, 302, 147, 23);
+		radioBorrowed.setBounds(938, 302, 147, 23);
 		panel.add(radioBorrowed);
 		radioBorrowed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -766,7 +772,7 @@ public void export() {
 	            // Set new column names
 	            tblModel.setColumnIdentifiers(newColumnNames);
 	            
-
+	            
 	            // Fetch and add new data
 	            while (rs.next()) {
 	                String transacId = String.valueOf(rs.getInt("Transaction_ID"));
@@ -785,6 +791,49 @@ public void export() {
 
 	                // add string array data to JTable
 	                tblModel.addRow(tbData);
+	                
+	                tblTransac.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
+		    		    @Override
+		    		    public Component getTableCellRendererComponent(JTable table,
+		    		            Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+		    		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+		    		        String status = (String)table.getModel().getValueAt(row, 9);
+		    		        if ("Student".equals(status)) {
+		    		        	setBackground(table.getBackground());
+		    		            setForeground(table.getForeground());
+		    		            
+		    		            // Assuming return date is in the 6th column (index 5)
+			    		        String returnDateStr = (String) table.getModel().getValueAt(row, 6);
+
+			    		        // Convert return date string to LocalDate
+			    		        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			    		        LocalDate returnDate = LocalDate.parse(returnDateStr, formatter);
+
+			    		        // Calculate the days between today and the return date
+			    		        LocalDate today = LocalDate.now();
+			    		        long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(today, returnDate);
+			    		        
+			    		        System.out.println(daysBetween);
+			    		        
+			    		        if (daysBetween == 2) {
+			    		            setBackground(Color.RED);
+			    		            setForeground(Color.WHITE);
+			    		        } else {
+			    		            setBackground(table.getBackground());
+			    		            setForeground(table.getForeground());
+			    		        }
+		    		        } else {
+		    		        	setBackground(Color.BLUE);
+		    		            setForeground(Color.WHITE);
+		    		            
+		    		        }    
+		    		        
+		    		     
+		    		        return this;
+		    		    }   
+		    		});
 	            }
 	        }
 	    } catch (Exception e) {
@@ -820,7 +869,8 @@ public void export() {
 
 	            // Set new column names
 	            tblModel.setColumnIdentifiers(newColumnNames);
-
+	            
+	            
 	            // Fetch and add new data
 	            while (rs.next()) {
 	                String transacId = String.valueOf(rs.getInt("transaction_id"));
@@ -839,6 +889,21 @@ public void export() {
 
 	                // add string array data to JTable
 	                tblModel.addRow(tbData);
+	                
+	                tblTransac.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
+		    		    @Override
+		    		    public Component getTableCellRendererComponent(JTable table,
+		    		            Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+		    		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+	    		        	setBackground(table.getBackground());
+	    		            setForeground(table.getForeground());
+
+     
+		    		        return this;
+		    		    }   
+		    		});
 	            }
 	        }
 	    } catch (Exception e) {

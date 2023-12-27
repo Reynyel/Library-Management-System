@@ -40,6 +40,7 @@ import javax.swing.table.DefaultTableModel;
 import color.AlternateColorRender;
 import tablemodel.NonEditTableModel;
 import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
 
 public class RegisterStudent extends JPanel {
 
@@ -85,37 +86,37 @@ public class RegisterStudent extends JPanel {
         panel.setLayout(null);
 		
 		JLabel lblLastName = new JLabel("Last Name");
-		lblLastName.setForeground(new Color(255, 255, 255));
+		lblLastName.setForeground(new Color(0, 0, 0));
 		lblLastName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblLastName.setBounds(62, 227, 77, 30);
 		panel.add(lblLastName);
 		
 		JLabel lblFirstName = new JLabel("First Name");
-		lblFirstName.setForeground(new Color(255, 255, 255));
+		lblFirstName.setForeground(new Color(0, 0, 0));
 		lblFirstName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblFirstName.setBounds(205, 227, 77, 30);
 		panel.add(lblFirstName);
 		
 		JLabel lblMiddleName = new JLabel("Middle Name");
-		lblMiddleName.setForeground(new Color(255, 255, 255));
+		lblMiddleName.setForeground(new Color(0, 0, 0));
 		lblMiddleName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblMiddleName.setBounds(348, 227, 108, 30);
 		panel.add(lblMiddleName);
 		
 		JLabel lblStudentNo = new JLabel("Student Number: ");
-		lblStudentNo.setForeground(new Color(255, 255, 255));
+		lblStudentNo.setForeground(new Color(0, 0, 0));
 		lblStudentNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblStudentNo.setBounds(62, 132, 133, 30);
 		panel.add(lblStudentNo);
 		
 		JLabel lblGrade = new JLabel("Level");
-		lblGrade.setForeground(new Color(255, 255, 255));
+		lblGrade.setForeground(new Color(0, 0, 0));
 		lblGrade.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblGrade.setBounds(62, 330, 77, 30);
 		panel.add(lblGrade);
 		
 		JLabel lblSection = new JLabel("Section");
-		lblSection.setForeground(new Color(255, 255, 255));
+		lblSection.setForeground(new Color(0, 0, 0));
 		lblSection.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblSection.setBounds(205, 330, 77, 30);
 		panel.add(lblSection);
@@ -186,8 +187,19 @@ public class RegisterStudent extends JPanel {
 		}
 		
 		panel.add(gradeComboBox);
+		AlternateColorRender alternate = new AlternateColorRender();
+		
+		Object[][] data = {null, null, null, null, null, null, null, null, null, null, null};
+		Object[] columnNames = {"Student No.", "Last Name", "First Name", "MiddleName", "Grade Level", "Section", "User Type"};
+		NonEditTableModel model;
+		Set<Integer> editableColumns = new HashSet<>();
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(546, 11, 700, 664);
+		panel.add(scrollPane);
 		
 		tblStudents = new JTable();
+		scrollPane.setViewportView(tblStudents);
 		tblStudents.setColumnSelectionAllowed(true);
 		tblStudents.setCellSelectionEnabled(true);
 		tblStudents.setModel(new DefaultTableModel(
@@ -216,14 +228,7 @@ public class RegisterStudent extends JPanel {
 			}
 		});
 		tblStudents.setBorder(new LineBorder(new Color(0, 0, 0)));
-		tblStudents.setBounds(546, 11, 700, 664);
-		AlternateColorRender alternate = new AlternateColorRender();
 		tblStudents.setDefaultRenderer(Object.class, alternate);
-		
-		Object[][] data = {null, null, null, null, null, null, null, null, null, null, null};
-		Object[] columnNames = {"Student No.", "Last Name", "First Name", "MiddleName", "Grade Level", "Section", "User Type"};
-		NonEditTableModel model;
-		Set<Integer> editableColumns = new HashSet<>();
 		
 		tblStudents.setModel(new NonEditTableModel(data, columnNames, editableColumns));
 		tblStudents.addMouseListener(new MouseAdapter() {
@@ -252,7 +257,6 @@ public class RegisterStudent extends JPanel {
 				}
 			}
 		});
-		panel.add(tblStudents);
 		
 		JButton btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener() {

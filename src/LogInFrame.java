@@ -129,7 +129,7 @@ public class LogInFrame extends JFrame {
 		passwordTxt.setBounds(44, 321, 207, 30);
 		passwordTxt.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(passwordTxt);				
-		
+			
 		JButton btnHidden = new JButton("");
 		btnHidden.setBounds(430, 176, 15, 14);
 		btnHidden.addActionListener(new ActionListener() {
@@ -150,7 +150,7 @@ public class LogInFrame extends JFrame {
 		contentPane.add(btnHidden);
 		
 		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Library Management System.png"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\Library Management System.png"));
 		lblNewLabel.setBounds(0, 0, 750, 487);
 		contentPane.add(lblNewLabel);
 		

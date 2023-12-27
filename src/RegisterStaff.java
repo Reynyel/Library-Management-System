@@ -42,6 +42,7 @@ import java.io.IOException;
 
 import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
 
 public class RegisterStaff extends JPanel {
 
@@ -199,9 +200,20 @@ public class RegisterStaff extends JPanel {
 		G.add(radioFaculty);
 		G.add(radioStaff);
 		
+		Object[][] data = {null, null, null, null, null, null, null};
+		Object[] columnNames = {"Employee ID", "Last Name", "First Name", "Middle Name", "Contact No.", "Email", "Employee Type"};
+		NonEditTableModel model;
+		Set<Integer> editableColumns = new HashSet<>();
+		AlternateColorRender alternate = new AlternateColorRender();
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(546, 11, 700, 664);
+		panel.add(scrollPane);
+		
 		
 		
 		tblEmployees = new JTable();
+		scrollPane.setViewportView(tblEmployees);
 		tblEmployees.setColumnSelectionAllowed(true);
 		tblEmployees.setCellSelectionEnabled(true);
 		tblEmployees.setModel(new DefaultTableModel(
@@ -225,11 +237,6 @@ public class RegisterStaff extends JPanel {
 				return columnEditables[column];
 			}
 		});
-		
-		Object[][] data = {null, null, null, null, null, null, null};
-		Object[] columnNames = {"Employee ID", "Last Name", "First Name", "Middle Name", "Contact No.", "Email", "Employee Type"};
-		NonEditTableModel model;
-		Set<Integer> editableColumns = new HashSet<>();
 		tblEmployees.setModel(new NonEditTableModel(data, columnNames, editableColumns));
 		tblEmployees.addMouseListener(new MouseAdapter() {
 			@Override
@@ -257,11 +264,8 @@ public class RegisterStaff extends JPanel {
 				}
 			}
 		});
-		tblEmployees.setBorder(new LineBorder(new Color(0, 0, 0)));	
-		tblEmployees.setBounds(546, 11, 700, 664);
-		AlternateColorRender alternate = new AlternateColorRender();
+		tblEmployees.setBorder(new LineBorder(new Color(0, 0, 0)));
 		tblEmployees.setDefaultRenderer(Object.class, alternate);
-		panel.add(tblEmployees);
 		
 		btnUpdate = new JButton("Update");
 		btnUpdate.addActionListener(new ActionListener() {
@@ -368,6 +372,7 @@ private boolean fileExists(String fileName) {
 	
 	private JButton btnUpdate;
 	private JLabel lblNewLabel;
+	private JScrollPane scrollPane;
 	
 	public void updateUserData() {
 		String lastName = txtLastName.getText();

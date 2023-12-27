@@ -6,6 +6,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
@@ -28,6 +29,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -87,6 +89,7 @@ public class TransactionFrame extends JPanel {
 		setBounds(100, 100, 1687, 743);
 		
 		panel = new JPanel();
+		panel.setBackground(new Color(0, 153, 255));
         panel.setBounds(0, 0, 1256, 686);
         add(panel);
         panel.setLayout(null);
@@ -101,10 +104,13 @@ public class TransactionFrame extends JPanel {
 		
 		AlternateColorRender alternate = new AlternateColorRender();
 		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 226, 1236, 413);
+		panel.add(scrollPane);
+		
 		JScrollPane js = new JScrollPane();
+		scrollPane.setViewportView(js);
 		js.setVisible(true);
-		js.setBounds(10, 226, 1236, 413); // Adjust the bounds to match the table
-		panel.add(js);
 		
 		tblTransac = new JTable();
 		js.setColumnHeaderView(tblTransac);
@@ -823,6 +829,29 @@ public class TransactionFrame extends JPanel {
 
 	                // add string array data to JTable
 	                tblModel.addRow(tbData);
+	                
+	                /*CHANGE ROW COLOR
+	                 * STAFF/FACULTY - BLUE
+	                 * STUDENT - WHITE*/
+	                tblTransac.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
+		    		    @Override
+		    		    public Component getTableCellRendererComponent(JTable table,
+		    		            Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+		    		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+		    		        String status = (String)table.getModel().getValueAt(row, 9);
+		    		        if ("Student".equals(status)) {
+		    		        	setBackground(table.getBackground());
+		    		            setForeground(table.getForeground());
+		    		        } else {
+		    		        	setBackground(Color.BLUE);
+		    		            setForeground(Color.WHITE);
+		    		            
+		    		        }       
+		    		        return this;
+		    		    }   
+		    		});
 	            }
 	        }
 	    } catch (Exception e) {
@@ -877,6 +906,19 @@ public class TransactionFrame extends JPanel {
 
                     // add string array data to jtable
                     tblModel.addRow(tbData);
+                    
+                    tblTransac.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
+		    		    @Override
+		    		    public Component getTableCellRendererComponent(JTable table,
+		    		            Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+		    		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+	    		        	setBackground(table.getBackground());
+	    		            setForeground(table.getForeground());
+     
+		    		        return this;
+		    		    }   
+		    		});
                 }
             }
         } catch (Exception e) {

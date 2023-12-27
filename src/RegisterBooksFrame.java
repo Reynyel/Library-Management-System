@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.Color;
@@ -38,6 +39,9 @@ import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+
+import color.AlternateColorRender;
+
 import java.awt.Component;
 import java.awt.Dimension;
 
@@ -89,7 +93,7 @@ public class RegisterBooksFrame extends JPanel {
 		setBorder(null);				
 		setPreferredSize(new Dimension(1256, 686));
 	    setLayout(null);
-				
+					
 		Object[][] data = {null, null, null, null, null, null, null, null, null, null, null};
 		Object[] columnNames = {"Book Number", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Dewey", "Accession", "Status", "Date Registered"};
 		NonEditTableModel model;
@@ -215,6 +219,8 @@ public class RegisterBooksFrame extends JPanel {
 		panel.add(scrollPane);
 		
 		table = new JTable();
+		table.setShowVerticalLines(false);
+		table.setShowHorizontalLines(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
@@ -252,6 +258,27 @@ public class RegisterBooksFrame extends JPanel {
 				}
 			}
 		});
+		
+		table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table,
+		            Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+
+		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+		        String status = (String)table.getModel().getValueAt(row, 9);
+		        if ("Available".equals(status)) {
+		        	setBackground(table.getBackground());
+		            setForeground(table.getForeground());
+		        } else {
+		        	setBackground(Color.GRAY);
+		            setForeground(Color.WHITE);
+		            
+		        }       
+		        return this;
+		    }   
+		});
+		 
 		scrollPane.setViewportView(table);
 		
 		JButton btnUpdate = new JButton("Update");
@@ -358,6 +385,8 @@ public class RegisterBooksFrame extends JPanel {
 	Connection conn;
 	PreparedStatement pst;
 	ResultSet rs;
+	
+	
 	private JTextField txtSrTitle;
 	private JTextField txtSrBookNum;
 	
