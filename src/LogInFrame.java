@@ -99,8 +99,8 @@ public class LogInFrame extends JFrame {
 		        }
 		        
 		        if(isValidUser) {
-		        	MainMenuFrame mainFrame = new MainMenuFrame(userType); 
-		        	mainFrame.setVisible(true);
+		        	MainMenuFrame mainFrame = new MainMenuFrame(userType); 		        	
+		        	mainFrame.setVisible(true);	        			        	
 		        	dispose();		        	
 		        }
 		        else {

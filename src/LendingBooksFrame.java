@@ -353,7 +353,7 @@ public class LendingBooksFrame extends JPanel {
 	private JTextField txtPenalty;
 	private JTextField txtDateReturned;
 	
-public void export() {						
+	public void export() {						
 		
 		// Create a format for the date in the file name
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
@@ -51,7 +53,7 @@ public class MainMenuFrame extends JFrame {
 	private JPanel contentPane, contentPanel;
 	private String userType;
 	private String loginTime; // New variable to store login time
-	private JLabel l_date, l_time, l_log, lblPageTitle;
+	private JLabel lblUserType, l_date, l_time, l_log, lblPageTitle;
 	private Label numBorr, numOD, numBooks, label_2_2, label_2_2_1, label_2_2_1_1, label, label_1,
 	label_1_1;
 	private JTable tblOverdue;
@@ -116,7 +118,7 @@ public class MainMenuFrame extends JFrame {
 		setBackground(new Color(255, 255, 255));
 		setResizable(false);
 		setTitle("Library Management System");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1510, 775);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(204, 255, 204));
@@ -170,20 +172,7 @@ public class MainMenuFrame extends JFrame {
 		JButton btnBackupRecords = new JButton(" Backup Records");
 		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\backup.png"));
 		btnBackupRecords.setBounds(12, 426, 220, 40);
-		panel.add(btnBackupRecords);
-		
-		// Check the user's role
-		if ("Librarian".equalsIgnoreCase(userType)) {
-		    // If the user is a librarian, disable and make the button invisible
-		    btnBackupRecords.setEnabled(false);
-		    btnBackupRecords.setVisible(false);
-		} else if ("Admin".equalsIgnoreCase(userType)) {
-		    // If the user is an admin, enable and make the button visible
-		    btnBackupRecords.setEnabled(true);
-		    btnBackupRecords.setVisible(true);
-		}
-
-		
+		panel.add(btnBackupRecords);						
 		
 		btnBackupRecords.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -278,7 +267,7 @@ public class MainMenuFrame extends JFrame {
 		lblNewLabel_2_1_1.setBounds(10, 112, 83, 18);
 		UserPanel.add(lblNewLabel_2_1_1);
 		
-		JLabel lblUserType = new JLabel("Librarian");
+		lblUserType = new JLabel("Librarian");
 		lblUserType.setHorizontalAlignment(SwingConstants.LEFT);
 		lblUserType.setForeground(Color.WHITE);
 		lblUserType.setFont(new Font("Verdana", Font.PLAIN, 14));
@@ -295,13 +284,7 @@ public class MainMenuFrame extends JFrame {
 		btnLogOut.setBackground(new Color(0, 51, 102));
 		btnLogOut.setForeground(new Color(255, 255, 255));
 		
-		btnLogOut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				LogInFrame logInFrame = new LogInFrame();
-				logInFrame.setVisible(true);
-				dispose();
-			}
-		});
+		
 		btnLogOut.setBorderPainted(false);
 		
 		JLabel lblNewLabel_2_1_2 = new JLabel("Time:");
@@ -340,6 +323,29 @@ public class MainMenuFrame extends JFrame {
 		btnDashboard.setBackground(new Color(0, 51, 102));
 		btnDashboard.setBounds(14, 169, 218, 41);
 		panel.add(btnDashboard);
+		
+		JButton btnLogs = new JButton("Log in Trail");
+		btnLogs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Logs viewLogs = new Logs();
+				viewLogs.setBounds(0, 0, 1256, 686);
+				viewLogs.setLayout(null);  // Set layout to null
+	            contentPanel.removeAll();  // Remove existing components
+	            contentPanel.add(viewLogs);
+	            contentPanel.revalidate();  // Revalidate the panel to reflect changes
+	            contentPanel.repaint();  // Repaint the panel
+	            lblPageTitle.setText("Login Audit Trail");
+			}
+		});
+		
+		btnLogs.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\logimg-small.png"));
+		btnLogs.setHorizontalAlignment(SwingConstants.LEFT);
+		btnLogs.setForeground(Color.WHITE);
+		btnLogs.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnLogs.setBorderPainted(false);
+		btnLogs.setBackground(new Color(0, 51, 102));
+		btnLogs.setBounds(12, 470, 220, 40);
+		panel.add(btnLogs);
         contentPanel.removeAll();  // Remove existing components
         contentPanel.setLayout(null);
         contentPanel.revalidate();  // Revalidate the panel to reflect changes
@@ -447,6 +453,21 @@ public class MainMenuFrame extends JFrame {
         label_2_2_1_1.setBounds(525, 65, 164, 22);
         contentPanel.add(label_2_2_1_1);
         
+        // Check the user's role
+     		if ("Librarian".equalsIgnoreCase(userType)) {
+     		    // If the user is a librarian, disable and make the button invisible
+     		    btnBackupRecords.setEnabled(false);
+     		    btnBackupRecords.setVisible(false);
+     		    btnLogs.setEnabled(false);
+     		    btnLogs.setVisible(false);
+     		} else if ("Admin".equalsIgnoreCase(userType)) {
+     		    // If the user is an admin, enable and make the button visible
+     		    btnBackupRecords.setEnabled(true);
+     		    btnBackupRecords.setVisible(true);
+     		    btnLogs.setEnabled(true);
+     		    btnLogs.setVisible(true);
+
+     		}
         
 
 		btnTransac.addActionListener(new ActionListener() {
@@ -564,7 +585,15 @@ public class MainMenuFrame extends JFrame {
 		displayOverdue();
 		displayReturned();
 		displayBorrowed();
-	
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				getLog();
+				LogInFrame logInFrame = new LogInFrame();
+				logInFrame.setVisible(true);
+				
+				dispose();
+			}
+		});
 	}		
 	
 	Connection conn;
@@ -609,6 +638,46 @@ public class MainMenuFrame extends JFrame {
 	    contentPanel.revalidate();
 	    contentPanel.repaint();
 	    	 
+	}
+	
+	public void getLog() {
+		try {
+	        Class.forName("com.mysql.jdbc.Driver");
+	    } catch (ClassNotFoundException e1) {
+	        e1.printStackTrace();
+	    }
+
+	    try {
+	    	conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/logsDB", "root", "ranielle25");
+            Statement stmt = conn.createStatement();
+            System.out.println("Connected");
+
+            // Get the inputs
+            String user = lblUserType.getText().toString();
+            String date = l_date.getText().toString();
+
+            // Use a PreparedStatement to handle parameterized queries
+            String sql = "INSERT INTO Logs (user_name, log_date, time_in, time_out) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, user);
+                pstmt.setString(2, date);
+                pstmt.setString(3, l_log.getText().toString());
+                
+                Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+                // Format the Timestamp to get only the time
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                String time = timeFormat.format(currentTime);
+                
+                // Use the current timestamp for time_out
+                pstmt.setString(4, time);
+                
+                // Execute the update
+                pstmt.executeUpdate();
+            }
+	    } catch (SQLException e1) {
+	        e1.printStackTrace();
+	    }
 	}
 	
 	public Component displayOverdue() {

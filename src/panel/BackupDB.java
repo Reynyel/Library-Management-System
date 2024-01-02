@@ -26,6 +26,13 @@ public class BackupDB extends JPanel {
 	public BackupDB() {
 		setLayout(null);
 		
+		JLabel lblNewLabel_1 = new JLabel("Backup Database");
+		lblNewLabel_1.setForeground(new Color(255, 255, 255));
+		lblNewLabel_1.setBackground(new Color(255, 255, 255));
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_1.setBounds(308, 266, 133, 24);
+		add(lblNewLabel_1);
+		
 		txtPath = new JTextField();
 		txtPath.setForeground(new Color(255, 255, 255));
 		txtPath.setBackground(new Color(0, 153, 204));

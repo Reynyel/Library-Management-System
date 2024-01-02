@@ -183,6 +183,9 @@ public class RegisterStaff extends JPanel {
 		radioFaculty.setBackground(new Color(0, 74, 174));
 		radioFaculty.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		radioFaculty.setBounds(40, 201, 109, 30);
+		radioFaculty.setOpaque(false);
+		radioFaculty.setContentAreaFilled(false);
+        radioFaculty.setBorderPainted(false);
 		panel.add(radioFaculty);
 		
 		radioStaff = new JRadioButton("Staff");
@@ -190,6 +193,9 @@ public class RegisterStaff extends JPanel {
 		radioStaff.setBackground(new Color(0, 51, 153));
 		radioStaff.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		radioStaff.setBounds(151, 201, 109, 30);
+		radioStaff.setOpaque(false);
+		radioStaff.setContentAreaFilled(false);
+        radioStaff.setBorderPainted(false);
 		panel.add(radioStaff);
 		
 		
