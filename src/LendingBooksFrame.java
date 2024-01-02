@@ -137,7 +137,7 @@ public class LendingBooksFrame extends JPanel {
 				}
 			}
 		});
-		tblTransac.setBounds(0, 11, 89, 144);
+		tblTransac.setBounds(0, 20, 89, 144);
 		
 		AlternateColorRender alternate = new AlternateColorRender();
 		tblTransac.setDefaultRenderer(Object.class, alternate);
@@ -319,8 +319,8 @@ public class LendingBooksFrame extends JPanel {
 		txtDateReturned.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Untitled design.png"));
-		lblNewLabel_1.setBounds(-10, 29, 1256, 686);
+		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
+		lblNewLabel_1.setBounds(0, -3, 1266, 686);
 		panel.add(lblNewLabel_1);
 		
 		fetchAndDisplayData();
@@ -762,7 +762,7 @@ public void export() {
 	                            
                 // Remove existing columns
 	            tblModel.setColumnCount(0);
-	            
+	            	
 	            // Clear existing rows
 	            tblModel.setRowCount(0); 
 	            

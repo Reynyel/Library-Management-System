@@ -60,8 +60,8 @@ public class BackupDB extends JPanel {
 		add(btnBackupNow);
 		
 		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Backup Records.png"));
-		lblNewLabel.setBounds(0, 0, 1256, 686);
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Backup Records.png"));
+		lblNewLabel.setBounds(-14, -19, 1259, 724);
 		add(lblNewLabel);
 
 	}

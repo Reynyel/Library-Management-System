@@ -86,37 +86,37 @@ public class RegisterStudent extends JPanel {
         panel.setLayout(null);
 		
 		JLabel lblLastName = new JLabel("Last Name");
-		lblLastName.setForeground(new Color(0, 0, 0));
+		lblLastName.setForeground(new Color(255, 255, 255));
 		lblLastName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblLastName.setBounds(62, 227, 77, 30);
 		panel.add(lblLastName);
 		
 		JLabel lblFirstName = new JLabel("First Name");
-		lblFirstName.setForeground(new Color(0, 0, 0));
+		lblFirstName.setForeground(new Color(255, 255, 255));
 		lblFirstName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblFirstName.setBounds(205, 227, 77, 30);
 		panel.add(lblFirstName);
 		
 		JLabel lblMiddleName = new JLabel("Middle Name");
-		lblMiddleName.setForeground(new Color(0, 0, 0));
+		lblMiddleName.setForeground(new Color(255, 255, 255));
 		lblMiddleName.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblMiddleName.setBounds(348, 227, 108, 30);
 		panel.add(lblMiddleName);
 		
 		JLabel lblStudentNo = new JLabel("Student Number: ");
-		lblStudentNo.setForeground(new Color(0, 0, 0));
+		lblStudentNo.setForeground(new Color(255, 255, 255));
 		lblStudentNo.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblStudentNo.setBounds(62, 132, 133, 30);
 		panel.add(lblStudentNo);
 		
 		JLabel lblGrade = new JLabel("Level");
-		lblGrade.setForeground(new Color(0, 0, 0));
+		lblGrade.setForeground(new Color(255, 255, 255));
 		lblGrade.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblGrade.setBounds(62, 330, 77, 30);
 		panel.add(lblGrade);
 		
 		JLabel lblSection = new JLabel("Section");
-		lblSection.setForeground(new Color(0, 0, 0));
+		lblSection.setForeground(new Color(255, 255, 255));
 		lblSection.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblSection.setBounds(205, 330, 77, 30);
 		panel.add(lblSection);
@@ -252,7 +252,7 @@ public class RegisterStudent extends JPanel {
 						gradeComboBox.setSelectedItem(gradeLevel);
 						sectionComboBox.setSelectedItem(section);
 						txtStudentNum.setText(studentNum);
-						
+							
 					}
 				}
 			}
@@ -272,7 +272,7 @@ public class RegisterStudent extends JPanel {
 		panel.add(btnUpdate);
 		
 		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Untitled design.png"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
 		lblNewLabel.setBounds(0, 0, 1256, 686);
 		panel.add(lblNewLabel);
 		

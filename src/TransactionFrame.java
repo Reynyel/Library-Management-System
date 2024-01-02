@@ -170,7 +170,7 @@ public class TransactionFrame extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				viewBooks();
 			}
-		});
+		});	
 		radioBooks.setBounds(1128, 185, 109, 30);
 		panel.add(radioBooks);
 		btnUpdate.addActionListener(new ActionListener() {
@@ -273,7 +273,7 @@ public class TransactionFrame extends JPanel {
 		btnSearchBook.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
 		
 		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Untitled design.png"));
+		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
 		lblNewLabel_1.setBounds(0, 0, 1256, 686);
 		panel.add(lblNewLabel_1);
 		btnSearchBook.addActionListener(new ActionListener() {

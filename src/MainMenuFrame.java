@@ -166,7 +166,7 @@ public class MainMenuFrame extends JFrame {
 		btnRegisterBooks.setBorderPainted(false);
 		
 		JButton btnBackupRecords = new JButton(" Backup Records");
-		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\backup.png"));
+		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\backup.png"));
 		btnBackupRecords.setBounds(12, 426, 220, 40);
 		panel.add(btnBackupRecords);
 		btnBackupRecords.addActionListener(new ActionListener() {
@@ -316,7 +316,7 @@ public class MainMenuFrame extends JFrame {
 		UserPanel.add(l_log);
 		
 		JButton btnDashboard = new JButton(" Dashboard");
-		btnDashboard.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\webpage.png"));
+		btnDashboard.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\webpage.png"));
 		btnDashboard.setHorizontalAlignment(SwingConstants.LEFT);
 		btnDashboard.setForeground(Color.WHITE);
 		btnDashboard.setFont(new Font("Verdana", Font.PLAIN, 15));

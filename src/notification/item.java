@@ -21,7 +21,7 @@ public class item extends JPanel {
 		lblDescription.setForeground(new Color(192, 192, 192));
 		lblDescription.setText(desc);
 		
-		
+			
 		JLabel lblADayAgo = new JLabel("a day ago");
 		lblADayAgo.setForeground(Color.LIGHT_GRAY);
 		setLayout(new MigLayout("", "[55px][55px]", "[14px][14px]"));

@@ -281,10 +281,10 @@ public class RegisterStaff extends JPanel {
 		panel.add(btnUpdate);
 		
 		lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Untitled design.png"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
 		lblNewLabel.setBounds(0, 0, 1256, 686);
 		panel.add(lblNewLabel);
-		
+			
 		JButton btnExport = new JButton("Export to CSV");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

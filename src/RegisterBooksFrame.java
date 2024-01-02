@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -55,6 +56,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.SpringLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JRadioButton;
 
 
 public class RegisterBooksFrame extends JPanel {
@@ -65,6 +67,7 @@ public class RegisterBooksFrame extends JPanel {
 	private JTextField txtISBN;
 	private JTextField txtPublisher;
 	private JTextField txtQuantity;
+	private JButton btnUpdate;
 	private JComboBox comboBoxSubject, languageComboBox;
 	private JTable table;
 
@@ -105,6 +108,31 @@ public class RegisterBooksFrame extends JPanel {
         add(panel);
         panel.setLayout(null);
         
+        ButtonGroup radioGroup = new ButtonGroup();
+        
+        JRadioButton radioSearch = new JRadioButton("Search Books");
+        
+        radioSearch.setForeground(Color.WHITE);
+        radioSearch.setBackground(new Color(40, 85, 238));
+        radioSearch.setBounds(815, 339, 109, 23);
+        radioSearch.setOpaque(false);
+        radioSearch.setContentAreaFilled(false);
+        radioSearch.setBorderPainted(false);
+        panel.add(radioSearch);
+        
+        JRadioButton radioRegister = new JRadioButton("Register Books");
+        
+        radioRegister.setForeground(new Color(255, 255, 255));
+        radioRegister.setBackground(new Color(40, 85, 238));
+        radioRegister.setBounds(76, 339, 109, 23);
+        radioRegister.setOpaque(false);
+        radioRegister.setContentAreaFilled(false);
+        radioRegister.setBorderPainted(false);
+        panel.add(radioRegister);
+        
+        radioGroup.add(radioRegister);
+        radioGroup.add(radioSearch);
+    
         JLabel lblNewLabel = new JLabel("Book Title");
         lblNewLabel.setForeground(new Color(255, 255, 255));
         lblNewLabel.setBounds(76, 370, 72, 30);
@@ -173,6 +201,14 @@ public class RegisterBooksFrame extends JPanel {
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				registerBooks();
+				txtTitle.setText("");
+				txtAuthor.setText("");
+				txtPublisher.setText("");
+				txtQuantity.setText("");
+				txtISBN.setText("");
+				comboBoxSubject.setSelectedIndex(0);
+				languageComboBox.setSelectedIndex(0);
+				
 			}
 				
 		});
@@ -254,6 +290,7 @@ public class RegisterBooksFrame extends JPanel {
 						languageComboBox.setSelectedItem(language);
 						comboBoxSubject.setSelectedItem(subject);
 						
+						btnUpdate.setEnabled(true);
 					}
 				}
 			}
@@ -281,12 +318,14 @@ public class RegisterBooksFrame extends JPanel {
 		 
 		scrollPane.setViewportView(table);
 		
-		JButton btnUpdate = new JButton("Update");
+		btnUpdate = new JButton("Update");
 		btnUpdate.setBounds(435, 596, 113, 30);
+		btnUpdate.setEnabled(false);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					update();
+					
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -298,6 +337,7 @@ public class RegisterBooksFrame extends JPanel {
 		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnUpdate.setBorderPainted(false);
 		btnUpdate.setBackground(new Color(0, 153, 0));
+		
 		panel.add(btnUpdate);
 		
 		txtSrTitle = new JTextField();
@@ -306,11 +346,11 @@ public class RegisterBooksFrame extends JPanel {
 		txtSrTitle.setColumns(10);
 		panel.add(txtSrTitle);
 		
-		JLabel lblNewLabel_1 = new JLabel("Book Title");
-		lblNewLabel_1.setForeground(new Color(255, 255, 255));
-		lblNewLabel_1.setBounds(815, 369, 64, 30);
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		panel.add(lblNewLabel_1);
+		JLabel lblTitle1 = new JLabel("Book Title");
+		lblTitle1.setForeground(new Color(255, 255, 255));
+		lblTitle1.setBounds(815, 369, 64, 30);
+		lblTitle1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		panel.add(lblTitle1);
 		
 		txtSrBookNum = new JTextField();
 		txtSrBookNum.setBounds(815, 469, 358, 30);
@@ -318,11 +358,11 @@ public class RegisterBooksFrame extends JPanel {
 		txtSrBookNum.setColumns(10);
 		panel.add(txtSrBookNum);
 		
-		JLabel lblAuthors_1 = new JLabel("Book Number");
-		lblAuthors_1.setForeground(new Color(255, 255, 255));
-		lblAuthors_1.setBounds(815, 438, 89, 30);
-		lblAuthors_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		panel.add(lblAuthors_1);
+		JLabel lblBookNum1 = new JLabel("Book Number");
+		lblBookNum1.setForeground(new Color(255, 255, 255));
+		lblBookNum1.setBounds(815, 438, 89, 30);
+		lblBookNum1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		panel.add(lblBookNum1);
 		
 		JButton btnSearch = new JButton("Search");
 		btnSearch.setBounds(1002, 526, 125, 30);
@@ -375,10 +415,67 @@ public class RegisterBooksFrame extends JPanel {
 		
 		JLabel lblNewLabel_2 = new JLabel("New label");
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
-		lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Untitled design.png"));
+		lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
 		lblNewLabel_2.setBounds(0, 0, 1256, 686);
 		panel.add(lblNewLabel_2);
 										
+		radioRegister.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	
+        		//Enable register assets
+        		txtTitle.setEnabled(true);
+        		txtTitle.setEditable(true);
+        		txtAuthor.setEnabled(true);
+        		txtAuthor.setEditable(true);
+        		txtPublisher.setEnabled(true);
+        		txtPublisher.setEditable(true);
+        		txtQuantity.setEnabled(true);
+        		txtQuantity.setEditable(true);
+        		txtISBN.setEnabled(true);
+        		txtISBN.setEditable(true);
+        		comboBoxSubject.setEnabled(true);
+        		languageComboBox.setEnabled(true);
+        		btnRegister.setEnabled(true);
+        		
+		    	//Disable search assets        		
+		    	txtSrTitle.setEnabled(false);
+		    	txtSrTitle.setEditable(false);
+		    	txtSrBookNum.setEnabled(false);
+		    	txtSrBookNum.setEnabled(false);
+		    	btnViewData.setEnabled(false);
+		    	btnSearch.setEnabled(false);
+		    	btnExport.setEnabled(false);
+        	}
+        });
+		
+		radioSearch.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		//Disable register assets
+        		txtTitle.setEnabled(false);
+        		txtTitle.setEditable(false);
+        		txtAuthor.setEnabled(false);
+        		txtAuthor.setEditable(false);
+        		txtPublisher.setEnabled(false);
+        		txtPublisher.setEditable(false);
+        		txtQuantity.setEnabled(false);
+        		txtQuantity.setEditable(false);
+        		txtISBN.setEnabled(false);
+        		txtISBN.setEditable(false);
+        		comboBoxSubject.setEnabled(false);
+        		languageComboBox.setEnabled(false);
+        		btnRegister.setEnabled(false);
+        		
+		    	//Enable search assets        		
+		    	txtSrTitle.setEnabled(true);
+		    	txtSrTitle.setEditable(true);
+		    	txtSrBookNum.setEnabled(true);
+		    	txtSrBookNum.setEnabled(true);
+		    	btnViewData.setEnabled(true);
+		    	btnSearch.setEnabled(true);
+		    	btnExport.setEnabled(true);
+        	}
+        });
+		
 		displayLatestData();
 	}
 	
