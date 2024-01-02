@@ -44,6 +44,7 @@ import color.AlternateColorRender;
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import com.toedter.calendar.JDateChooser;
 
 public class TransactionFrame extends JPanel {
 
@@ -55,6 +56,7 @@ public class TransactionFrame extends JPanel {
 	private JTable tblTransac;
 	private JTextField txtBorrID;
 	private JComboBox cbAccession;
+	private JDateChooser dateChooser;
 	/**
 	 * Launch the application.
 	 */
@@ -104,16 +106,36 @@ public class TransactionFrame extends JPanel {
 		
 		AlternateColorRender alternate = new AlternateColorRender();
 		
+		JLabel lblReturnDate = new JLabel("Return Date");
+		lblReturnDate.setForeground(Color.WHITE);
+		lblReturnDate.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblReturnDate.setBounds(548, 131, 93, 30);
+		panel.add(lblReturnDate);
+		
+		dateChooser = new JDateChooser();
+		dateChooser.setBounds(651, 134, 131, 27);
+		panel.add(dateChooser);
+		
+		// Add ActionListener to capture the chosen date
+		dateChooser.getDateEditor().addPropertyChangeListener(e -> {
+		    if ("date".equals(e.getPropertyName())) {
+		        // Date has been chosen
+		        Date chosenDate = dateChooser.getDate();
+		        
+		        // Now you can use the chosenDate as needed, for example:
+		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		        String formattedDate = dateFormat.format(chosenDate);
+		        
+		        // Print or use the formattedDate as needed
+		        System.out.println("Chosen Date: " + formattedDate);
+		    }
+		});
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 226, 1236, 413);
 		panel.add(scrollPane);
-		
-		JScrollPane js = new JScrollPane();
-		scrollPane.setViewportView(js);
-		js.setVisible(true);
-		
+				
 		tblTransac = new JTable();
-		js.setColumnHeaderView(tblTransac);
+		scrollPane.setViewportView(tblTransac);
 		tblTransac.setBorder(new LineBorder(new Color(0, 0, 0)));
 		tblTransac.setColumnSelectionAllowed(true);
 		tblTransac.setCellSelectionEnabled(true);
@@ -154,6 +176,9 @@ public class TransactionFrame extends JPanel {
 		radioTransaction.setFont(new Font("Verdana", Font.PLAIN, 12));
 		radioTransaction.setForeground(new Color(255, 255, 255));
 		radioTransaction.setBackground(new Color(0, 0, 0));
+		radioTransaction.setOpaque(false);
+		radioTransaction.setContentAreaFilled(false);
+        radioTransaction.setBorderPainted(false);
 		radioTransaction.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				displayTransactionHistory();
@@ -166,6 +191,9 @@ public class TransactionFrame extends JPanel {
 		radioBooks.setFont(new Font("Verdana", Font.PLAIN, 12));
 		radioBooks.setForeground(new Color(255, 255, 255));
 		radioBooks.setBackground(new Color(0, 0, 0));
+		radioBooks.setOpaque(false);
+		radioBooks.setContentAreaFilled(false);
+        radioBooks.setBorderPainted(false);
 		radioBooks.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				viewBooks();
@@ -575,9 +603,19 @@ public class TransactionFrame extends JPanel {
             		
             		String userType = getUserType(borrId);
             		
+            		// Date has been chosen
+    		        Date chosenDate = dateChooser.getDate();
+    		        
+    		        // Now you can use the chosenDate as needed, for example:
+    		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    		        String formattedDate = dateFormat.format(chosenDate);
+    		        
+    		        // Print or use the formattedDate as needed
+    		        System.out.println("Chosen Date: " + formattedDate);
+    		        
             		if ("Faculty".equals(userType) || "Staff".equals(userType)) {                  
             			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id, user_type) " +
-            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), 'IND', ?, ?)";
+            					"VALUES (?, ?, ?, ?, 'Borrowed', ?, 'IND', ?, ?)";
             			
             			try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
             				pstmt.setString(1, bn);
@@ -585,7 +623,8 @@ public class TransactionFrame extends JPanel {
             				pstmt.setInt(3, acc);
             				pstmt.setString(4, borrowerName);
             				pstmt.setString(5, userId);
-            				pstmt.setString(6, userType);            				
+            				pstmt.setString(6, userType);
+            				
             				
             				// Execute the update
             				int rowsAffected = pstmt.executeUpdate();
@@ -599,7 +638,7 @@ public class TransactionFrame extends JPanel {
             			        			
             			// If user ID does not start with "1", set return date to three days from the transaction date
             			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id, user_type) " +
-            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), DATE_ADD(CURDATE(), INTERVAL 3 DAY), ?, ?)";
+            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(),?, ?, ?)";
             			
             			
             			try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
@@ -607,8 +646,9 @@ public class TransactionFrame extends JPanel {
             				pstmt.setString(2, tl);
             				pstmt.setInt(3, acc);
             				pstmt.setString(4, borrowerName);
-            				pstmt.setString(5, userId);
-            				pstmt.setString(6, userType);
+            				pstmt.setString(5, formattedDate);
+            				pstmt.setString(6, userId);
+            				pstmt.setString(7, userType);
             				
             				// Execute the update
             				int rowsAffected = pstmt.executeUpdate();

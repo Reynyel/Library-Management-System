@@ -111,20 +111,22 @@ public class RegisterBooksFrame extends JPanel {
         ButtonGroup radioGroup = new ButtonGroup();
         
         JRadioButton radioSearch = new JRadioButton("Search Books");
+        radioSearch.setFont(new Font("Tahoma", Font.PLAIN, 15));
         
         radioSearch.setForeground(Color.WHITE);
         radioSearch.setBackground(new Color(40, 85, 238));
-        radioSearch.setBounds(815, 339, 109, 23);
+        radioSearch.setBounds(815, 339, 142, 23);
         radioSearch.setOpaque(false);
         radioSearch.setContentAreaFilled(false);
         radioSearch.setBorderPainted(false);
         panel.add(radioSearch);
         
         JRadioButton radioRegister = new JRadioButton("Register Books");
+        radioRegister.setFont(new Font("Tahoma", Font.PLAIN, 15));
         
         radioRegister.setForeground(new Color(255, 255, 255));
         radioRegister.setBackground(new Color(40, 85, 238));
-        radioRegister.setBounds(76, 339, 109, 23);
+        radioRegister.setBounds(76, 339, 142, 23);
         radioRegister.setOpaque(false);
         radioRegister.setContentAreaFilled(false);
         radioRegister.setBorderPainted(false);

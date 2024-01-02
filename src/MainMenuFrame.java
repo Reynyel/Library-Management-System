@@ -44,6 +44,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Label;
+import com.toedter.calendar.JDateChooser;
 
 public class MainMenuFrame extends JFrame {
 
@@ -165,10 +166,25 @@ public class MainMenuFrame extends JFrame {
 		btnRegisterBooks.setBackground(new Color(0, 51, 102));
 		btnRegisterBooks.setBorderPainted(false);
 		
+		
 		JButton btnBackupRecords = new JButton(" Backup Records");
 		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\backup.png"));
 		btnBackupRecords.setBounds(12, 426, 220, 40);
 		panel.add(btnBackupRecords);
+		
+		// Check the user's role
+		if ("Librarian".equalsIgnoreCase(userType)) {
+		    // If the user is a librarian, disable and make the button invisible
+		    btnBackupRecords.setEnabled(false);
+		    btnBackupRecords.setVisible(false);
+		} else if ("Admin".equalsIgnoreCase(userType)) {
+		    // If the user is an admin, enable and make the button visible
+		    btnBackupRecords.setEnabled(true);
+		    btnBackupRecords.setVisible(true);
+		}
+
+		
+		
 		btnBackupRecords.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				BackupDB backup;
