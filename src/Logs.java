@@ -15,6 +15,8 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
+import GradientBackground.gradientBackground;
+
 public class Logs extends JPanel {
 	private JTable table;
 
@@ -24,9 +26,14 @@ public class Logs extends JPanel {
 	public Logs() {
 		setLayout(null);
 		
+		JPanel panel = new gradientBackground();
+		panel.setBounds(0, 0, 1338, 744);
+		add(panel);
+		panel.setLayout(null);
+		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(221, 99, 655, 400);
-		add(scrollPane);
+		scrollPane.setBounds(319, 169, 655, 400);
+		panel.add(scrollPane);
 		
 		table = new JTable();
 		table.setModel(new DefaultTableModel(
@@ -38,11 +45,6 @@ public class Logs extends JPanel {
 			}
 		));
 		scrollPane.setViewportView(table);
-		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
-		lblNewLabel.setBounds(0, 0, 1256, 686);
-		add(lblNewLabel);
 		
 		viewLogs();
 	}

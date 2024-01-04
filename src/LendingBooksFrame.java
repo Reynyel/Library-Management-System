@@ -38,6 +38,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import GradientBackground.gradientBackground;
 import color.AlternateColorRender;
 import tablemodel.NonEditTableModel;
 
@@ -80,15 +81,15 @@ public class LendingBooksFrame extends JPanel {
 	 * Create the frame.
 	 */
 	public LendingBooksFrame() {
-		setPreferredSize(new Dimension(1256, 686));
+		setPreferredSize(new Dimension(1256, 754));
 	    setLayout(null);
 		setBounds(100, 100, 1687, 743);
 		
 		ButtonGroup radioGroup = new ButtonGroup();
 		
-		panel = new JPanel();
+		panel = new gradientBackground();
 		panel.setBackground(new Color(0, 153, 255));
-        panel.setBounds(0, 0, 1256, 686);
+        panel.setBounds(0, 0, 1255, 756);
         add(panel);
         panel.setLayout(null);
 		
@@ -271,7 +272,7 @@ public class LendingBooksFrame extends JPanel {
 		
 		JScrollPane js = new JScrollPane(tblTransac);
 		js.setVisible(true);
-		js.setBounds(10, 332, 1236, 306); // Adjust the bounds to match the table
+		js.setBounds(10, 332, 1236, 315); // Adjust the bounds to match the table
 		panel.add(js);
 		
 		
@@ -308,7 +309,7 @@ public class LendingBooksFrame extends JPanel {
 		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnExport.setBorderPainted(false);
 		btnExport.setBackground(new Color(0, 128, 0));
-		btnExport.setBounds(1096, 650, 150, 25);
+		btnExport.setBounds(1096, 658, 150, 25);
 		panel.add(btnExport);
 		
 		txtReturnDate = new JTextField();
@@ -336,11 +337,6 @@ public class LendingBooksFrame extends JPanel {
 		panel.add(txtDateReturned);
 		txtDateReturned.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtDateReturned.setColumns(10);
-		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
-		lblNewLabel_1.setBounds(0, -3, 1266, 686);
-		panel.add(lblNewLabel_1);
 		
 		fetchAndDisplayData();
 	}
@@ -1000,7 +996,7 @@ public class LendingBooksFrame extends JPanel {
 	            
 	            if(rs.next()) {
 	            	// Insert the details into the Returned table
-	            	
+	            		
 	            	//WORK ON DIS
 	            	String insertReturnedSql = "INSERT INTO Returned (transaction_id, book_num, title, accession, status, due_date, date_returned, borrower, id)"
 	            			+ " VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE(), ?, ?)";

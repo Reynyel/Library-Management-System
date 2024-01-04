@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import GradientBackground.gradientBackground;
+
 public class BackupDB extends JPanel {
 
 	private JTextField txtPath;
@@ -24,52 +26,53 @@ public class BackupDB extends JPanel {
 	 * Create the panel.
 	 */	
 	public BackupDB() {
+
 		setLayout(null);
 		
+		JPanel panel = new gradientBackground();
+		panel.setBounds(0, 0, 1346, 718);
+		add(panel);
+		panel.setLayout(null);
+		
 		JLabel lblNewLabel_1 = new JLabel("Backup Database");
+		lblNewLabel_1.setBounds(264, 270, 133, 24);
+		panel.add(lblNewLabel_1);
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setBackground(new Color(255, 255, 255));
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_1.setBounds(308, 266, 133, 24);
-		add(lblNewLabel_1);
 		
 		txtPath = new JTextField();
+		txtPath.setBounds(264, 324, 610, 30);
+		panel.add(txtPath);
 		txtPath.setForeground(new Color(255, 255, 255));
 		txtPath.setBackground(new Color(0, 153, 204));
-		txtPath.setBounds(308, 320, 610, 30);
-		add(txtPath);
 		txtPath.setColumns(10);
 		
 		JButton btnBrowse = new JButton("Browse Path");
+		btnBrowse.setBounds(884, 324, 133, 30);
+		panel.add(btnBrowse);
 		btnBrowse.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnBrowse.setForeground(new Color(255, 255, 255));
-		btnBrowse.setBackground(new Color(153, 51, 51));
+		btnBrowse.setBackground(new Color(60, 172, 196));
 		btnBrowse.setBorderPainted(false);
-		btnBrowse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				browsePath();
-			}
-		});
-		btnBrowse.setBounds(928, 320, 133, 30);
-		add(btnBrowse);
 		
 		JButton btnBackupNow = new JButton("Backup Now");
+		btnBackupNow.setBounds(384, 367, 390, 30);
+		panel.add(btnBackupNow);
 		btnBackupNow.setFont(new Font("Verdana", Font.PLAIN, 13));
-		btnBackupNow.setBackground(new Color(204, 153, 102));
-		btnBackupNow.setForeground(new Color(102, 0, 0));
+		btnBackupNow.setBackground(new Color(71, 160, 165));
+		btnBackupNow.setForeground(new Color(255, 255, 255));
 		btnBackupNow.setBorderPainted(false);
 		btnBackupNow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				backup();
 			}
 		});
-		btnBackupNow.setBounds(428, 363, 390, 30);
-		add(btnBackupNow);
-		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Backup Records.png"));
-		lblNewLabel.setBounds(-14, -19, 1259, 724);
-		add(lblNewLabel);
+		btnBrowse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				browsePath();
+			}
+		});
 
 	}
 	

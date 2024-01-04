@@ -37,6 +37,8 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+
+import GradientBackground.gradientBackground;
 import color.AlternateColorRender;
 import tablemodel.NonEditTableModel;
 import javax.swing.ImageIcon;
@@ -80,7 +82,7 @@ public class RegisterStudent extends JPanel {
 	    setLayout(null);
 		setBounds(100, 100, 1687, 743);
 		
-		panel = new JPanel();
+		panel = new gradientBackground();
         panel.setBounds(0, 0, 1256, 686);
         add(panel);
         panel.setLayout(null);
@@ -270,11 +272,6 @@ public class RegisterStudent extends JPanel {
 		btnUpdate.setBackground(new Color(32, 178, 170));
 		btnUpdate.setBounds(62, 453, 205, 33);
 		panel.add(btnUpdate);
-		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
-		lblNewLabel.setBounds(0, 0, 1256, 686);
-		panel.add(lblNewLabel);
 		
 		JButton btnExport = new JButton("Export to CSV");
 		btnExport.addActionListener(new ActionListener() {

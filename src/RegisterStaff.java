@@ -32,6 +32,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+
+import GradientBackground.gradientBackground;
 import color.AlternateColorRender;
 import tablemodel.NonEditTableModel;
 import java.awt.event.MouseAdapter;
@@ -80,7 +82,7 @@ public class RegisterStaff extends JPanel {
 	    setLayout(null);
 		setBounds(100, 100, 1687, 743);
 		
-		panel = new JPanel();
+		panel = new gradientBackground();
 		panel.setBackground(new Color(153, 153, 255));
         panel.setBounds(0, 0, 1256, 686);
         add(panel);
@@ -258,7 +260,7 @@ public class RegisterStaff extends JPanel {
 						String contactNum = (String) tblEmployees.getValueAt(selectedRow, 4);
 						String email = (String) tblEmployees.getValueAt(selectedRow, 5);
 						String employeeType = (String) tblEmployees.getValueAt(selectedRow, 6);
-						
+							
 						//Populate fields
 						txtEmployeeID.setText(employeeId);
 						txtLastName.setText(lastName);
@@ -285,11 +287,6 @@ public class RegisterStaff extends JPanel {
 		btnUpdate.setBackground(new Color(32, 178, 170));
 		btnUpdate.setBounds(204, 533, 150, 33);
 		panel.add(btnUpdate);
-		
-		lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
-		lblNewLabel.setBounds(0, 0, 1256, 686);
-		panel.add(lblNewLabel);
 			
 		JButton btnExport = new JButton("Export to CSV");
 		btnExport.addActionListener(new ActionListener() {
@@ -377,7 +374,6 @@ private boolean fileExists(String fileName) {
 }
 	
 	private JButton btnUpdate;
-	private JLabel lblNewLabel;
 	private JScrollPane scrollPane;
 	
 	public void updateUserData() {

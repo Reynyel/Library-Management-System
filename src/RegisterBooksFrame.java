@@ -41,6 +41,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
+import GradientBackground.gradientBackground;
 import color.AlternateColorRender;
 
 import java.awt.Component;
@@ -94,7 +95,7 @@ public class RegisterBooksFrame extends JPanel {
 	public RegisterBooksFrame() throws SQLException {
 		setBackground(new Color(0, 255, 204));
 		setBorder(null);				
-		setPreferredSize(new Dimension(1256, 686));
+		setPreferredSize(new Dimension(1255, 756));
 	    setLayout(null);
 					
 		Object[][] data = {null, null, null, null, null, null, null, null, null, null, null};
@@ -102,9 +103,9 @@ public class RegisterBooksFrame extends JPanel {
 		NonEditTableModel model;
 		Set<Integer> editableColumns = new HashSet<>();
 		
-        panel = new JPanel();
+        panel = new gradientBackground();
         panel.setBackground(new Color(0, 153, 255));
-        panel.setBounds(0, 0, 1256, 686);
+        panel.setBounds(0, 0, 1255, 756);
         add(panel);
         panel.setLayout(null);
         
@@ -115,7 +116,7 @@ public class RegisterBooksFrame extends JPanel {
         
         radioSearch.setForeground(Color.WHITE);
         radioSearch.setBackground(new Color(40, 85, 238));
-        radioSearch.setBounds(815, 339, 142, 23);
+        radioSearch.setBounds(815, 399, 142, 23);
         radioSearch.setOpaque(false);
         radioSearch.setContentAreaFilled(false);
         radioSearch.setBorderPainted(false);
@@ -126,7 +127,7 @@ public class RegisterBooksFrame extends JPanel {
         
         radioRegister.setForeground(new Color(255, 255, 255));
         radioRegister.setBackground(new Color(40, 85, 238));
-        radioRegister.setBounds(76, 339, 142, 23);
+        radioRegister.setBounds(76, 399, 142, 23);
         radioRegister.setOpaque(false);
         radioRegister.setContentAreaFilled(false);
         radioRegister.setBorderPainted(false);
@@ -136,19 +137,20 @@ public class RegisterBooksFrame extends JPanel {
         radioGroup.add(radioSearch);
     
         JLabel lblNewLabel = new JLabel("Book Title");
+        lblNewLabel.setBackground(new Color(89, 89, 89));
         lblNewLabel.setForeground(new Color(255, 255, 255));
-        lblNewLabel.setBounds(76, 370, 72, 30);
+        lblNewLabel.setBounds(76, 430, 72, 30);
         lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblNewLabel);
         
         JLabel lblAuthors = new JLabel("Author(s)");
         lblAuthors.setForeground(new Color(255, 255, 255));
-        lblAuthors.setBounds(386, 370, 64, 30);
+        lblAuthors.setBounds(386, 430, 64, 30);
         lblAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblAuthors);
         
         txtAuthor = new JTextField();
-        txtAuthor.setBounds(386, 401, 284, 30);
+        txtAuthor.setBounds(386, 461, 284, 30);
         txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
         txtAuthor.setColumns(10);
         panel.add(txtAuthor);
@@ -156,42 +158,42 @@ public class RegisterBooksFrame extends JPanel {
         JLabel lblIsbn = new JLabel("ISBN");
         lblIsbn.setHorizontalAlignment(SwingConstants.LEFT);
         lblIsbn.setForeground(new Color(255, 255, 255));
-        lblIsbn.setBounds(386, 439, 72, 30);
+        lblIsbn.setBounds(386, 499, 72, 30);
         lblIsbn.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblIsbn);
         
         txtISBN = new JTextField();
-        txtISBN.setBounds(386, 470, 284, 30);
+        txtISBN.setBounds(386, 530, 284, 30);
         txtISBN.setFont(new Font("Tahoma", Font.PLAIN, 15));
         txtISBN.setColumns(10);
         panel.add(txtISBN);
         
         JLabel lblPublisher = new JLabel("Publisher");
         lblPublisher.setForeground(new Color(255, 255, 255));
-        lblPublisher.setBounds(76, 442, 72, 30);
+        lblPublisher.setBounds(76, 502, 72, 30);
         lblPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblPublisher);
         
         txtPublisher = new JTextField();
-        txtPublisher.setBounds(76, 470, 300, 30);
+        txtPublisher.setBounds(76, 530, 300, 30);
         txtPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
         txtPublisher.setColumns(10);
         panel.add(txtPublisher);
         
         JLabel lblLanguage = new JLabel("Language");
         lblLanguage.setForeground(new Color(255, 255, 255));
-        lblLanguage.setBounds(332, 511, 66, 30);
+        lblLanguage.setBounds(332, 571, 66, 30);
         lblLanguage.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblLanguage);
         
         JLabel lblSubject = new JLabel("Subject");
         lblSubject.setForeground(new Color(255, 255, 255));
-        lblSubject.setBounds(76, 511, 64, 30);
+        lblSubject.setBounds(76, 571, 64, 30);
         lblSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblSubject);
         
         comboBoxSubject = new JComboBox();
-        comboBoxSubject.setBounds(76, 542, 246, 30);
+        comboBoxSubject.setBounds(76, 602, 246, 30);
         comboBoxSubject.setBackground(new Color(255, 255, 255));
         
         comboBoxSubject.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -199,7 +201,7 @@ public class RegisterBooksFrame extends JPanel {
 		        
 		
 		JButton btnRegister = new JButton("Register");
-		btnRegister.setBounds(558, 596, 112, 30);
+		btnRegister.setBounds(558, 656, 112, 30);
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				registerBooks();
@@ -223,18 +225,18 @@ public class RegisterBooksFrame extends JPanel {
 		
 		JLabel lblQuantity = new JLabel("Quantity");
 		lblQuantity.setForeground(new Color(255, 255, 255));
-		lblQuantity.setBounds(491, 511, 66, 30);
+		lblQuantity.setBounds(491, 571, 66, 30);
 		lblQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(lblQuantity);
 		
 		txtQuantity = new JTextField();
-		txtQuantity.setBounds(490, 541, 89, 30);
+		txtQuantity.setBounds(490, 601, 89, 30);
 		txtQuantity.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtQuantity.setColumns(10);
 		panel.add(txtQuantity);
 		
 		languageComboBox = new JComboBox();
-		languageComboBox.setBounds(332, 542, 148, 30);
+		languageComboBox.setBounds(332, 602, 148, 30);
 		languageComboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		languageComboBox.setBackground(Color.WHITE);
 		panel.add(languageComboBox);
@@ -253,7 +255,7 @@ public class RegisterBooksFrame extends JPanel {
 		}
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 1236, 321);
+		scrollPane.setBounds(10, 31, 1236, 361);
 		panel.add(scrollPane);
 		
 		table = new JTable();
@@ -297,7 +299,7 @@ public class RegisterBooksFrame extends JPanel {
 				}
 			}
 		});
-		
+			
 		table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
 		    @Override
 		    public Component getTableCellRendererComponent(JTable table,
@@ -321,7 +323,7 @@ public class RegisterBooksFrame extends JPanel {
 		scrollPane.setViewportView(table);
 		
 		btnUpdate = new JButton("Update");
-		btnUpdate.setBounds(435, 596, 113, 30);
+		btnUpdate.setBounds(435, 656, 113, 30);
 		btnUpdate.setEnabled(false);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -343,31 +345,31 @@ public class RegisterBooksFrame extends JPanel {
 		panel.add(btnUpdate);
 		
 		txtSrTitle = new JTextField();
-		txtSrTitle.setBounds(815, 400, 358, 30);
+		txtSrTitle.setBounds(815, 460, 358, 30);
 		txtSrTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtSrTitle.setColumns(10);
 		panel.add(txtSrTitle);
 		
 		JLabel lblTitle1 = new JLabel("Book Title");
 		lblTitle1.setForeground(new Color(255, 255, 255));
-		lblTitle1.setBounds(815, 369, 64, 30);
+		lblTitle1.setBounds(815, 429, 64, 30);
 		lblTitle1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(lblTitle1);
 		
 		txtSrBookNum = new JTextField();
-		txtSrBookNum.setBounds(815, 469, 358, 30);
+		txtSrBookNum.setBounds(815, 529, 358, 30);
 		txtSrBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtSrBookNum.setColumns(10);
 		panel.add(txtSrBookNum);
 		
 		JLabel lblBookNum1 = new JLabel("Book Number");
 		lblBookNum1.setForeground(new Color(255, 255, 255));
-		lblBookNum1.setBounds(815, 438, 89, 30);
+		lblBookNum1.setBounds(815, 498, 89, 30);
 		lblBookNum1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panel.add(lblBookNum1);
 		
 		JButton btnSearch = new JButton("Search");
-		btnSearch.setBounds(1002, 526, 125, 30);
+		btnSearch.setBounds(1002, 586, 125, 30);
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
@@ -381,7 +383,7 @@ public class RegisterBooksFrame extends JPanel {
 		panel.add(btnSearch);
 		
 		JButton btnViewData = new JButton("View Data");
-		btnViewData.setBounds(868, 526, 124, 30);
+		btnViewData.setBounds(868, 586, 124, 30);
 		btnViewData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				view();
@@ -396,7 +398,7 @@ public class RegisterBooksFrame extends JPanel {
 		txtTitle = new JTextField();
 		panel.add(txtTitle);
 		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtTitle.setBounds(76, 400, 300, 30);
+		txtTitle.setBounds(76, 460, 300, 30);
 		txtTitle.setColumns(10);
 		
 		JButton btnExport = new JButton("Export to CSV");
@@ -412,14 +414,8 @@ public class RegisterBooksFrame extends JPanel {
 		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnExport.setBorderPainted(false);
 		btnExport.setBackground(new Color(0, 128, 0));
-		btnExport.setBounds(868, 567, 259, 30);
+		btnExport.setBounds(868, 627, 259, 30);
 		panel.add(btnExport);
-		
-		JLabel lblNewLabel_2 = new JLabel("New label");
-		lblNewLabel_2.setForeground(new Color(255, 255, 255));
-		lblNewLabel_2.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
-		lblNewLabel_2.setBounds(0, 0, 1256, 686);
-		panel.add(lblNewLabel_2);
 										
 		radioRegister.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {

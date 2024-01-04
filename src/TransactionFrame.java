@@ -46,6 +46,8 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import com.toedter.calendar.JDateChooser;
 
+import GradientBackground.gradientBackground;
+
 public class TransactionFrame extends JPanel {
 
 	private JPanel contentPane;
@@ -90,7 +92,7 @@ public class TransactionFrame extends JPanel {
 	    setLayout(null);
 		setBounds(100, 100, 1687, 743);
 		
-		panel = new JPanel();
+		panel = new gradientBackground();
 		panel.setBackground(new Color(0, 153, 255));
         panel.setBounds(0, 0, 1256, 686);
         add(panel);
@@ -299,11 +301,6 @@ public class TransactionFrame extends JPanel {
 		btnSearchBook.setBackground(new Color(220, 20, 60));
 		btnSearchBook.setBorderPainted(false);
 		btnSearchBook.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
-		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Untitled design.png"));
-		lblNewLabel_1.setBounds(0, 0, 1256, 686);
-		panel.add(lblNewLabel_1);
 		btnSearchBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
@@ -615,13 +612,13 @@ public class TransactionFrame extends JPanel {
     		        
             		if ("Faculty".equals(userType) || "Staff".equals(userType)) {                  
             			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id, user_type) " +
-            					"VALUES (?, ?, ?, ?, 'Borrowed', ?, 'IND', ?, ?)";
+            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), 'IND', ?, ?)";
             			
             			try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
             				pstmt.setString(1, bn);
             				pstmt.setString(2, tl);
             				pstmt.setInt(3, acc);
-            				pstmt.setString(4, borrowerName);
+            				pstmt.setString(4, borrowerName);         				
             				pstmt.setString(5, userId);
             				pstmt.setString(6, userType);
             				

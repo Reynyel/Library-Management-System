@@ -71,19 +71,6 @@ public class UserTypeFrame extends JFrame {
 		teacherBtn.setBounds(535, 11, 500, 645);
 		contentPane.add(teacherBtn);
 		
-		JButton btnBack = new JButton("Back");
-		btnBack.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MainMenuFrame menu = new MainMenuFrame();
-				menu.setVisible(true);
-				dispose();
-			}
-		});
-		btnBack.setForeground(Color.WHITE);
-		btnBack.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnBack.setBorderPainted(false);
-		btnBack.setBackground(new Color(0, 51, 153));
-		btnBack.setBounds(10, 667, 93, 33);
-		contentPane.add(btnBack);
+		
 	}
 }

@@ -2,6 +2,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -46,7 +49,13 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Label;
+import java.awt.RenderingHints;
+
 import com.toedter.calendar.JDateChooser;
+
+import GradientBackground.gradientBackground;
+
+import com.toedter.calendar.JCalendar;
 
 public class MainMenuFrame extends JFrame {
 
@@ -54,26 +63,29 @@ public class MainMenuFrame extends JFrame {
 	private String userType;
 	private String loginTime; // New variable to store login time
 	private JLabel lblUserType, l_date, l_time, l_log, lblPageTitle;
-	private Label numBorr, numOD, numBooks, label_2_2, label_2_2_1, label_2_2_1_1, label, label_1,
+	private JLabel numBorr, numOD, numBooks, label_2_2, label_2_2_1, label_2_2_1_1, label, label_1,
 	label_1_1;
 	private JTable tblOverdue;
 	private JScrollPane scrollPane, scrollPane_1, scrollPane_2;
+	
+	
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainMenuFrame frame = new MainMenuFrame("");
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
+
+		public static void main(String[] args) {
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						MainMenuFrame frame = new MainMenuFrame("");
+						frame.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-			}
-		});
-	}
-	
+			});
+		}
+		
 	public void dt() {
 		// Create a format for the date in the file name
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -119,7 +131,7 @@ public class MainMenuFrame extends JFrame {
 		setResizable(false);
 		setTitle("Library Management System");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 1510, 775);
+		setBounds(100, 100, 1510, 845);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(204, 255, 204));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -129,7 +141,7 @@ public class MainMenuFrame extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(0, 51, 102));
-		panel.setBounds(0, 0, 240, 736);
+		panel.setBounds(0, 0, 240, 806);
 		contentPane.add(panel);
 		
 		JPanel panel_1 = new JPanel();
@@ -139,10 +151,9 @@ public class MainMenuFrame extends JFrame {
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
-		contentPanel = new JPanel();
-		contentPanel.setBackground(new Color(255, 255, 255));
+		contentPanel = new gradientBackground();
 		contentPanel.setBorder(null);
-		contentPanel.setBounds(239, 50, 1255, 686);
+		contentPanel.setBounds(239, 50, 1255, 756);
 		contentPane.add(contentPanel);
 		
 		lblPageTitle = new JLabel("Dashboard");
@@ -159,7 +170,7 @@ public class MainMenuFrame extends JFrame {
 		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\Santa Rosa Educational Institution.png"));
 		
 		JButton btnRegisterBooks = new JButton("Manage Books");
-		btnRegisterBooks.setBounds(14, 221, 218, 41);
+		btnRegisterBooks.setBounds(14, 309, 218, 41);
 		panel.add(btnRegisterBooks);
 		btnRegisterBooks.setHorizontalAlignment(SwingConstants.LEFT);
 		btnRegisterBooks.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\book (1).png"));
@@ -171,7 +182,7 @@ public class MainMenuFrame extends JFrame {
 		
 		JButton btnBackupRecords = new JButton(" Backup Records");
 		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\backup.png"));
-		btnBackupRecords.setBounds(12, 426, 220, 40);
+		btnBackupRecords.setBounds(12, 514, 220, 40);
 		panel.add(btnBackupRecords);						
 		
 		btnBackupRecords.addActionListener(new ActionListener() {
@@ -194,7 +205,7 @@ public class MainMenuFrame extends JFrame {
 		btnBackupRecords.setBackground(new Color(0, 51, 102));
 		
 		JButton btnReturnBooks = new JButton(" Returning");
-		btnReturnBooks.setBounds(12, 375, 220, 40);
+		btnReturnBooks.setBounds(12, 463, 220, 40);
 		panel.add(btnReturnBooks);
 		btnReturnBooks.setHorizontalAlignment(SwingConstants.LEFT);
 		btnReturnBooks.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\return.png"));
@@ -204,7 +215,7 @@ public class MainMenuFrame extends JFrame {
 		btnReturnBooks.setBorderPainted(false);			                  		
 		
 		JButton btnTransac = new JButton(" Lending");
-		btnTransac.setBounds(12, 324, 220, 40);
+		btnTransac.setBounds(12, 412, 220, 40);
 		panel.add(btnTransac);
 		btnTransac.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\transaction.png"));
 		btnTransac.setHorizontalAlignment(SwingConstants.LEFT);
@@ -214,7 +225,7 @@ public class MainMenuFrame extends JFrame {
 		btnTransac.setBorderPainted(false);
 		
 		JButton btnRegisterUser = new JButton(" Manage Users");
-		btnRegisterUser.setBounds(12, 273, 220, 40);
+		btnRegisterUser.setBounds(12, 361, 220, 40);
 		panel.add(btnRegisterUser);
 		btnRegisterUser.setHorizontalAlignment(SwingConstants.LEFT);
 		btnRegisterUser.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\management.png"));
@@ -239,7 +250,7 @@ public class MainMenuFrame extends JFrame {
 		JPanel UserPanel = new JPanel();
 		UserPanel.setBackground(new Color(0, 51, 102));
 		UserPanel.setForeground(new Color(0, 51, 102));
-		UserPanel.setBounds(12, 539, 220, 186);
+		UserPanel.setBounds(12, 609, 220, 186);
 		panel.add(UserPanel);
 		UserPanel.setLayout(null);
 		
@@ -321,7 +332,7 @@ public class MainMenuFrame extends JFrame {
 		btnDashboard.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnDashboard.setBorderPainted(false);
 		btnDashboard.setBackground(new Color(0, 51, 102));
-		btnDashboard.setBounds(14, 169, 218, 41);
+		btnDashboard.setBounds(14, 257, 218, 41);
 		panel.add(btnDashboard);
 		
 		JButton btnLogs = new JButton("Log in Trail");
@@ -344,8 +355,12 @@ public class MainMenuFrame extends JFrame {
 		btnLogs.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnLogs.setBorderPainted(false);
 		btnLogs.setBackground(new Color(0, 51, 102));
-		btnLogs.setBounds(12, 470, 220, 40);
+		btnLogs.setBounds(12, 558, 220, 40);
 		panel.add(btnLogs);
+		
+		JCalendar calendar = new JCalendar();
+		calendar.setBounds(10, 103, 220, 153);
+		panel.add(calendar);
         contentPanel.removeAll();  // Remove existing components
         contentPanel.setLayout(null);
         contentPanel.revalidate();  // Revalidate the panel to reflect changes
@@ -353,7 +368,7 @@ public class MainMenuFrame extends JFrame {
         lblPageTitle.setText("Dashboard");
         
         scrollPane = new JScrollPane();
-        scrollPane.setBounds(26, 326, 767, 332);
+        scrollPane.setBounds(26, 380, 767, 332);
         contentPanel.add(scrollPane);
         
         tblOverdue = new JTable();
@@ -369,18 +384,20 @@ public class MainMenuFrame extends JFrame {
         	}
         ));
         
-        label = new Label("Overdue Books");
+        label = new JLabel("Overdue Books");
+        label.setForeground(Color.WHITE);
         label.setFont(new Font("Dialog", Font.PLAIN, 22));
-        label.setBounds(26, 298, 164, 22);
+        label.setBounds(26, 352, 164, 22);
         contentPanel.add(label);
         
-        label_1 = new Label("Book Circulation History");
+        label_1 = new JLabel("Book Circulation History");
+        label_1.setForeground(Color.WHITE);
         label_1.setFont(new Font("Dialog", Font.PLAIN, 22));
-        label_1.setBounds(847, 326, 275, 22);
+        label_1.setBounds(831, 330, 275, 66);
         contentPanel.add(label_1);
         
         scrollPane_1 = new JScrollPane();
-        scrollPane_1.setBounds(847, 354, 398, 304);
+        scrollPane_1.setBounds(831, 380, 398, 332);
         contentPanel.add(scrollPane_1);
         
         tblReturned = new JTable();
@@ -395,13 +412,14 @@ public class MainMenuFrame extends JFrame {
         tblReturned.setShowVerticalLines(false);
         tblReturned.setShowHorizontalLines(false);
         
-        label_1_1 = new Label("Borrowed Books");
+        label_1_1 = new JLabel("Borrowed Books");
         label_1_1.setFont(new Font("Dialog", Font.PLAIN, 22));
-        label_1_1.setBounds(847, 42, 275, 22);
+        label_1_1.setForeground(Color.WHITE);
+        label_1_1.setBounds(831, 38, 275, 22);
         contentPanel.add(label_1_1);
         
         scrollPane_2 = new JScrollPane();
-        scrollPane_2.setBounds(847, 83, 398, 231);
+        scrollPane_2.setBounds(831, 79, 398, 231);
         contentPanel.add(scrollPane_2);
         
         tblBorrowed = new JTable();
@@ -416,41 +434,47 @@ public class MainMenuFrame extends JFrame {
         tblBorrowed.setShowVerticalLines(false);
         tblBorrowed.setShowHorizontalLines(false);
         
-        numBorr = new Label("0");
+        numBorr = new JLabel("0");
         numBorr.setFont(new Font("Dialog", Font.PLAIN, 22));
-        numBorr.setBounds(26, 97, 164, 22);
+        numBorr.setBounds(42, 133, 164, 22);
+        numBorr.setForeground(Color.WHITE);
         String borrowedCount = countBorrowedBooks();
         numBorr.setText(borrowedCount);
         contentPanel.add(numBorr);
         
-        numOD = new Label("0");
-        numOD.setFont(new Font("Dialog", Font.PLAIN, 22));
-        numOD.setBounds(296, 97, 164, 22);
+        numOD = new JLabel("0");
+        numOD.setFont(new Font("Dialog", Font.PLAIN, 22));       
+        numOD.setBounds(312, 133, 164, 22);
+        numOD.setForeground(Color.WHITE);
         String borrowedCountOD = countOverdue();
         numOD.setText(borrowedCountOD);
         contentPanel.add(numOD);
         
-        numBooks = new Label("0");
+        numBooks = new JLabel("0");
         numBooks.setFont(new Font("Dialog", Font.PLAIN, 22));
-        numBooks.setBounds(525, 97, 164, 22);
+        numBooks.setBounds(541, 133, 164, 22);
+        numBooks.setForeground(Color.WHITE);
         String countBooks = countBooks();
         numBooks.setText(countBooks);
         contentPanel.add(numBooks);
         
-        label_2_2 = new Label("Borrowed");
+        label_2_2 = new JLabel("Borrowed");
         label_2_2.setFont(new Font("Dialog", Font.PLAIN, 13));
-        label_2_2.setBounds(26, 65, 164, 22);
+        label_2_2.setBounds(42, 101, 164, 22);
+        label_2_2.setForeground(Color.WHITE);
         contentPanel.add(label_2_2);
         
-        label_2_2_1 = new Label("Overdue");
+        label_2_2_1 = new JLabel("Overdue");
         label_2_2_1.setFont(new Font("Dialog", Font.PLAIN, 13));
-        label_2_2_1.setBounds(296, 65, 164, 22);
+        label_2_2_1.setBounds(312, 101, 164, 22);
+        label_2_2_1.setForeground(Color.WHITE);
         contentPanel.add(label_2_2_1);
         String countAvail = countBooksAvailable();
         
-        label_2_2_1_1 = new Label("Registered Books");
+        label_2_2_1_1 = new JLabel("Registered Books");
         label_2_2_1_1.setFont(new Font("Dialog", Font.PLAIN, 13));
-        label_2_2_1_1.setBounds(525, 65, 164, 22);
+        label_2_2_1_1.setBounds(541, 101, 164, 22);
+        label_2_2_1_1.setForeground(Color.WHITE);
         contentPanel.add(label_2_2_1_1);
         
         // Check the user's role
@@ -886,7 +910,7 @@ public class MainMenuFrame extends JFrame {
 	        System.out.println("Connected");
 
 	        // Count the number of borrowed books
-	        String countBooksSql = "SELECT COUNT(*) AS borrowedCount FROM Transactions WHERE user_type = 'Student'";
+	        String countBooksSql = "SELECT COUNT(*) AS borrowedCount FROM Transactions";
 
 	        try (PreparedStatement stmtCountBooksSql = conn.prepareStatement(countBooksSql)) {
 	            ResultSet rs = stmtCountBooksSql.executeQuery();
