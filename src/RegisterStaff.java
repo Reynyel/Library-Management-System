@@ -543,93 +543,90 @@ private boolean fileExists(String fileName) {
 	}
 	
 	public void registerStaff() {
-		try {		
-			 // Load the JDBC driver (version 4.0 or later)
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-	        
-			Connection conn;
-			
-			try {
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/booksDB", "root", "ranielle25");
-				Statement stmt = conn.createStatement();
-				System.out.println("Connected");
-				//Get the inputs
-				String employeeID = txtEmployeeID.getText();
-				String lastName = txtLastName.getText();
-				String firstName = txtFirstName.getText();
-				String middleName = txtMiddleName.getText();
-				String contact = txtContactNum.getText();
-				String email = txtEmail.getText();
-				String type;
-				
-				 // Query to get the next available employee ID
-	            String getIdQuery = "SELECT MAX(employeeID) FROM Employees";
-	            ResultSet idResultSet = stmt.executeQuery(getIdQuery);
+	    try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        try {
+	            Class.forName("com.mysql.jdbc.Driver");
+	        } catch (ClassNotFoundException e1) {
+	            e1.printStackTrace();
+	        }
 
-	            int nextEmployeeID = 100000;
+	        Connection conn;
 
-	            if (idResultSet.next()) {
-	                nextEmployeeID = idResultSet.getInt(1) + 1;
+	        try {
+	            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/booksDB", "root", "ranielle25");
+	            Statement stmt = conn.createStatement();
+	            System.out.println("Connected");
+
+	            // Get the inputs
+	            String employeeID = txtEmployeeID.getText().trim();
+	            String lastName = txtLastName.getText().trim();
+	            String firstName = txtFirstName.getText().trim();
+	            String middleName = txtMiddleName.getText().trim();
+	            String contact = txtContactNum.getText().trim();
+	            String email = txtEmail.getText().trim();
+	            String type;
+
+	            // Check if the user ID already exists
+	            String checkIdQuery = "SELECT * FROM Employees WHERE employeeID = '" + employeeID + "'";
+	            ResultSet resultSet = stmt.executeQuery(checkIdQuery);
+
+	            if (resultSet.next()) {
+	                // User ID already exists, show an error message
+	            	resetFieldsAndSelection();
+	                JOptionPane.showMessageDialog(getRootPane(), "Employee with this ID already exists.");
+	                return;
 	            }
-				
 
-				//If radioFaculty is ticked, set the employee type to 'Faculty'
-				if(radioFaculty.isSelected()) {
-					type = "Faculty";
-					//Build query
-					String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, UserType)" +
-							"VALUES ('" + nextEmployeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
-					
-					//Execute query
-					stmt.executeUpdate(sql);
-					txtEmployeeID.setText("");
-                    txtLastName.setText("");
-                    txtFirstName.setText("");
-                    txtMiddleName.setText("");
-                    txtEmail.setText("");
-                    txtContactNum.setText("");
-                    G.clearSelection();
-					JOptionPane.showMessageDialog(getRootPane(), "Employee Registered");
-				}
-				
-				//If radioFaculty is ticked, set the employee type to 'Staff'
-				else if(radioStaff.isSelected()) {
-					type = "Staff";
-					//Build query
-					String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, UserType)" +
-							"VALUES ('" + nextEmployeeID + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + contact +  "', '" + email + "', '" + type +"')";
-					
-					//Execute query
-					stmt.executeUpdate(sql);
-					txtEmployeeID.setText("");
-                    txtLastName.setText("");
-                    txtFirstName.setText("");
-                    txtMiddleName.setText("");
-                    txtEmail.setText("");
-                    txtContactNum.setText("");
-                    G.clearSelection();
-					JOptionPane.showMessageDialog(getRootPane(), "Employee Registered");
-				}
-				
-				//If no radio button is ticked, this message pops up
-				else {
-					JOptionPane.showMessageDialog(getRootPane(), "Please select employee type");
-				}
-												
-				
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-								
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	            // If radioFaculty is ticked, set the employee type to 'Faculty'
+	            if (radioFaculty.isSelected()) {
+	                type = "Faculty";
+	                // Build query
+	                String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, UserType)" +
+	                        "VALUES ('" + employeeID + "', '" + lastName + "', '" + firstName + "', '" + middleName + "', '" + contact + "', '" + email + "', '" + type + "')";
+
+	                // Execute query
+	                stmt.executeUpdate(sql);
+	                resetFieldsAndSelection();
+	                JOptionPane.showMessageDialog(getRootPane(), "Employee Registered");
+	            }
+
+	            // If radioFaculty is ticked, set the employee type to 'Staff'
+	            else if (radioStaff.isSelected()) {
+	                type = "Staff";
+	                // Build query
+	                String sql = "INSERT INTO Employees (employeeID, LastName, FirstName, MiddleName, ContactNo, email, UserType)" +
+	                        "VALUES ('" + employeeID + "', '" + lastName + "', '" + firstName + "', '" + middleName + "', '" + contact + "', '" + email + "', '" + type + "')";
+
+	                // Execute query
+	                stmt.executeUpdate(sql);
+	                resetFieldsAndSelection();
+	                JOptionPane.showMessageDialog(getRootPane(), "Employee Registered");
+	            }
+
+	            // If no radio button is ticked, this message pops up
+	            else {
+	                JOptionPane.showMessageDialog(getRootPane(), "Please select employee type");
+	            }
+
+	        } catch (SQLException e1) {
+	            e1.printStackTrace();
+	        }
+
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
 	}
+
+	//reset text fields and radio button selection
+	private void resetFieldsAndSelection() {
+	    txtEmployeeID.setText("");
+	    txtLastName.setText("");
+	    txtFirstName.setText("");
+	    txtMiddleName.setText("");
+	    txtEmail.setText("");
+	    txtContactNum.setText("");
+	    G.clearSelection(); 
+	}
+
 }

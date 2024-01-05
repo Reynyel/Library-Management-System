@@ -550,6 +550,7 @@ private boolean fileExists(String fileName) {
 
 	                if (existingStudentResult.next()) {
 	                    // Student with the same ID already exists, show an error message
+	                	resetFieldsAndSelection();
 	                    JOptionPane.showMessageDialog(getRootPane(), "Student with the same ID already exists.", "Error", JOptionPane.ERROR_MESSAGE);
 	                } else {
 	                    // Student with the same ID doesn't exist, proceed with registration
@@ -570,12 +571,7 @@ private boolean fileExists(String fileName) {
 
 	                        insertStudentStmt.executeUpdate();
 
-	                        txtStudentNum.setText("");
-	                        txtLastName.setText("");
-	                        txtFirstName.setText("");
-	                        txtMiddleName.setText("");
-	                        gradeComboBox.setSelectedIndex(0);
-	                        sectionComboBox.setSelectedIndex(0);
+	                        resetFieldsAndSelection();
 	                        JOptionPane.showMessageDialog(getRootPane(), "Student Registered");
 	                    }
 	                }
@@ -589,4 +585,13 @@ private boolean fileExists(String fileName) {
 	        e1.printStackTrace();
 	    }
 	}
+	//reset text fields and radio button selection
+		private void resetFieldsAndSelection() {
+			txtStudentNum.setText("");
+            txtLastName.setText("");
+            txtFirstName.setText("");
+            txtMiddleName.setText("");
+            gradeComboBox.setSelectedIndex(0);
+            sectionComboBox.setSelectedIndex(0);
+		}
 }

@@ -127,6 +127,7 @@ public class LendingBooksFrame extends JPanel {
 						String returnDate = (String) tblTransac.getValueAt(selectedRow, 6);
 						String userName = (String) tblTransac.getValueAt(selectedRow, 7);
 						String userId = (String) tblTransac.getValueAt(selectedRow, 8);
+						String userType = (String) tblTransac.getValueAt(selectedRow, 9);
 						
 						//Populate fields
 						txtTitle.setText(title);
@@ -134,6 +135,17 @@ public class LendingBooksFrame extends JPanel {
 						txtAccession.setText(acc); //FIX THIS						
 						txtBorrDate.setText(transacDate);
 						txtReturnDate.setText(returnDate);
+						
+						//if Student display penalty fee, if there is a fee to be paid. If staff, only display 0
+						
+						// Display penalty fee based on user type
+		                if ("Student".equals(userType)) {
+		                    // Display penalty fee for students
+		                    txtPenalty.setText(String.valueOf(calculateFee()));
+		                } else {
+		                    // Display 0 for staff
+		                    txtPenalty.setText("0.0");
+		                }
 						
 					}
 				}
@@ -158,7 +170,7 @@ public class LendingBooksFrame extends JPanel {
 		
 		JLabel lblPenalty = new JLabel("Penalty Fee");
 		lblPenalty.setForeground(new Color(255, 255, 255));
-		lblPenalty.setBounds(398, 267, 80, 20);
+		lblPenalty.setBounds(398, 229, 80, 20);
 		panel.add(lblPenalty);
 		lblPenalty.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
@@ -319,24 +331,11 @@ public class LendingBooksFrame extends JPanel {
 		txtReturnDate.setColumns(10);
 		
 		txtPenalty = new JTextField();
-		txtPenalty.setBounds(501, 267, 155, 27);
+		txtPenalty.setBounds(501, 229, 155, 27);
 		panel.add(txtPenalty);
 		txtPenalty.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		txtPenalty.setEditable(false);
 		txtPenalty.setColumns(10);
-		
-		JLabel lblDateReturned = new JLabel("Date Returned");
-		lblDateReturned.setForeground(new Color(255, 255, 255));
-		lblDateReturned.setBounds(398, 229, 107, 24);
-		panel.add(lblDateReturned);
-		lblDateReturned.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
-		txtDateReturned = new JTextField();
-		txtDateReturned.setEditable(false);
-		txtDateReturned.setBounds(501, 228, 155, 27);
-		panel.add(txtDateReturned);
-		txtDateReturned.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		txtDateReturned.setColumns(10);
 		
 		fetchAndDisplayData();
 	}
@@ -347,7 +346,6 @@ public class LendingBooksFrame extends JPanel {
 	private JTextField txtReturnDate;
 	private JTextField txtAccession;
 	private JTextField txtPenalty;
-	private JTextField txtDateReturned;
 	
 	public void export() {
 	    // Create a format for the date in the file name
@@ -591,8 +589,7 @@ public class LendingBooksFrame extends JPanel {
     		e.printStackTrace();
     	}
     }
-    
-    
+      
     public double calculateFee() {
     	double penaltyFee = 0.0;
 
@@ -618,9 +615,7 @@ public class LendingBooksFrame extends JPanel {
                         long overdueMillis = currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() - returnDate.getTime();
                         long overdueDays = TimeUnit.MILLISECONDS.toDays(overdueMillis);
                         penaltyFee = overdueDays * 10.0;
-
-                        // DEBUG (DELETE THIS)
-                        System.out.println("Penalty Fee calculated successfully: " + penaltyFee);
+                      
                     } else {
                         System.out.println("Book returned on time or early.");
                     }
@@ -633,7 +628,6 @@ public class LendingBooksFrame extends JPanel {
         } else {
             System.out.println("No row selected in tblTransac.");
         }
-
         return penaltyFee;
     }
 
@@ -694,7 +688,22 @@ public class LendingBooksFrame extends JPanel {
                     String updateBookStatusSql = "UPDATE Books SET book_status = 'Available' WHERE Book_Num = (SELECT BooNum FROM Transactions WHERE transaction_id = ?)";
                     String updateTransactionStatusSql = "UPDATE Transactions SET BookStatus = 'Returned' WHERE transaction_id = ?";
                     //String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = '10' WHERE transaction_id = ?";
+                    
+                    if ("Student".equals(userType)) {
+                        int confirmResult = JOptionPane.showConfirmDialog(
+                                getRootPane(),
+                                "This student has penalty fee of: PHP" + calculateFee() + ". Is this paid already or not?",
+                                "Confirmation",
+                                JOptionPane.YES_NO_OPTION
+                        );
 
+                        if (confirmResult != JOptionPane.YES_OPTION) {
+                            // User chose not to proceed
+                            JOptionPane.showMessageDialog(getRootPane(), "Return canceled.");
+                            return;
+                        }
+                    }
+                        
                     try (PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql);
                          PreparedStatement updateTransactionStatusStmt = conn.prepareStatement(updateTransactionStatusSql)
                          ) {
@@ -714,6 +723,7 @@ public class LendingBooksFrame extends JPanel {
                         //int rowsAffectedPenalty = updatePenaltyFeeStmt.executeUpdate();
                         
                         if (rowsAffectedBook > 0 && rowsAffectedTransaction > 0) {
+                        	resetFieldsAndSelection();
                             JOptionPane.showMessageDialog(getRootPane(), "Book returned successfully.");
                         } else {
                             JOptionPane.showMessageDialog(getRootPane(), "Error updating book and transaction status with penalty fee.");
@@ -1055,4 +1065,15 @@ public class LendingBooksFrame extends JPanel {
 		}
 			
 	}
+	
+	//reset text fields and radio button selection
+			private void resetFieldsAndSelection() {
+				txtBorrID.setText("");
+	            txtBookNum.setText("");
+	            txtTitle.setText("");
+	            txtAccession.setText("");
+	            txtBorrDate.setText("");
+	            txtReturnDate.setText("");
+	            comboBoxStatus.setSelectedIndex(0);
+			}
 }
