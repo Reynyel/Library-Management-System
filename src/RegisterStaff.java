@@ -57,7 +57,7 @@ public class RegisterStaff extends JPanel {
 	private JTextField txtEmail;
 	private JRadioButton radioFaculty, radioStaff;
 	private JTable tblEmployees;
-
+	private ButtonGroup G;
 	/**
 	 * Launch the application.
 	 */
@@ -163,8 +163,17 @@ public class RegisterStaff extends JPanel {
 		JButton btnRegister = new JButton("Register");
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				registerStaff();
-				displayData();
+				String id = txtEmployeeID.getText().trim();
+		        String lastName = txtLastName.getText().trim();
+		        String firstName = txtFirstName.getText().trim();
+		        String contact = txtContactNum.getText().trim();
+		        
+		        if (id.isEmpty() || lastName.isEmpty() || firstName.isEmpty() || contact.isEmpty() || (!radioFaculty.isSelected() && !radioStaff.isSelected())) {
+		            JOptionPane.showMessageDialog(getRootPane(), "Please enter all required information before registering.");
+		        } else {
+		            registerStaff();
+		            displayData();
+		        }
 			}
 		});
 		btnRegister.setForeground(Color.WHITE);
@@ -204,7 +213,7 @@ public class RegisterStaff extends JPanel {
 		/*Add radio buttons for employee type
 		 * in a group, so only one radio button
 		 * can be ticked*/
-		ButtonGroup G = new ButtonGroup();
+		G = new ButtonGroup();
 		G.add(radioFaculty);
 		G.add(radioStaff);
 		
@@ -308,64 +317,99 @@ public class RegisterStaff extends JPanel {
 	PreparedStatement pst;
 	ResultSet rs;
 	
-	public void export() {						
+	public void export() {
+	    // Create a format for the date in the file name
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	// Create a format for the date in the file name
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    // Get the current date and format it
+	    String currentDate = dateFormat.format(new Date());
 
-    // Get the current date and format it
-    String currentDate = dateFormat.format(new Date());
+	    // Construct the base file name with the current date
+	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\employees_export_" + currentDate + ".csv";
 
-    // Construct the base file name with the current date
-    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\employee_export_" + currentDate + ".csv";
+	    // Initialize the file name
+	    String fileName = baseFileName;
 
-    // Initialize the file name
-    String fileName = baseFileName;
+	    // Check if the file already exists
+	    int fileIndex = 1;
+	    while (fileExists(fileName)) {
+	        // Append a suffix to make the file name unique
+	        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
+	        fileIndex++;
+	    }
 
-    // Check if the file already exists
-    int fileIndex = 1;
-    while (fileExists(fileName)) {
-        // Append a suffix to make the file name unique
-        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
-        fileIndex++;
-    }
+	    try {
+	        FileWriter fw = new FileWriter(fileName);
+	        
+	        // Add headers to the CSV file
+	        fw.append("Employee ID");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Last Name");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("First Name");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Middle Name");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Contact No.");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Email");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("User Type");
+	        fw.append('\n');
 
-    try {
-        FileWriter fw = new FileWriter(fileName);
-        try {
-            pst = conn.prepareStatement("SELECT * From Employees");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        rs = pst.executeQuery();
+	        // Fetch data from the database
+	        pst = conn.prepareStatement("SELECT * FROM Employees");
+	        rs = pst.executeQuery();
 
-        while (rs.next()) {
-        	fw.append(rs.getString(1));
-			fw.append(',');
-			fw.append(rs.getString(2));
-			fw.append(',');
-			fw.append(rs.getString(3));
-			fw.append(',');
-			fw.append(rs.getString(4));
-			fw.append(',');
-			fw.append(rs.getString(5));
-			fw.append(',');
-			fw.append(rs.getString(6));
-			fw.append(',');
-			fw.append(rs.getString(7));
-			fw.append('\n');
-        }
-        JOptionPane.showMessageDialog(getRootPane(), "Export success");
-        fw.flush();
-        fw.close();
-    } catch (IOException e) {
-        e.printStackTrace();
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
+	        int totalBooks = 0;
 
+	        while (rs.next()) {
+	        	fw.append(rs.getString(1));  //the column index for ID
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(2));  //the column index for Last
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(3));  //the column index for First
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(4));  //the column index for Middle
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(5));  //the column index for Contact
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(6));  //the column index for Email
+	            fw.append(',');
+		        fw.append(',');
+		        fw.append(',');
+	            fw.append(rs.getString(7));  //the column index for Type
+	            fw.append('\n');
 
-}
+	            totalBooks++;
+	        }
+
+	        // Write the total number of books registered
+	        fw.append('\n');
+	        fw.append("Total Staff Registered: " + totalBooks);
+	        
+	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        
+	        // Flush and close the FileWriter
+	        fw.flush();
+	        fw.close();
+	    } catch (IOException | SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 
 // check if file already exissts
 private boolean fileExists(String fileName) {
@@ -543,6 +587,13 @@ private boolean fileExists(String fileName) {
 					
 					//Execute query
 					stmt.executeUpdate(sql);
+					txtEmployeeID.setText("");
+                    txtLastName.setText("");
+                    txtFirstName.setText("");
+                    txtMiddleName.setText("");
+                    txtEmail.setText("");
+                    txtContactNum.setText("");
+                    G.clearSelection();
 					JOptionPane.showMessageDialog(getRootPane(), "Employee Registered");
 				}
 				
@@ -555,6 +606,13 @@ private boolean fileExists(String fileName) {
 					
 					//Execute query
 					stmt.executeUpdate(sql);
+					txtEmployeeID.setText("");
+                    txtLastName.setText("");
+                    txtFirstName.setText("");
+                    txtMiddleName.setText("");
+                    txtEmail.setText("");
+                    txtContactNum.setText("");
+                    G.clearSelection();
 					JOptionPane.showMessageDialog(getRootPane(), "Employee Registered");
 				}
 				

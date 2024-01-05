@@ -221,10 +221,10 @@ public class RegisterBooksFrame extends JPanel {
 				
 		});
 		
-		btnRegister.setForeground(Color.WHITE);
+		btnRegister.setForeground(new Color(255, 255, 255));
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
-		btnRegister.setBackground(new Color(220, 20, 60));
+		btnRegister.setBackground(new Color(0, 147, 217));
 		panel.add(btnRegister);
 		
 		JLabel lblQuantity = new JLabel("Quantity");
@@ -440,6 +440,42 @@ public class RegisterBooksFrame extends JPanel {
 		
 
 		panel.add(cbSort);
+		
+		JButton btnRemove = new JButton("Remove");
+		btnRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = table.getSelectedRow();
+
+		        if (selectedRow == -1) {
+		            // No row selected, show an error message
+		            JOptionPane.showMessageDialog(getRootPane(), "Please select a book to remove.", "Error", JOptionPane.ERROR_MESSAGE);
+		        } else {
+		            // Get the Book_Num from the selected row
+		            String bookNum = table.getValueAt(selectedRow, 0).toString(); // Assuming Book_Num is in the first column (index 0)
+		            String getAcc = table.getValueAt(selectedRow, 8).toString();
+		            int acc = Integer.parseInt(String.valueOf(getAcc)); 
+		            // Confirm the removal with a dialog
+		            int dialogResult = JOptionPane.showConfirmDialog(getRootPane(), "Are you sure you want to remove this book?", "Confirmation", JOptionPane.YES_NO_OPTION);
+		            
+		            if (dialogResult == JOptionPane.YES_OPTION) {
+		                // User confirmed, proceed with removal
+		                removeBook(bookNum, acc);
+		                try {
+							displayLatestData();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} // Update the displayed data after removal
+		            }
+		        }
+			}
+		});
+		btnRemove.setForeground(Color.WHITE);
+		btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnRemove.setBorderPainted(false);
+		btnRemove.setBackground(new Color(220, 20, 60));
+		btnRemove.setBounds(76, 656, 112, 30);
+		panel.add(btnRemove);
 										
 		radioRegister.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -503,6 +539,29 @@ public class RegisterBooksFrame extends JPanel {
 			
 	private JTextField txtSrTitle;
 	private JTextField txtSrBookNum;
+	
+	
+	// Method to remove a book by Book_Num
+	private void removeBook(String bookNum, int acc) {
+	    try {
+	        String deleteSql = "DELETE FROM Books WHERE Book_Num = ? AND Accession_Num = ?";
+
+	        try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
+	            deleteStmt.setString(1, bookNum);
+	            deleteStmt.setInt(2, acc);
+	            // Execute the update
+	            int rowsAffected = deleteStmt.executeUpdate();
+
+	            if (rowsAffected > 0) {
+	                JOptionPane.showMessageDialog(getRootPane(), "Book removed successfully.");
+	            } else {
+	                JOptionPane.showMessageDialog(getRootPane(), "Failed to remove the book.", "Error", JOptionPane.ERROR_MESSAGE);
+	            }
+	        }
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    }
+	}
 	
 	// Use this method to get the selected sorting criteria
 	private String getOrderByClause() {
@@ -583,9 +642,8 @@ public class RegisterBooksFrame extends JPanel {
 		}
 	}
 	
-	public void export() {						
-		
-		// Create a format for the date in the file name
+	public void export() {
+	    // Create a format for the date in the file name
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	    // Get the current date and format it
@@ -607,51 +665,97 @@ public class RegisterBooksFrame extends JPanel {
 
 	    try {
 	        FileWriter fw = new FileWriter(fileName);
-	        try {
-	            pst = conn.prepareStatement("SELECT * From Books");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
+	        
+	        // Add headers to the CSV file
+	        fw.append("Book Num");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Title");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Author");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("ISBN");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Publisher");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Language");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Subject");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Quantity");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Dewey Decimal");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Accession Num");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Date Registered");
+	        fw.append('\n');
+
+	        // Fetch data from the database
+	        pst = conn.prepareStatement("SELECT * FROM Books");
 	        rs = pst.executeQuery();
 
+	        int totalBooks = 0;
+
 	        while (rs.next()) {
-	        	fw.append(rs.getString(1));
-				fw.append(',');
-				fw.append(rs.getString(2));
-				fw.append(',');
-				fw.append(rs.getString(3));
-				fw.append(',');
-				fw.append(rs.getString(4));
-				fw.append(',');
-				fw.append(rs.getString(5));
-				fw.append(',');
-				fw.append(rs.getString(6));
-				fw.append(',');
-				fw.append(rs.getString(7));
-				fw.append(',');
-				fw.append(rs.getString(8));
-				fw.append(',');
-				fw.append(rs.getString(9));
-				fw.append(',');
-				fw.append(rs.getString(10));
-				fw.append(',');
-				fw.append(rs.getString(11));
-				fw.append(',');
-				fw.append(rs.getString(12));
-				fw.append('\n');
+	        	fw.append(rs.getString(1));  //column index for Title
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(2));  //column index for Title
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(3));  //column index for Author
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(4));  //column index for ISBN
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(5));  //column index for Publisher
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(6));  //column index for Language
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(7));  //column index for Subject
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(8));  //column index for Quantity
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(9));  //column index for Book_Num
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(10)); //column index for Dewey_Decimal
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(12)); //column index for Book_Status
+	            fw.append('\n');
+
+	            totalBooks++;
 	        }
+
+	        // Write the total number of books registered
+	        fw.append('\n');
+	        fw.append("Total Books Registered: " + totalBooks);
+	        
 	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        
+	        // Flush and close the FileWriter
 	        fw.flush();
 	        fw.close();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    } catch (SQLException e) {
+	    } catch (IOException | SQLException e) {
 	        e.printStackTrace();
 	    }
-								
-		
 	}
-	
 	// check if file already exissts
 	private boolean fileExists(String fileName) {
 	    File file = new File(fileName);

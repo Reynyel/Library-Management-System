@@ -21,6 +21,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
@@ -41,6 +43,8 @@ import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import color.AlternateColorRender;
+import tablemodel.NonEditTableModel;
+
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
@@ -136,6 +140,11 @@ public class TransactionFrame extends JPanel {
 		scrollPane.setBounds(10, 226, 1236, 413);
 		panel.add(scrollPane);
 				
+		Object[][] data = {null, null, null, null, null, null, null, null, null, null};
+		Object[] columnNames = {"Book Number", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Dewey", "Accession", "Status"};
+		NonEditTableModel model;
+		Set<Integer> editableColumns = new HashSet<>();
+		
 		tblTransac = new JTable();
 		scrollPane.setViewportView(tblTransac);
 		tblTransac.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -149,6 +158,7 @@ public class TransactionFrame extends JPanel {
 					"Book Number", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Dewey", "Accession", "Status"
 			}
 		));
+		tblTransac.setModel(new NonEditTableModel(data, columnNames, editableColumns));
 		tblTransac.setDefaultRenderer(Object.class, alternate);
 		
 
@@ -295,7 +305,7 @@ public class TransactionFrame extends JPanel {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		JButton btnSearchBook = new JButton("Search Book");
-		btnSearchBook.setBounds(824, 130, 128, 30);
+		btnSearchBook.setBounds(611, 13, 128, 30);
 		panel.add(btnSearchBook);
 		btnSearchBook.setForeground(new Color(255, 255, 255));
 		btnSearchBook.setBackground(new Color(220, 20, 60));
@@ -316,20 +326,19 @@ public class TransactionFrame extends JPanel {
 	PreparedStatement pst;
 	ResultSet rs;
 	
-	public void export() {						
-			
-			// Create a format for the date in the file name
+	public void export() {
+	    // Create a format for the date in the file name
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	    // Get the current date and format it
 	    String currentDate = dateFormat.format(new Date());
-	
+
 	    // Construct the base file name with the current date
 	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\transactions_export_" + currentDate + ".csv";
-	
+
 	    // Initialize the file name
 	    String fileName = baseFileName;
-	
+
 	    // Check if the file already exists
 	    int fileIndex = 1;
 	    while (fileExists(fileName)) {
@@ -337,48 +346,90 @@ public class TransactionFrame extends JPanel {
 	        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
 	        fileIndex++;
 	    }
-	
+
 	    try {
 	        FileWriter fw = new FileWriter(fileName);
-	        try {
-	            pst = conn.prepareStatement("SELECT * From Transactions");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
+	        
+	        // Add headers to the CSV file
+	        fw.append("Transaction ID");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Book Number");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Title");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Accession");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Book Status");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Transaction Date");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Return Date");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Borrower");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Borrower ID");
+	        fw.append('\n');
+
+	        // Fetch data from the database
+	        pst = conn.prepareStatement("SELECT * FROM Transactions");
 	        rs = pst.executeQuery();
-	
+
+	        int totalBooks = 0;
+
 	        while (rs.next()) {
-	        	fw.append(rs.getString(1));
-				fw.append(',');
-				fw.append(rs.getString(2));
-				fw.append(',');
-				fw.append(rs.getString(3));
-				fw.append(',');
-				fw.append(rs.getString(4));
-				fw.append(',');
-				fw.append(rs.getString(5));
-				fw.append(',');
-				fw.append(rs.getString(6));
-				fw.append(',');
-				fw.append(rs.getString(7));
-				fw.append(',');
-				fw.append(rs.getString(8));
-				fw.append(',');
-				fw.append(rs.getString(9));
-				fw.append(',');
-				fw.append(rs.getString(10));
-				fw.append('\n');
+	        	fw.append(rs.getString(1));  //the column index for Transaction ID
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(2));  //the column index for Book Num
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(3));  //the column index for Title
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(4));  //the column index for Accession
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(5));  //the column index for Status
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(6));  //the column index for Transaction Date
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(7));  //the column index for Return Date
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(8));  //the column index for Borrower
+	            fw.append(',');
+		        fw.append(',');
+		        fw.append(',');
+	            fw.append(rs.getString(9));  //the column index for Borrower ID
+	            fw.append('\n');
+
+	            totalBooks++;
 	        }
+
+	        // Write the total number of books registered
+	        fw.append('\n');
+	        fw.append("Total Transactions Recorded: " + totalBooks);
+	        
 	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        
+	        // Flush and close the FileWriter
 	        fw.flush();
 	        fw.close();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    } catch (SQLException e) {
+	    } catch (IOException | SQLException e) {
 	        e.printStackTrace();
 	    }
-								
-		
 	}
 	
 	// check if file already exissts
@@ -626,11 +677,22 @@ public class TransactionFrame extends JPanel {
             				// Execute the update
             				int rowsAffected = pstmt.executeUpdate();
             				
+            				txtTitle.setText("");
+            				txtBookNum.setText("");
+            				txtAuthor.setText("");
+            				txtTitle.setText("");
+            				cbAccession.removeAllItems();
+            				txtStatus.setText("");
+            				txtBorrID.setText("");
             				JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!");
+            				//will cause console stuff
+            				dateChooser.setCalendar(null);    
             				
             			} catch (SQLException e) {
             				e.printStackTrace();
             			}
+            			
+            			
             		} else {
             			        			
             			// If user ID does not start with "1", set return date to three days from the transaction date
@@ -650,8 +712,15 @@ public class TransactionFrame extends JPanel {
             				// Execute the update
             				int rowsAffected = pstmt.executeUpdate();
             				
+            				txtTitle.setText("");
+            				txtBookNum.setText("");
+            				txtAuthor.setText("");
+            				txtTitle.setText("");
+            				cbAccession.removeAllItems();
+            				txtStatus.setText("");
+            				txtBorrID.setText("");           				       				
             				JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!");
-            				
+            				dateChooser.setCalendar(null);    
             			} catch (SQLException e) {
             				e.printStackTrace();
             			}
