@@ -540,12 +540,6 @@ public class LendingBooksFrame extends JPanel {
 
                 int rowsPenaltyAffected = updatePenaltyFeeStmt.executeUpdate();
 
-                if(rowsPenaltyAffected > 0) {
-                	JOptionPane.showMessageDialog(getRootPane(), "PEEEEEEEEEEE");
-                }
-                else {
-                	JOptionPane.showMessageDialog(getRootPane(), "Error with updatePenalty() method");
-                }
             }
             catch(SQLException e) {
             	e.printStackTrace();
@@ -586,14 +580,8 @@ public class LendingBooksFrame extends JPanel {
                 updatePenaltyFeeStmt.setString(2, transactionId);
                 
                 int rowsPenaltyAffected = updatePenaltyFeeStmt.executeUpdate();
-                System.out.println("pelase fucking wodsdrk");
 
-                if(rowsPenaltyAffected > 0) {
-                	JOptionPane.showMessageDialog(getRootPane(), "PEEEEEEEEEEE");
-                }
-                else {
-                	JOptionPane.showMessageDialog(getRootPane(), "Error with updatePenalty() method");
-                }
+
             }
             catch(SQLException e) {
             	e.printStackTrace();
@@ -606,14 +594,11 @@ public class LendingBooksFrame extends JPanel {
     
     
     public double calculateFee() {
-        double penaltyFee = 0.0;
+    	double penaltyFee = 0.0;
 
-        // Get the selected row from the table
         int selectedRow = tblTransac.getSelectedRow();
 
-        // Check if a row is selected
         if (selectedRow != -1) {
-            // Assuming the return date is in the seventh column (index 6)
             Object returnDateObj = tblTransac.getValueAt(selectedRow, 6);
 
             if (returnDateObj != null) {
@@ -625,23 +610,20 @@ public class LendingBooksFrame extends JPanel {
                     Date returnDate = dateFormat.parse(returnDateStr);
 
                     // Get the current date
-                    Date currentDate = new Date();
+                    LocalDate currentDate = LocalDate.now();
 
-//                    Set a custom date, 11 days from now
-//                    
-//                    CHANGE THIS TO BACK TO CURRENT TIME BEFORE PRODUCTION
-//                    SUBTRACTS BY 2
-                    LocalDate customDate = LocalDate.now();
-                    Date customDateAsDate = Date.from(customDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    // Calculate the penalty fee only if the book is returned late
+                    if (returnDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(currentDate)) {
+                        // Calculate the penalty fee based on the number of overdue days
+                        long overdueMillis = currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() - returnDate.getTime();
+                        long overdueDays = TimeUnit.MILLISECONDS.toDays(overdueMillis);
+                        penaltyFee = overdueDays * 10.0;
 
-                    // Calculate the penalty fee based on the number of overdue days
-                    long overdueMillis = customDateAsDate.getTime() - returnDate.getTime();
-                    long overdueDays = TimeUnit.MILLISECONDS.toDays(overdueMillis);
-                    
-                    penaltyFee = overdueDays * 10.0;
-
-                    //DEBUUGER (DELETE THIS)
-                    System.out.println("Penalty Fee calculated successfully: " + penaltyFee);
+                        // DEBUG (DELETE THIS)
+                        System.out.println("Penalty Fee calculated successfully: " + penaltyFee);
+                    } else {
+                        System.out.println("Book returned on time or early.");
+                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -1013,11 +995,6 @@ public class LendingBooksFrame extends JPanel {
 	        	//executee :))))
 	        	int rowsAffected = deleteStmt.executeUpdate();
 	        	
-	        	if (rowsAffected > 0) {
-	                JOptionPane.showMessageDialog(getRootPane(), "Book removed from transactions successfully.");
-	            } else {
-	                JOptionPane.showMessageDialog(getRootPane(), "Error removing book from transactions.");
-	            }
 	        	
 	        }
 	        catch(SQLException e) {
@@ -1062,12 +1039,6 @@ public class LendingBooksFrame extends JPanel {
 	                    
 	                    //executeeee
 	                    int rowsAffected = insertReturnedStmt.executeUpdate();
-	                    
-	                    if (rowsAffected > 0) {
-	                        JOptionPane.showMessageDialog(getRootPane(), "Returned Book was recorded successfully.");
-	                    } else {
-	                        JOptionPane.showMessageDialog(getRootPane(), "Error recording book as returned.");
-	                    }
 	            		
 	            	}
 	            	catch(SQLException e) {
