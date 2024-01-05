@@ -349,16 +349,15 @@ public class LendingBooksFrame extends JPanel {
 	private JTextField txtPenalty;
 	private JTextField txtDateReturned;
 	
-	public void export() {						
-		
-		// Create a format for the date in the file name
+	public void export() {
+	    // Create a format for the date in the file name
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	    // Get the current date and format it
 	    String currentDate = dateFormat.format(new Date());
 
 	    // Construct the base file name with the current date
-	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\returned_books_export_" + currentDate + ".csv";
+	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\returned_export_" + currentDate + ".csv";
 
 	    // Initialize the file name
 	    String fileName = baseFileName;
@@ -373,45 +372,95 @@ public class LendingBooksFrame extends JPanel {
 
 	    try {
 	        FileWriter fw = new FileWriter(fileName);
-	        try {
-	            pst = conn.prepareStatement("SELECT * From Returned");
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
+	        
+	        // Add headers to the CSV file
+	        fw.append("Transaction ID");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Book Number");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Title");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Accession");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Status");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Due Date");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Date Returned");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Borrower");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("ID");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Penalty Fee");
+	        fw.append('\n');
+
+	        // Fetch data from the database
+	        pst = conn.prepareStatement("SELECT * FROM Returned ");
 	        rs = pst.executeQuery();
 
+	        int totalBooks = 0;
+
 	        while (rs.next()) {
-	        	fw.append(rs.getString(1));
-				fw.append(',');
-				fw.append(rs.getString(2));
-				fw.append(',');
-				fw.append(rs.getString(3));
-				fw.append(',');
-				fw.append(rs.getString(4));
-				fw.append(',');
-				fw.append(rs.getString(5));
-				fw.append(',');
-				fw.append(rs.getString(6));
-				fw.append(',');
-				fw.append(rs.getString(7));
-				fw.append(',');
-				fw.append(rs.getString(8));
-				fw.append(',');
-				fw.append(rs.getString(9));
-				fw.append(',');
-				fw.append(rs.getString(10));
-				fw.append('\n');
+	        	fw.append(rs.getString(1));  //the column index for ID
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(2));  //the column index for Last
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(3));  //the column index for First
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(4));  //the column index for Middle
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(5));  //the column index for Contact
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(6));  //the column index for Email
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(7));  //the column index for Email
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(8));  //the column index for Email
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(9));  //the column index for Email
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(10));  //the column index for Email
+	            fw.append('\n');
+
+	            totalBooks++;
 	        }
+
+	        // Write the total number of books registered
+	        fw.append('\n');
+	        fw.append("Total Returned Books Recorded: " + totalBooks);
+	        
 	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        
+	        // Flush and close the FileWriter
 	        fw.flush();
 	        fw.close();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	    } catch (SQLException e) {
+	    } catch (IOException | SQLException e) {
 	        e.printStackTrace();
 	    }
-								
-		
 	}
 	
 	// check if file already exissts

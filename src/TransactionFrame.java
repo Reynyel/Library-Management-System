@@ -334,7 +334,7 @@ public class TransactionFrame extends JPanel {
 	    String currentDate = dateFormat.format(new Date());
 
 	    // Construct the base file name with the current date
-	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\books_export_" + currentDate + ".csv";
+	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\transactions_export_" + currentDate + ".csv";
 
 	    // Initialize the file name
 	    String fileName = baseFileName;
@@ -375,41 +375,44 @@ public class TransactionFrame extends JPanel {
 	        fw.append("Borrower");
 	        fw.append(',');
 	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
 	        fw.append("Borrower ID");
 	        fw.append('\n');
 
 	        // Fetch data from the database
-	        pst = conn.prepareStatement("SELECT * FROM Books");
+	        pst = conn.prepareStatement("SELECT * FROM Transactions");
 	        rs = pst.executeQuery();
 
 	        int totalBooks = 0;
 
 	        while (rs.next()) {
-	        	fw.append(rs.getString(1));  // Assuming 2 is the column index for Title
+	        	fw.append(rs.getString(1));  //the column index for Transaction ID
 	            fw.append(',');
 	            fw.append(',');
-	            fw.append(rs.getString(2));  // Assuming 2 is the column index for Title
+	            fw.append(rs.getString(2));  //the column index for Book Num
 	            fw.append(',');
 	            fw.append(',');
-	            fw.append(rs.getString(3));  // Assuming 3 is the column index for Author
+	            fw.append(rs.getString(3));  //the column index for Title
 	            fw.append(',');
 	            fw.append(',');
-	            fw.append(rs.getString(4));  // Assuming 4 is the column index for ISBN
+	            fw.append(rs.getString(4));  //the column index for Accession
 	            fw.append(',');
 	            fw.append(',');
-	            fw.append(rs.getString(5));  // Assuming 5 is the column index for Publisher
+	            fw.append(rs.getString(5));  //the column index for Status
 	            fw.append(',');
 	            fw.append(',');
-	            fw.append(rs.getString(6));  // Assuming 6 is the column index for Language
+	            fw.append(rs.getString(6));  //the column index for Transaction Date
 	            fw.append(',');
 	            fw.append(',');
-	            fw.append(rs.getString(7));  // Assuming 7 is the column index for Subject
+	            fw.append(rs.getString(7));  //the column index for Return Date
 	            fw.append(',');
 	            fw.append(',');
-	            fw.append(rs.getString(8));  // Assuming 8 is the column index for Quantity
+	            fw.append(rs.getString(8));  //the column index for Borrower
 	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(9));  // Assuming 9 is the column index for Book_Num
+		        fw.append(',');
+		        fw.append(',');
+	            fw.append(rs.getString(9));  //the column index for Borrower ID
 	            fw.append('\n');
 
 	            totalBooks++;
@@ -417,7 +420,7 @@ public class TransactionFrame extends JPanel {
 
 	        // Write the total number of books registered
 	        fw.append('\n');
-	        fw.append("Total Books Registered: " + totalBooks);
+	        fw.append("Total Transactions Recorded: " + totalBooks);
 	        
 	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
 	        
@@ -682,11 +685,14 @@ public class TransactionFrame extends JPanel {
             				txtStatus.setText("");
             				txtBorrID.setText("");
             				JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!");
+            				//will cause console stuff
             				dateChooser.setCalendar(null);    
             				
             			} catch (SQLException e) {
             				e.printStackTrace();
             			}
+            			
+            			
             		} else {
             			        			
             			// If user ID does not start with "1", set return date to three days from the transaction date
@@ -712,8 +718,7 @@ public class TransactionFrame extends JPanel {
             				txtTitle.setText("");
             				cbAccession.removeAllItems();
             				txtStatus.setText("");
-            				txtBorrID.setText("");
-            				       				
+            				txtBorrID.setText("");           				       				
             				JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!");
             				dateChooser.setCalendar(null);    
             			} catch (SQLException e) {
