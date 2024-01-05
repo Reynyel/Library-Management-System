@@ -149,9 +149,19 @@ public class RegisterStudent extends JPanel {
 		
 		JButton btnRegister = new JButton("Register");
 		btnRegister.addActionListener(new ActionListener() {
+			String studentNum = txtStudentNum.getText().toString();
+			String lastName = txtLastName.getText().toString();
+			String firstName = txtFirstName.getText().toString();
 			public void actionPerformed(ActionEvent e) {
-				registerStudent();
-				displayData();
+				if(studentNum.equals("") && lastName.equals("") && firstName.equals("")) {
+					JOptionPane.showMessageDialog(getRootPane(), "Please enter the following information first");
+					return;
+				}
+				else {
+					registerStudent();
+					displayData();
+				}
+				
 			}
 		});
 		btnRegister.setForeground(Color.WHITE);

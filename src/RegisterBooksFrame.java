@@ -69,8 +69,12 @@ public class RegisterBooksFrame extends JPanel {
 	private JTextField txtPublisher;
 	private JTextField txtQuantity;
 	private JButton btnUpdate;
-	private JComboBox comboBoxSubject, languageComboBox;
+	private JComboBox comboBoxSubject, languageComboBox, cbSort;
 	private JTable table;
+	
+	Connection conn;
+	PreparedStatement pst;
+	ResultSet rs;
 
 	/**
 	 * Launch the application.
@@ -416,6 +420,27 @@ public class RegisterBooksFrame extends JPanel {
 		btnExport.setBackground(new Color(0, 128, 0));
 		btnExport.setBounds(868, 627, 259, 30);
 		panel.add(btnExport);
+		
+		JLabel lblSort = new JLabel("Sort By:");
+		lblSort.setForeground(Color.WHITE);
+		lblSort.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblSort.setBackground(new Color(89, 89, 89));
+		lblSort.setBounds(1024, 401, 64, 30);
+		panel.add(lblSort);
+		
+		cbSort = new JComboBox();
+		cbSort.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sort();
+			}
+		});
+		cbSort.setModel(new DefaultComboBoxModel(new String[] {"Date Registered", "Title"}));
+		cbSort.setFont(new Font("Tahoma", Font.PLAIN, 15));	
+		cbSort.setBackground(Color.WHITE);
+		cbSort.setBounds(1098, 401, 148, 30);
+		
+
+		panel.add(cbSort);
 										
 		radioRegister.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -476,14 +501,88 @@ public class RegisterBooksFrame extends JPanel {
 		
 		displayLatestData();
 	}
-	
-	Connection conn;
-	PreparedStatement pst;
-	ResultSet rs;
-	
-	
+			
 	private JTextField txtSrTitle;
 	private JTextField txtSrBookNum;
+	
+	// Use this method to get the selected sorting criteria
+	private String getOrderByClause() {
+	    String selectedSortBy = (String) cbSort.getSelectedItem();
+	    String orderByClause;
+
+	    switch (selectedSortBy) {
+	        case "Date Registered":
+	            orderByClause = "ORDER BY date_registered";
+	            break;
+	        case "Title":
+	            orderByClause = "ORDER BY title, Accession_Num";
+	            break;
+
+	        default:
+	            orderByClause = ""; 
+	    }
+
+	    return orderByClause;
+	}
+	
+	public void sort() {
+		try {		
+			 // Load the JDBC driver (version 4.0 or later)
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}   		
+			
+			try {
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+				Statement stmt = conn.createStatement();
+				System.out.println("Connected");
+								
+				String sql = "SELECT * FROM Books " + getOrderByClause();
+				ResultSet rs = stmt.executeQuery(sql);
+				
+				
+				DefaultTableModel tblModel = (DefaultTableModel)table.getModel();
+				
+				// Clear existing rows in the table
+	            tblModel.setRowCount(0);
+	            
+	            
+				while(rs.next()) {
+					//add data until there is none
+					String bookNum = String.valueOf(rs.getInt("Book_Num"));
+					String title = rs.getString("Title");
+					String author = rs.getString("Author");
+					String isbn = rs.getString("isbn");
+					String publisher = rs.getString("Publisher");
+					String language = rs.getString("Language");
+					String subject = rs.getString("Subject");
+					String quantity = String.valueOf(rs.getInt("Quantity"));
+					String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+					String accession = String.valueOf(rs.getInt("Accession_Num"));
+					String dateRegistered = String.valueOf(rs.getString("date_registered"));
+					String status = rs.getString("book_status");
+					
+					//array to store data into jtable
+					String tbData[] = {bookNum, title, author, isbn, publisher,
+							language, subject, dewey, accession, status, dateRegistered};
+								
+					//add string array data to jtable
+					tblModel.addRow(tbData);
+				}
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}          				
+								
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
 	
 	public void export() {						
 		
@@ -693,101 +792,94 @@ public class RegisterBooksFrame extends JPanel {
 	
 	
 	public void registerBooks() {
-		try {		
-			 // Load the JDBC driver (version 4.0 or later)
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-	        
-			Connection conn;
-			
-			try {
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
-				Statement stmt = conn.createStatement();
-				System.out.println("Connected");
-				//Get the inputs
-				String title = txtTitle.getText();
-				String author = txtAuthor.getText();
-				String isbn = txtISBN.getText();
-				String publisher = txtPublisher.getText();
-				String language = languageComboBox.getSelectedItem().toString();
-				String subject = comboBoxSubject.getSelectedItem().toString();
-				int quantity = Integer.valueOf(txtQuantity.getText()); //Converts String to Int
-				DeweyMap deweyMap = new DeweyMap();
-				double deweyDecimal = deweyMap.getDeweyForSubject(subject); 
-				
-				//Starting value for accession number
-				int accessionNum = 00;
-								
-				// Create a map to store used book numbers for each title
-				Map<String, Integer> titleToUsedBookNumber = new HashMap<>();
-				
-				// created a set to store book numbers
-				Set<Integer> usedBookNumbers = new HashSet<>();
-				
-				Random rd = new Random();	
-				
-				/* Checks the book's quantity:
-				 * If there is more than one copy of the same book, multiple entries will be inserted into the database.
-				 * The Accession_Num will increment by 1 for each copy.
-				 * If there's only one copy, a single entry is created.
-				 */
-				int bookNum;
-				
-				/*this will generate a unique 6-character
-				 * book number for a title*/
-				do {
-					bookNum = 100000 + rd.nextInt(900000);
-				} while (usedBookNumbers.contains(bookNum));
-				
-				usedBookNumbers.add(bookNum);
-				
-				/* this is used to store the designated
-				 * book number for a title*/
-				titleToUsedBookNumber.put(title, bookNum);
+	    try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        try {
+	            Class.forName("com.mysql.jdbc.Driver");
+	        } catch (ClassNotFoundException e1) {
+	            e1.printStackTrace();
+	        }
 
-				for(int i = 0; i <= (quantity - 1); i++) {					
-					
-					if(quantity > 1) {
-							/* this will use the same book number
-							 * for multiple copies of the same title*/
-							int usedBookNum = titleToUsedBookNumber.get(title);
-							
-							String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num, book_status, date_registered)" +
-								    "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + usedBookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "', '" + "Available" + "', CURRENT_DATE())";
-							
-							//Execute query
-							stmt.executeUpdate(sql);
-						
-						}
-						
-					else {					
-						// For single copy
-						String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num, book_status, date_registered)" +
-						    "VALUES ('" + title + "', '" + author + "', '" + isbn + "', '" + publisher + "', '" + language + "', '" + subject + "', '" + quantity + "', '" + bookNum + "', '" + deweyDecimal + "', '" + (accessionNum + i) + "', '" + "Available" + "', CURRENT_DATE())";
-						
-						//Execute query
-						stmt.executeUpdate(sql);
-					}
-				
-				}
-				
-				JOptionPane.showMessageDialog(getRootPane(), "Book Registered");
-				displayLatestData();
-				
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}          				
-								
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	        Connection conn;
+
+	        try {
+	            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	            Statement stmt = conn.createStatement();
+	            System.out.println("Connected");
+	            // Get the inputs
+	            String title = txtTitle.getText();
+	            String author = txtAuthor.getText();
+	            String isbn = txtISBN.getText();
+	            String publisher = txtPublisher.getText();
+	            String language = languageComboBox.getSelectedItem().toString();
+	            String subject = comboBoxSubject.getSelectedItem().toString();
+	            int quantity = Integer.valueOf(txtQuantity.getText()); // Converts String to Int
+	            DeweyMap deweyMap = new DeweyMap();
+	            double deweyDecimal = deweyMap.getDeweyForSubject(subject);
+
+	            // Create a map to store used book numbers for each title
+	            Map<String, Integer> titleToUsedBookNumber = new HashMap<>();
+
+	            // Check if a book with the same title already exists
+	            String checkExistingBookSql = "SELECT Book_Num, MAX(Accession_Num) AS latestAccessionNum FROM Books WHERE Title = ? GROUP BY Book_Num";
+	            try (PreparedStatement checkExistingBookStmt = conn.prepareStatement(checkExistingBookSql)) {
+	                checkExistingBookStmt.setString(1, title);
+	                ResultSet existingBookResult = checkExistingBookStmt.executeQuery();
+
+	                int usedBookNum;
+	                int latestAccessionNum = 0;
+
+	                if (existingBookResult.next()) {
+	                    // Book with the same title already exists
+	                    usedBookNum = existingBookResult.getInt("Book_Num");
+	                    latestAccessionNum = existingBookResult.getInt("latestAccessionNum");
+	                } else {
+	                    // Book with the same title doesn't exist, generate new book number
+	                    usedBookNum = 100000 + new Random().nextInt(900000);
+	                }
+
+	                titleToUsedBookNumber.put(title, usedBookNum);
+
+	                for (int i = 0; i < quantity; i++) {
+	                    // Increment accessionNum for each new book
+	                    int accessionNum = latestAccessionNum + i + 1;
+
+	                    String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num, book_status, date_registered)" +
+	                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE())";
+
+	                    try (PreparedStatement insertBookStmt = conn.prepareStatement(sql)) {
+	                        insertBookStmt.setString(1, title);
+	                        insertBookStmt.setString(2, author);
+	                        insertBookStmt.setString(3, isbn);
+	                        insertBookStmt.setString(4, publisher);
+	                        insertBookStmt.setString(5, language);
+	                        insertBookStmt.setString(6, subject);
+	                        insertBookStmt.setInt(7, quantity);
+	                        insertBookStmt.setInt(8, usedBookNum);
+	                        insertBookStmt.setDouble(9, deweyDecimal);
+	                        insertBookStmt.setInt(10, accessionNum);
+	                        insertBookStmt.setString(11, "Available");
+
+	                        // Execute query
+	                        insertBookStmt.executeUpdate();
+	                    }
+	                }
+	            }
+
+	            JOptionPane.showMessageDialog(getRootPane(), "Book Registered");
+	            // Fetch and display the latest data
+	            displayLatestData();
+
+	        } catch (SQLException e1) {
+	            e1.printStackTrace();
+	        }
+
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
 	}
+
+
 	
 		public void search() {
 			try {		
@@ -867,7 +959,8 @@ public class RegisterBooksFrame extends JPanel {
 				e1.printStackTrace();
 			}		
 			
-	}
+		}
+		
 		public void view() {
 			try {		
 				 // Load the JDBC driver (version 4.0 or later)

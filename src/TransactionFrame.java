@@ -490,12 +490,17 @@ public class TransactionFrame extends JPanel {
             Object obAcc = cbAccession.getSelectedItem();
             
             String userType = getUserType(borrId);
-            
+            // Date has been chosen
+	        Date chosenDate = dateChooser.getDate();
+	        
+	        
             // check if the user has inserted a book title
             if(tl.isEmpty() && bn.isEmpty() && obAcc == null) {
             	JOptionPane.showMessageDialog(getRootPane(), "Please search for the book first");       
             }
-            
+            else if(chosenDate == null) {
+	        	JOptionPane.showMessageDialog(getRootPane(), "Please choose a return date.");
+	        }
             else {
             	int acc = Integer.parseInt(cbAccession.getSelectedItem().toString());
             	// Check if the user is a student or faculty/school staff based on ID number
@@ -556,11 +561,7 @@ public class TransactionFrame extends JPanel {
             		JOptionPane.showMessageDialog(getRootPane(), "Invalid user ID format!");
             	}
             	
-            }
-            
-            
-            
-            
+            }                                             
             fetchAndDisplayData();
         } catch (Exception e) {
             e.printStackTrace();
@@ -602,8 +603,7 @@ public class TransactionFrame extends JPanel {
             		
             		// Date has been chosen
     		        Date chosenDate = dateChooser.getDate();
-    		        
-    		        // Now you can use the chosenDate as needed, for example:
+		        	// Now you can use the chosenDate as needed, for example:
     		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     		        String formattedDate = dateFormat.format(chosenDate);
     		        
@@ -657,6 +657,7 @@ public class TransactionFrame extends JPanel {
             			}
             			
             		}
+   	        		       
             		
             	}
             	catch(SQLException e) {
