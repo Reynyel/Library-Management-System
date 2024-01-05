@@ -57,7 +57,7 @@ public class RegisterStaff extends JPanel {
 	private JTextField txtEmail;
 	private JRadioButton radioFaculty, radioStaff;
 	private JTable tblEmployees;
-
+	private ButtonGroup G;
 	/**
 	 * Launch the application.
 	 */
@@ -163,8 +163,17 @@ public class RegisterStaff extends JPanel {
 		JButton btnRegister = new JButton("Register");
 		btnRegister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				registerStaff();
-				displayData();
+				String id = txtEmployeeID.getText().trim();
+		        String lastName = txtLastName.getText().trim();
+		        String firstName = txtFirstName.getText().trim();
+		        String contact = txtContactNum.getText().trim();
+		        
+		        if (id.isEmpty() || lastName.isEmpty() || firstName.isEmpty() || contact.isEmpty() || (!radioFaculty.isSelected() && !radioStaff.isSelected())) {
+		            JOptionPane.showMessageDialog(getRootPane(), "Please enter all required information before registering.");
+		        } else {
+		            registerStaff();
+		            displayData();
+		        }
 			}
 		});
 		btnRegister.setForeground(Color.WHITE);
@@ -204,7 +213,7 @@ public class RegisterStaff extends JPanel {
 		/*Add radio buttons for employee type
 		 * in a group, so only one radio button
 		 * can be ticked*/
-		ButtonGroup G = new ButtonGroup();
+		G = new ButtonGroup();
 		G.add(radioFaculty);
 		G.add(radioStaff);
 		
@@ -578,6 +587,13 @@ private boolean fileExists(String fileName) {
 					
 					//Execute query
 					stmt.executeUpdate(sql);
+					txtEmployeeID.setText("");
+                    txtLastName.setText("");
+                    txtFirstName.setText("");
+                    txtMiddleName.setText("");
+                    txtEmail.setText("");
+                    txtContactNum.setText("");
+                    G.clearSelection();
 					JOptionPane.showMessageDialog(getRootPane(), "Employee Registered");
 				}
 				
@@ -590,6 +606,13 @@ private boolean fileExists(String fileName) {
 					
 					//Execute query
 					stmt.executeUpdate(sql);
+					txtEmployeeID.setText("");
+                    txtLastName.setText("");
+                    txtFirstName.setText("");
+                    txtMiddleName.setText("");
+                    txtEmail.setText("");
+                    txtContactNum.setText("");
+                    G.clearSelection();
 					JOptionPane.showMessageDialog(getRootPane(), "Employee Registered");
 				}
 				

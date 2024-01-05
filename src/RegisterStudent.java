@@ -149,18 +149,17 @@ public class RegisterStudent extends JPanel {
 		
 		JButton btnRegister = new JButton("Register");
 		btnRegister.addActionListener(new ActionListener() {
-			String studentNum = txtStudentNum.getText().toString();
-			String lastName = txtLastName.getText().toString();
-			String firstName = txtFirstName.getText().toString();
 			public void actionPerformed(ActionEvent e) {
-				if(studentNum.equals("") && lastName.equals("") && firstName.equals("")) {
-					JOptionPane.showMessageDialog(getRootPane(), "Please enter the following information first");
-					return;
-				}
-				else {
-					registerStudent();
-					displayData();
-				}
+				String studentNum = txtStudentNum.getText().trim();
+		        String lastName = txtLastName.getText().trim();
+		        String firstName = txtFirstName.getText().trim();
+
+		        if (studentNum.isEmpty() || lastName.isEmpty() || firstName.isEmpty()) {
+		            JOptionPane.showMessageDialog(getRootPane(), "Please enter all required information before registering.");
+		        } else {
+		            registerStudent();
+		            displayData();
+		        }
 				
 			}
 		});
@@ -520,47 +519,74 @@ private boolean fileExists(String fileName) {
 	}
 	
 	public void registerStudent() {
-		try {		
-			 // Load the JDBC driver (version 4.0 or later)
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-	        
-			Connection conn;
-			
-			try {
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/booksDB", "root", "ranielle25");
-				Statement stmt = conn.createStatement();
-				System.out.println("Connected");
-				//Get the inputs
-				String studentNum = txtStudentNum.getText();
-				String lastName = txtLastName.getText();
-				String firstName = txtFirstName.getText();
-				String middleName = txtMiddleName.getText();
-				int level = (int) gradeComboBox.getSelectedItem();
-				String section = sectionComboBox.getSelectedItem().toString();
-										
-				//Build query
-				String sql = "INSERT INTO Students (StudentNo, LastName, FirstName, MiddleName, GradeLevel, Section, UserType)" +
-						"VALUES ('" + studentNum + "', '" + lastName + "', '" + firstName+ "', '" + middleName+ "', '" + level +  "', '" + section + "', '" + "Student" + "')";
-				
-				//Execute query
-				stmt.executeUpdate(sql);
-				
-				JOptionPane.showMessageDialog(getRootPane(), "Student Registered");
-				
-				
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-								
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	    try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        try {
+	            Class.forName("com.mysql.jdbc.Driver");
+	        } catch (ClassNotFoundException e1) {
+	            e1.printStackTrace();
+	        }
+
+	        Connection conn;
+
+	        try {
+	            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/booksDB", "root", "ranielle25");
+	            Statement stmt = conn.createStatement();
+	            System.out.println("Connected");
+
+	            // Get the inputs
+	            String studentNum = txtStudentNum.getText();
+	            String lastName = txtLastName.getText();
+	            String firstName = txtFirstName.getText();
+	            String middleName = txtMiddleName.getText();
+	            int level = (int) gradeComboBox.getSelectedItem();
+	            String section = sectionComboBox.getSelectedItem().toString();
+
+	            // Check if the student with the same ID already exists
+	            String checkExistingStudentSql = "SELECT * FROM Students WHERE StudentNo = ?";
+	            try (PreparedStatement checkExistingStudentStmt = conn.prepareStatement(checkExistingStudentSql)) {
+	                checkExistingStudentStmt.setString(1, studentNum);
+	                ResultSet existingStudentResult = checkExistingStudentStmt.executeQuery();
+
+	                if (existingStudentResult.next()) {
+	                    // Student with the same ID already exists, show an error message
+	                    JOptionPane.showMessageDialog(getRootPane(), "Student with the same ID already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+	                } else {
+	                    // Student with the same ID doesn't exist, proceed with registration
+
+	                    // Build query
+	                    String sql = "INSERT INTO Students (StudentNo, LastName, FirstName, MiddleName, GradeLevel, Section, UserType)" +
+	                            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+	                    // Execute query
+	                    try (PreparedStatement insertStudentStmt = conn.prepareStatement(sql)) {
+	                        insertStudentStmt.setString(1, studentNum);
+	                        insertStudentStmt.setString(2, lastName);
+	                        insertStudentStmt.setString(3, firstName);
+	                        insertStudentStmt.setString(4, middleName);
+	                        insertStudentStmt.setInt(5, level);
+	                        insertStudentStmt.setString(6, section);
+	                        insertStudentStmt.setString(7, "Student");
+
+	                        insertStudentStmt.executeUpdate();
+
+	                        txtStudentNum.setText("");
+	                        txtLastName.setText("");
+	                        txtFirstName.setText("");
+	                        txtMiddleName.setText("");
+	                        gradeComboBox.setSelectedIndex(0);
+	                        sectionComboBox.setSelectedIndex(0);
+	                        JOptionPane.showMessageDialog(getRootPane(), "Student Registered");
+	                    }
+	                }
+	            }
+
+	        } catch (SQLException e1) {
+	            e1.printStackTrace();
+	        }
+
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
 	}
 }
