@@ -84,7 +84,7 @@ public class RegisterStaff extends JPanel {
 		
 		panel = new gradientBackground();
 		panel.setBackground(new Color(153, 153, 255));
-        panel.setBounds(0, 0, 1256, 686);
+        panel.setBounds(0, 0, 1510, 743);
         add(panel);
         panel.setLayout(null);
 		
@@ -224,7 +224,7 @@ public class RegisterStaff extends JPanel {
 		AlternateColorRender alternate = new AlternateColorRender();
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(546, 11, 700, 664);
+		scrollPane.setBounds(540, 43, 700, 700);
 		panel.add(scrollPane);
 		
 		
