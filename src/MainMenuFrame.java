@@ -63,11 +63,11 @@ public class MainMenuFrame extends JFrame {
 	private String userType;
 	private String loginTime; // New variable to store login time
 	private JLabel lblUserType, l_date, l_time, l_log, lblPageTitle;
-	private JLabel numBorr, numOD, numBooks, label_2_2, label_2_2_1, label_2_2_1_1, label, label_1,
+	private JLabel numBorr, numOD, numBooks, label_2_2, label_2_2_1, label_2_2_1_1, label_2_2_1_1_1, label, label_1,
 	label_1_1;
 	private JTable tblOverdue;
 	private JScrollPane scrollPane, scrollPane_1, scrollPane_2;
-	
+	private JCalendar calendar;
 	
 	/**
 	 * Launch the application.
@@ -167,13 +167,13 @@ public class MainMenuFrame extends JFrame {
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setBounds(0, 0, 240, 100);
 		panel.add(lblNewLabel);
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\Santa Rosa Educational Institution.png"));
+		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Santa Rosa Educational Institution.png"));
 		
 		JButton btnRegisterBooks = new JButton("Manage Books");
-		btnRegisterBooks.setBounds(14, 309, 218, 41);
+		btnRegisterBooks.setBounds(14, 226, 218, 41);
 		panel.add(btnRegisterBooks);
 		btnRegisterBooks.setHorizontalAlignment(SwingConstants.LEFT);
-		btnRegisterBooks.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\book (1).png"));
+		btnRegisterBooks.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\book (1).png"));
 		btnRegisterBooks.setForeground(new Color(255, 255, 255));
 		btnRegisterBooks.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnRegisterBooks.setBackground(new Color(0, 51, 102));
@@ -181,8 +181,8 @@ public class MainMenuFrame extends JFrame {
 		
 		
 		JButton btnBackupRecords = new JButton(" Backup Records");
-		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\backup.png"));
-		btnBackupRecords.setBounds(12, 514, 220, 40);
+		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\backup.png"));
+		btnBackupRecords.setBounds(12, 431, 220, 40);
 		panel.add(btnBackupRecords);						
 		
 		btnBackupRecords.addActionListener(new ActionListener() {
@@ -205,19 +205,19 @@ public class MainMenuFrame extends JFrame {
 		btnBackupRecords.setBackground(new Color(0, 51, 102));
 		
 		JButton btnReturnBooks = new JButton(" Returning");
-		btnReturnBooks.setBounds(12, 463, 220, 40);
+		btnReturnBooks.setBounds(12, 380, 220, 40);
 		panel.add(btnReturnBooks);
 		btnReturnBooks.setHorizontalAlignment(SwingConstants.LEFT);
-		btnReturnBooks.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\return.png"));
+		btnReturnBooks.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\return.png"));
 		btnReturnBooks.setForeground(new Color(255, 255, 255));
 		btnReturnBooks.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnReturnBooks.setBackground(new Color(0, 51, 102));
 		btnReturnBooks.setBorderPainted(false);			                  		
 		
 		JButton btnTransac = new JButton(" Lending");
-		btnTransac.setBounds(12, 412, 220, 40);
+		btnTransac.setBounds(12, 329, 220, 40);
 		panel.add(btnTransac);
-		btnTransac.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\transaction.png"));
+		btnTransac.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\transaction.png"));
 		btnTransac.setHorizontalAlignment(SwingConstants.LEFT);
 		btnTransac.setForeground(new Color(255, 255, 255));
 		btnTransac.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -225,10 +225,10 @@ public class MainMenuFrame extends JFrame {
 		btnTransac.setBorderPainted(false);
 		
 		JButton btnRegisterUser = new JButton(" Manage Users");
-		btnRegisterUser.setBounds(12, 361, 220, 40);
+		btnRegisterUser.setBounds(12, 278, 220, 40);
 		panel.add(btnRegisterUser);
 		btnRegisterUser.setHorizontalAlignment(SwingConstants.LEFT);
-		btnRegisterUser.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\management.png"));
+		btnRegisterUser.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\management.png"));
 		btnRegisterUser.setForeground(new Color(255, 255, 255));
 		btnRegisterUser.setFont(new Font("Verdana", Font.PLAIN, 15));
 		
@@ -255,7 +255,7 @@ public class MainMenuFrame extends JFrame {
 		UserPanel.setLayout(null);
 		
 		JLabel lbluserIcon = new JLabel("");
-		lbluserIcon.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\librarian.png"));
+		lbluserIcon.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\librarian.png"));
 		lbluserIcon.setBounds(10, 11, 32, 32);
 		UserPanel.add(lbluserIcon);
 		
@@ -290,7 +290,7 @@ public class MainMenuFrame extends JFrame {
 		JButton btnLogOut = new JButton("Sign Out");
 		btnLogOut.setBounds(0, 143, 220, 32);
 		UserPanel.add(btnLogOut);
-		btnLogOut.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Documents\\GitHub\\Library-Management-System\\exit (3).png"));
+		btnLogOut.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\exit (3).png"));
 		btnLogOut.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnLogOut.setBackground(new Color(0, 51, 102));
 		btnLogOut.setForeground(new Color(255, 255, 255));
@@ -326,16 +326,16 @@ public class MainMenuFrame extends JFrame {
 		UserPanel.add(l_log);
 		
 		JButton btnDashboard = new JButton(" Dashboard");
-		btnDashboard.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\webpage.png"));
+		btnDashboard.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\webpage.png"));
 		btnDashboard.setHorizontalAlignment(SwingConstants.LEFT);
 		btnDashboard.setForeground(Color.WHITE);
 		btnDashboard.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnDashboard.setBorderPainted(false);
 		btnDashboard.setBackground(new Color(0, 51, 102));
-		btnDashboard.setBounds(14, 257, 218, 41);
+		btnDashboard.setBounds(14, 174, 218, 41);
 		panel.add(btnDashboard);
 		
-		JButton btnLogs = new JButton("Log in Trail");
+		JButton btnLogs = new JButton(" Log-in Trail");
 		btnLogs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Logs viewLogs = new Logs();
@@ -349,26 +349,26 @@ public class MainMenuFrame extends JFrame {
 			}
 		});
 		
-		btnLogs.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\logimg-small.png"));
+		btnLogs.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\logimg-small.png"));
 		btnLogs.setHorizontalAlignment(SwingConstants.LEFT);
 		btnLogs.setForeground(Color.WHITE);
 		btnLogs.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnLogs.setBorderPainted(false);
 		btnLogs.setBackground(new Color(0, 51, 102));
-		btnLogs.setBounds(12, 558, 220, 40);
+		btnLogs.setBounds(12, 475, 220, 40);
 		panel.add(btnLogs);
 		
-		JCalendar calendar = new JCalendar();
-		calendar.setBounds(10, 103, 220, 153);
-		panel.add(calendar);
+		calendar = new JCalendar();
+		calendar.setBounds(992, 26, 250, 211);
         contentPanel.removeAll();  // Remove existing components
         contentPanel.setLayout(null);
         contentPanel.revalidate();  // Revalidate the panel to reflect changes
         contentPanel.repaint();  // Repaint the panel
         lblPageTitle.setText("Dashboard");
+        contentPanel.add(calendar);
         
         scrollPane = new JScrollPane();
-        scrollPane.setBounds(26, 380, 767, 332);
+        scrollPane.setBounds(10, 424, 765, 321);
         contentPanel.add(scrollPane);
         
         tblOverdue = new JTable();
@@ -387,17 +387,17 @@ public class MainMenuFrame extends JFrame {
         label = new JLabel("Overdue Books");
         label.setForeground(Color.WHITE);
         label.setFont(new Font("Dialog", Font.PLAIN, 22));
-        label.setBounds(26, 352, 164, 22);
+        label.setBounds(10, 386, 164, 39);
         contentPanel.add(label);
         
         label_1 = new JLabel("Book Circulation History");
         label_1.setForeground(Color.WHITE);
         label_1.setFont(new Font("Dialog", Font.PLAIN, 22));
-        label_1.setBounds(831, 330, 275, 66);
+        label_1.setBounds(801, 391, 275, 29);
         contentPanel.add(label_1);
         
         scrollPane_1 = new JScrollPane();
-        scrollPane_1.setBounds(831, 380, 398, 332);
+        scrollPane_1.setBounds(801, 424, 444, 321);
         contentPanel.add(scrollPane_1);
         
         tblReturned = new JTable();
@@ -415,11 +415,11 @@ public class MainMenuFrame extends JFrame {
         label_1_1 = new JLabel("Borrowed Books");
         label_1_1.setFont(new Font("Dialog", Font.PLAIN, 22));
         label_1_1.setForeground(Color.WHITE);
-        label_1_1.setBounds(831, 38, 275, 22);
+        label_1_1.setBounds(801, 222, 275, 39);
         contentPanel.add(label_1_1);
         
         scrollPane_2 = new JScrollPane();
-        scrollPane_2.setBounds(831, 79, 398, 231);
+        scrollPane_2.setBounds(801, 260, 444, 125);
         contentPanel.add(scrollPane_2);
         
         tblBorrowed = new JTable();
@@ -436,7 +436,7 @@ public class MainMenuFrame extends JFrame {
         
         numBorr = new JLabel("0");
         numBorr.setFont(new Font("Dialog", Font.PLAIN, 22));
-        numBorr.setBounds(42, 133, 164, 22);
+        numBorr.setBounds(77, 103, 164, 22);
         numBorr.setForeground(Color.WHITE);
         String borrowedCount = countBorrowedBooks();
         numBorr.setText(borrowedCount);
@@ -444,7 +444,7 @@ public class MainMenuFrame extends JFrame {
         
         numOD = new JLabel("0");
         numOD.setFont(new Font("Dialog", Font.PLAIN, 22));       
-        numOD.setBounds(312, 133, 164, 22);
+        numOD.setBounds(322, 103, 164, 22);
         numOD.setForeground(Color.WHITE);
         String borrowedCountOD = countOverdue();
         numOD.setText(borrowedCountOD);
@@ -452,7 +452,7 @@ public class MainMenuFrame extends JFrame {
         
         numBooks = new JLabel("0");
         numBooks.setFont(new Font("Dialog", Font.PLAIN, 22));
-        numBooks.setBounds(541, 133, 164, 22);
+        numBooks.setBounds(558, 103, 164, 22);
         numBooks.setForeground(Color.WHITE);
         String countBooks = countBooks();
         numBooks.setText(countBooks);
@@ -460,22 +460,27 @@ public class MainMenuFrame extends JFrame {
         
         label_2_2 = new JLabel("Borrowed");
         label_2_2.setFont(new Font("Dialog", Font.PLAIN, 13));
-        label_2_2.setBounds(42, 101, 164, 22);
+        label_2_2.setBounds(77, 71, 164, 22);
         label_2_2.setForeground(Color.WHITE);
         contentPanel.add(label_2_2);
         
         label_2_2_1 = new JLabel("Overdue");
         label_2_2_1.setFont(new Font("Dialog", Font.PLAIN, 13));
-        label_2_2_1.setBounds(312, 101, 164, 22);
+        label_2_2_1.setBounds(322, 71, 164, 22);
         label_2_2_1.setForeground(Color.WHITE);
         contentPanel.add(label_2_2_1);
         String countAvail = countBooksAvailable();
         
         label_2_2_1_1 = new JLabel("Registered Books");
         label_2_2_1_1.setFont(new Font("Dialog", Font.PLAIN, 13));
-        label_2_2_1_1.setBounds(541, 101, 164, 22);
+        label_2_2_1_1.setBounds(558, 71, 164, 22);
         label_2_2_1_1.setForeground(Color.WHITE);
         contentPanel.add(label_2_2_1_1);
+        
+        label_2_2_1_1_1 = new JLabel("Calendar");
+        label_2_2_1_1_1.setForeground(new Color(255, 255, 255));
+        label_2_2_1_1_1.setBounds(992, 11, 84, 14);
+        contentPanel.add(label_2_2_1_1_1);
         
         // Check the user's role
      		if ("Librarian".equalsIgnoreCase(userType)) {
@@ -644,18 +649,22 @@ public class MainMenuFrame extends JFrame {
 	    
 	    // Clear other components and add your initial components (Labels, Buttons, etc.)
 	    contentPanel.removeAll();
+	    
 	    contentPanel.add(numBorr);
 	    contentPanel.add(numOD);
 	    contentPanel.add(numBooks);
 	    contentPanel.add(label_2_2);
 	    contentPanel.add(label_2_2_1);
 	    contentPanel.add(label_2_2_1_1);
+	    contentPanel.add(label_2_2_1_1_1);
 	    contentPanel.add(label);
 	    contentPanel.add(label_1);
 	    contentPanel.add(scrollPane_1);
 	    contentPanel.add(scrollPane);
 	    contentPanel.add(label_1_1);
 	    contentPanel.add(scrollPane_2);
+	    contentPanel.add(calendar);
+	    
 	    // Add other initial components as needed
 
 	    // Repaint the panel again
