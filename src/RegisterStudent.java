@@ -206,7 +206,7 @@ public class RegisterStudent extends JPanel {
 		Set<Integer> editableColumns = new HashSet<>();
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(546, 11, 700, 664);
+		scrollPane.setBounds(525, 40, 700, 700);
 		panel.add(scrollPane);
 		
 		tblStudents = new JTable();
@@ -292,7 +292,7 @@ public class RegisterStudent extends JPanel {
 		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnExport.setBorderPainted(false);
 		btnExport.setBackground(new Color(0, 128, 0));
-		btnExport.setBounds(171, 497, 314, 30);
+		btnExport.setBounds(62, 497, 419, 30);
 		panel.add(btnExport);
 		
 		displayData();
