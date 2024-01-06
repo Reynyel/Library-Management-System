@@ -48,9 +48,14 @@ import tablemodel.NonEditTableModel;
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+
+import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
 
 import GradientBackground.gradientBackground;
+import Holidays.HolidayChecker;
+import com.toedter.calendar.JDayChooser;
 
 public class TransactionFrame extends JPanel {
 
@@ -300,7 +305,7 @@ public class TransactionFrame extends JPanel {
 		Border border2 = BorderFactory.createTitledBorder(title2);
 		
 		fetchAndDisplayData();
-	}
+	}	
 	
 	Connection conn;
 	PreparedStatement pst;
@@ -534,7 +539,7 @@ public class TransactionFrame extends JPanel {
             	// Check if the user is a student or faculty/school staff based on ID number
             	if ("Student".equals(userType)) {
             	      			
-            		String borrowerNameSql = "SELECT LastName, FirstName, MiddleName FROM Students WHERE StudentNo = ?";
+            		String borrowerNameSql = "SELECT LastName, FirstName, MiddleName, GradeLevel, Section FROM Students WHERE StudentNo = ?";
             		try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
             			borrowerNameStmt.setString(1, borrId);
             			ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
@@ -556,8 +561,14 @@ public class TransactionFrame extends JPanel {
             				String borrowerName = borrowerNameResult.getString("LastName") + 
             						", " + borrowerNameResult.getString("FirstName") +
             						" " + borrowerNameResult.getString("MiddleName");
-            				
-            				insertTransaction(bn, tl, acc, borrowerName);          			
+            				String gradeLevel = borrowerNameResult.getString("GradeLevel");
+            			    String section = borrowerNameResult.getString("Section");
+            			    
+            			    // Display a confirmation dialog before proceeding
+            			    int confirmResult = showConfirmDialog(borrowerName, gradeLevel, section, tl, acc);
+                            if (confirmResult == JOptionPane.YES_OPTION) {
+                                insertTransaction(bn, tl, acc, borrowerName);
+                            }          			
             			}
             			else {
             				JOptionPane.showMessageDialog(getRootPane(), "Name not found!");
@@ -594,6 +605,17 @@ public class TransactionFrame extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    private int showConfirmDialog(String borrowerName, String gradeLevel, String section, String title, int accessionNum) {
+        String message = "Confirm borrowing:\n\n"
+        		+ "Title: " + title + "\n"
+                + "Borrower: " + borrowerName + "\n"
+                + "Grade Level: " + gradeLevel + "\n"
+                + "Section: " + section + "\n"                
+                + "Accession Number: " + accessionNum + "\n\n"
+                + "Proceed with the transaction?";
+        return JOptionPane.showConfirmDialog(getRootPane(), message, "Confirmation", JOptionPane.YES_NO_OPTION);
     }
 
 
@@ -667,7 +689,7 @@ public class TransactionFrame extends JPanel {
             		} else {            			        			
             			// If user ID does not start with "1", set return date to three days from the transaction date
             			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id, user_type) " +
-            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), ShiftHolidayToWorkday(DATE_ADD(CURDATE(), INTERVAL 3 DAY)), ?, ?)";
+            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), ShiftHolidayToWorkday(DATE_ADD(CURDATE(), INTERVAL 3 DAY), YEAR(CURDATE())), ?, ?)";
             			
             			
             			try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
@@ -708,6 +730,23 @@ public class TransactionFrame extends JPanel {
             e.printStackTrace();
         }
     }   
+    
+    private String calculateReturnDate() {
+        Date currentDate = new Date();
+        String holiday = HolidayChecker.getHolidayName(currentDate);
+
+        // Check if the current date is a holiday
+        if (holiday != null) {
+            // Adjust the return date if it's a holiday
+            Date nextDay = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24)); // Add one day
+            return HolidayChecker.getHolidayName(nextDay) == null
+                    ? new SimpleDateFormat("yyyy-MM-dd").format(nextDay)
+                    : calculateReturnDate(); // Recursively check the next day if it's also a holiday
+        } else {
+            // If it's not a holiday, return the current date
+            return new SimpleDateFormat("yyyy-MM-dd").format(currentDate);
+        }
+    }
     
     //check if the student has already borrowed the same title
     private boolean hasBorrowedSameTitle(String userId, String title) {

@@ -104,7 +104,7 @@ public class LogInFrame extends JFrame {
 		        	dispose();		        	
 		        }
 		        else {
-		        	 JOptionPane.showMessageDialog(getRootPane(), "Invalid username or password. Please try again.");
+		        	 JOptionPane.showMessageDialog(getRootPane(), "Invalid username or password. Please try again. LOG IN ATTEMPT; ?");
 		        }
 		        
 		        passwordTxt.setText("");
