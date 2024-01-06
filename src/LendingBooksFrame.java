@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashSet;
@@ -370,7 +371,13 @@ public class LendingBooksFrame extends JPanel {
 
 	    try {
 	        FileWriter fw = new FileWriter(fileName);
-	        
+	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
+			String formattedAcadYear = ya.format( FormatStyle.FULL);
+	        fw.append("List of All Returned Books");
+	        fw.append("\n");
+	        fw.append("Academic Year: " + formattedAcadYear);
+	        fw.append("\n");
+	        fw.append("\n");
 	        // Add headers to the CSV file
 	        fw.append("Transaction ID");
 	        fw.append(',');
@@ -450,6 +457,14 @@ public class LendingBooksFrame extends JPanel {
 	        // Write the total number of books registered
 	        fw.append('\n');
 	        fw.append("Total Returned Books Recorded: " + totalBooks);
+	        fw.append('\n');
+	        String userType = MainMenuFrame.getUser();
+	        
+	        if ("Librarian".equalsIgnoreCase(userType)) {
+	        	fw.append("Prepared by: " + "Librarian");
+     		} else if ("Admin".equalsIgnoreCase(userType)) {
+     			fw.append("Prepared by: " + "Admin");
+     		}
 	        
 	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
 	        

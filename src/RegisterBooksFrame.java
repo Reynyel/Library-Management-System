@@ -28,6 +28,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -71,6 +73,7 @@ public class RegisterBooksFrame extends JPanel {
 	private JButton btnUpdate;
 	private JComboBox comboBoxSubject, languageComboBox, cbSort;
 	private JTable table;
+	private String userType;
 	
 	Connection conn;
 	PreparedStatement pst;
@@ -665,6 +668,13 @@ public class RegisterBooksFrame extends JPanel {
 
 	    try {
 	        FileWriter fw = new FileWriter(fileName);
+	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
+			String formattedAcadYear = ya.format( FormatStyle.FULL);
+	        fw.append("List of All Books");
+	        fw.append("\n");
+	        fw.append("Academic Year: " + formattedAcadYear);
+	        fw.append("\n");
+	        fw.append("\n");
 	        
 	        // Add headers to the CSV file
 	        fw.append("Book Num");
@@ -746,6 +756,16 @@ public class RegisterBooksFrame extends JPanel {
 	        // Write the total number of books registered
 	        fw.append('\n');
 	        fw.append("Total Books Registered: " + totalBooks);
+	        fw.append('\n');
+	        
+	        String userType = MainMenuFrame.getUser();
+	        
+	        if ("Librarian".equalsIgnoreCase(userType)) {
+	        	fw.append("Prepared by: " + "Librarian");
+     		} else if ("Admin".equalsIgnoreCase(userType)) {
+     			fw.append("Prepared by: " + "Admin");
+     		}
+	        
 	        
 	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
 	        
@@ -1040,8 +1060,7 @@ public class RegisterBooksFrame extends JPanel {
 	        			comboBoxModel.addElement(accession);
 	        			
 	        			txtSrBookNum.setText(bookNum);
-	        			txtTitle.setText(title);
-	        			
+
 	        			//array to store data into jtable
 	        			String tbData[] = {bookNum, title, author, isbn, publisher,
 	        					language, subject, dewey, accession, status, dateRegistered};
@@ -1102,10 +1121,11 @@ public class RegisterBooksFrame extends JPanel {
 						String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
 						String accession = String.valueOf(rs.getInt("Accession_Num"));
 						String status = rs.getString("book_status");
+						String dateRegistered = rs.getString("date_registered");
 						
 						//array to store data into jtable
 						String tbData[] = {bookNum, title, author, isbn, publisher,
-								language, subject, dewey, accession, status};
+								language, subject, dewey, accession, status, dateRegistered};
 									
 						//add string array data to jtable
 						tblModel.addRow(tbData);

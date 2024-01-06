@@ -16,7 +16,11 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
@@ -62,7 +66,11 @@ public class MainMenuFrame extends JFrame {
 	private JPanel contentPane, contentPanel;
 	private String userType;
 	private String loginTime; // New variable to store login time
-	private JLabel lblUserType, l_date, l_time, l_log, lblPageTitle;
+	private static JLabel lblUserType;
+	private JLabel l_date;
+	private JLabel l_time;
+	private JLabel l_log;
+	private JLabel lblPageTitle;
 	private JLabel numBorr, numOD, numBooks, label_2_2, label_2_2_1, label_2_2_1_1, label_2_2_1_1_1, label, label_1,
 	label_1_1;
 	private JTable tblOverdue;
@@ -250,7 +258,7 @@ public class MainMenuFrame extends JFrame {
 		JPanel UserPanel = new JPanel();
 		UserPanel.setBackground(new Color(0, 51, 102));
 		UserPanel.setForeground(new Color(0, 51, 102));
-		UserPanel.setBounds(12, 609, 220, 186);
+		UserPanel.setBounds(12, 592, 220, 203);
 		panel.add(UserPanel);
 		UserPanel.setLayout(null);
 		
@@ -269,13 +277,13 @@ public class MainMenuFrame extends JFrame {
 		JLabel lblNewLabel_2_1 = new JLabel("Date:");
 		lblNewLabel_2_1.setForeground(Color.WHITE);
 		lblNewLabel_2_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_1.setBounds(10, 54, 56, 18);
+		lblNewLabel_2_1.setBounds(10, 76, 56, 18);
 		UserPanel.add(lblNewLabel_2_1);
 		
 		JLabel lblNewLabel_2_1_1 = new JLabel("Login Time:");
 		lblNewLabel_2_1_1.setForeground(Color.WHITE);
 		lblNewLabel_2_1_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_1_1.setBounds(10, 112, 83, 18);
+		lblNewLabel_2_1_1.setBounds(10, 134, 83, 18);
 		UserPanel.add(lblNewLabel_2_1_1);
 		
 		lblUserType = new JLabel("Librarian");
@@ -288,7 +296,7 @@ public class MainMenuFrame extends JFrame {
 		UserPanel.add(lblUserType);
 		
 		JButton btnLogOut = new JButton("Sign Out");
-		btnLogOut.setBounds(0, 143, 220, 32);
+		btnLogOut.setBounds(0, 163, 220, 32);
 		UserPanel.add(btnLogOut);
 		btnLogOut.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\exit (3).png"));
 		btnLogOut.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -301,29 +309,47 @@ public class MainMenuFrame extends JFrame {
 		JLabel lblNewLabel_2_1_2 = new JLabel("Time:");
 		lblNewLabel_2_1_2.setForeground(Color.WHITE);
 		lblNewLabel_2_1_2.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_1_2.setBounds(10, 83, 56, 18);
+		lblNewLabel_2_1_2.setBounds(10, 105, 56, 18);
 		UserPanel.add(lblNewLabel_2_1_2);
 		
 		l_date = new JLabel("0");
 		l_date.setForeground(Color.WHITE);
 		l_date.setFont(new Font("Verdana", Font.PLAIN, 14));
-		l_date.setBounds(76, 54, 122, 18);
+		l_date.setBounds(76, 76, 122, 18);
 		UserPanel.add(l_date);
 		
 		l_time = new JLabel("0");
 		l_time.setForeground(Color.WHITE);
 		l_time.setFont(new Font("Verdana", Font.PLAIN, 14));
-		l_time.setBounds(76, 83, 122, 18);
+		l_time.setBounds(76, 105, 122, 18);
 		UserPanel.add(l_time);
 		
 		l_log = new JLabel("0");
 		l_log.setForeground(Color.WHITE);
 		l_log.setFont(new Font("Verdana", Font.PLAIN, 14));
-		l_log.setBounds(100, 112, 113, 18);
+		l_log.setBounds(100, 134, 113, 18);
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         loginTime = timeFormat.format(new Date());
         l_log.setText(loginTime);
 		UserPanel.add(l_log);
+		
+		JLabel lblAcadYear = new JLabel("2023-2024");
+		Year currentYear = Year.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+		String formattedYear = currentYear.format(formatter);
+		lblAcadYear.setForeground(Color.WHITE);
+		lblAcadYear.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblAcadYear.setBounds(76, 47, 97, 18);
+		AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
+		String formattedAcadYear = ya.format( FormatStyle.FULL);
+		lblAcadYear.setText(formattedAcadYear);
+		UserPanel.add(lblAcadYear);
+		
+		JLabel lblNewLabel_2_1_2_1 = new JLabel("Acad Yr:");
+		lblNewLabel_2_1_2_1.setForeground(Color.WHITE);
+		lblNewLabel_2_1_2_1.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblNewLabel_2_1_2_1.setBounds(10, 47, 70, 18);
+		UserPanel.add(lblNewLabel_2_1_2_1);
 		
 		JButton btnDashboard = new JButton(" Dashboard");
 		btnDashboard.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\webpage.png"));
@@ -630,7 +656,11 @@ public class MainMenuFrame extends JFrame {
 	ResultSet rs;
 	private JTable tblReturned;
 	private JTable tblBorrowed;
+			
 	
+	public static String getUser() {
+		return lblUserType.getText();
+	}
 	private void setupDashboardView() {		    	    
 		// Call the methods to display the relevant data
 	    displayOverdue();

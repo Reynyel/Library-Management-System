@@ -22,6 +22,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.FormatStyle;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -340,6 +342,13 @@ public class RegisterStaff extends JPanel {
 
 	    try {
 	        FileWriter fw = new FileWriter(fileName);
+	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
+			String formattedAcadYear = ya.format( FormatStyle.FULL);
+	        fw.append("List of All Registered Employee");
+	        fw.append("\n");
+	        fw.append("Academic Year: " + formattedAcadYear);
+	        fw.append("\n");
+	        fw.append("\n");
 	        
 	        // Add headers to the CSV file
 	        fw.append("Employee ID");
@@ -399,6 +408,15 @@ public class RegisterStaff extends JPanel {
 	        // Write the total number of books registered
 	        fw.append('\n');
 	        fw.append("Total Staff Registered: " + totalBooks);
+	        fw.append('\n');
+	        
+	        String userType = MainMenuFrame.getUser();
+	        
+	        if ("Librarian".equalsIgnoreCase(userType)) {
+	        	fw.append("Prepared by: " + "Librarian");
+     		} else if ("Admin".equalsIgnoreCase(userType)) {
+     			fw.append("Prepared by: " + "Admin");
+     		}
 	        
 	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
 	        

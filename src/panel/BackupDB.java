@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import GradientBackground.gradientBackground;
+import javax.swing.JComboBox;
 
 public class BackupDB extends JPanel {
 
@@ -63,6 +64,18 @@ public class BackupDB extends JPanel {
 		btnBackupNow.setBackground(new Color(71, 160, 165));
 		btnBackupNow.setForeground(new Color(255, 255, 255));
 		btnBackupNow.setBorderPainted(false);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("Select Acad Year");
+		lblNewLabel_1_1.setForeground(Color.WHITE);
+		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_1_1.setBackground(Color.WHITE);
+		lblNewLabel_1_1.setBounds(34, 37, 133, 24);
+		panel.add(lblNewLabel_1_1);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		comboBox.setBounds(177, 40, 120, 22);
+		panel.add(comboBox);
 		btnBackupNow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				backup();

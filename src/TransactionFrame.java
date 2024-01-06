@@ -20,6 +20,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.FormatStyle;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,7 +56,6 @@ import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 
 import GradientBackground.gradientBackground;
-import Holidays.HolidayChecker;
 import com.toedter.calendar.JDayChooser;
 
 public class TransactionFrame extends JPanel {
@@ -311,6 +312,7 @@ public class TransactionFrame extends JPanel {
 	PreparedStatement pst;
 	ResultSet rs;
 	
+
 	public void export() {
 	    // Create a format for the date in the file name
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -334,6 +336,13 @@ public class TransactionFrame extends JPanel {
 
 	    try {
 	        FileWriter fw = new FileWriter(fileName);
+	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
+			String formattedAcadYear = ya.format( FormatStyle.FULL);
+	        fw.append("List of All Transactions");
+	        fw.append("\n");
+	        fw.append("Academic Year: " + formattedAcadYear);
+	        fw.append("\n");
+	        fw.append("\n");
 	        
 	        // Add headers to the CSV file
 	        fw.append("Transaction ID");
@@ -405,7 +414,16 @@ public class TransactionFrame extends JPanel {
 
 	        // Write the total number of books registered
 	        fw.append('\n');
-	        fw.append("Total Transactions Recorded: " + totalBooks);
+	        fw.append("Total Transactions Recorded: " + totalBooks);	        
+	        fw.append('\n');
+	        
+	        String userType = MainMenuFrame.getUser();
+	        
+	        if ("Librarian".equalsIgnoreCase(userType)) {
+	        	fw.append("Prepared by: " + "Librarian");
+     		} else if ("Admin".equalsIgnoreCase(userType)) {
+     			fw.append("Prepared by: " + "Admin");
+     		}
 	        
 	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
 	        
@@ -731,22 +749,7 @@ public class TransactionFrame extends JPanel {
         }
     }   
     
-    private String calculateReturnDate() {
-        Date currentDate = new Date();
-        String holiday = HolidayChecker.getHolidayName(currentDate);
-
-        // Check if the current date is a holiday
-        if (holiday != null) {
-            // Adjust the return date if it's a holiday
-            Date nextDay = new Date(currentDate.getTime() + (1000 * 60 * 60 * 24)); // Add one day
-            return HolidayChecker.getHolidayName(nextDay) == null
-                    ? new SimpleDateFormat("yyyy-MM-dd").format(nextDay)
-                    : calculateReturnDate(); // Recursively check the next day if it's also a holiday
-        } else {
-            // If it's not a holiday, return the current date
-            return new SimpleDateFormat("yyyy-MM-dd").format(currentDate);
-        }
-    }
+  
     
     //check if the student has already borrowed the same title
     private boolean hasBorrowedSameTitle(String userId, String title) {
