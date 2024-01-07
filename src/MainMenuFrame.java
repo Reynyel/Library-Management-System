@@ -238,9 +238,11 @@ public class MainMenuFrame extends JFrame {
 		JPopupMenu popupMenu = new JPopupMenu();
 		JMenuItem btnStudents = new JMenuItem("Students");
         JMenuItem btnStaff = new JMenuItem("Faculty/Staff");
+        JMenuItem btnBlocked = new JMenuItem("Blocked Users");
         
         popupMenu.add(btnStudents);
         popupMenu.add(btnStaff);
+        popupMenu.add(btnBlocked);
 		
 		btnRegisterUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -478,6 +480,22 @@ public class MainMenuFrame extends JFrame {
 	            contentPanel.revalidate();  // Revalidate the panel to reflect changes
 	            contentPanel.repaint();  // Repaint the panel
 	            lblPageTitle.setText("Staff/Faculty Registration");
+
+            }
+        });
+		
+		btnBlocked.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	BlockedUsers blocked = new BlockedUsers();
+            	blocked = new BlockedUsers();
+            	blocked.setBounds(0, 0, 1256, 686);
+            	blocked.setLayout(null);  // Set layout to null
+	            contentPanel.removeAll();  // Remove existing components
+	            contentPanel.add(blocked);
+	            contentPanel.revalidate();  // Revalidate the panel to reflect changes
+	            contentPanel.repaint();  // Repaint the panel
+	            lblPageTitle.setText("Blocklist");
 
             }
         });

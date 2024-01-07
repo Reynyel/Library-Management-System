@@ -541,8 +541,7 @@ public class TransactionFrame extends JPanel {
             
             String userType = getUserType(borrId);
             
-	        
-	        
+	                
             // check if the user has inserted a book title
             if(tl.isEmpty() && bn.isEmpty() && obAcc == null) {
             	JOptionPane.showMessageDialog(getRootPane(), "Please search for the book first");       
@@ -567,10 +566,16 @@ public class TransactionFrame extends JPanel {
             		    } 
             		    if(borrowedBooksCount >= 3) {
             		    	JOptionPane.showMessageDialog(getRootPane(), "This student cannot borrow more than 3 books.");
-            		        return; // Exit the method without proceeding with the transaction
-            		    	
+            		        return; // Exit the method without proceeding with the transaction        		    	
             		    }
             		    
+            		    //check if the user is currently in the blocklist
+            		    if(blockedFromBorrwing(userId)) {
+            				JOptionPane.showMessageDialog(getRootPane(), "This user is currently blocked from borrowing another book!");
+            				return;
+            			}
+            		    
+            		    //else proceed
             			if(borrowerNameResult.next()) {
             				String borrowerName = borrowerNameResult.getString("LastName") + 
             						", " + borrowerNameResult.getString("FirstName") +
@@ -596,6 +601,11 @@ public class TransactionFrame extends JPanel {
             			borrowerNameStmt.setString(1, borrId);
             			ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
             			
+            			if(blockedFromBorrwing(userId)) {
+            				JOptionPane.showMessageDialog(getRootPane(), "This user is currently blocked from borrowing another book!");
+            				return;
+            			}
+            			
             			if(borrowerNameResult.next()) {
             				String borrowerName = borrowerNameResult.getString("LastName") + 
             						", " + borrowerNameResult.getString("FirstName") +
@@ -604,8 +614,11 @@ public class TransactionFrame extends JPanel {
             				insertTransaction(bn, tl, acc, borrowerName);
             				
             			}
+            			
+
             			else {
             				JOptionPane.showMessageDialog(getRootPane(), "Name not found!");
+            				return;
             			}
             		}
             		
@@ -624,10 +637,10 @@ public class TransactionFrame extends JPanel {
     private int showConfirmDialog(String borrowerName, String gradeLevel, String section, String title, int accessionNum) {
         String message = "Confirm borrowing:\n\n"
         		+ "Title: " + title + "\n"
+        		+ "Accession Number: " + accessionNum + "\n"
                 + "Borrower: " + borrowerName + "\n"
                 + "Grade Level: " + gradeLevel + "\n"
-                + "Section: " + section + "\n"                
-                + "Accession Number: " + accessionNum + "\n\n"
+                + "Section: " + section + "\n\n"                
                 + "Proceed with the transaction?";
         return JOptionPane.showConfirmDialog(getRootPane(), message, "Confirmation", JOptionPane.YES_NO_OPTION);
     }
@@ -764,7 +777,22 @@ public class TransactionFrame extends JPanel {
         }
     }   
     
-  
+    //check if the user is blocked from borrowing
+    private boolean blockedFromBorrwing(String userId) {
+        boolean alreadyBorrowed = false;
+
+        String checkSql = "SELECT * FROM Blocked WHERE user_id = ?";
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+            checkStmt.setString(1, userId);
+            ResultSet checkResult = checkStmt.executeQuery();
+
+            alreadyBorrowed = checkResult.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return alreadyBorrowed;
+    }
     
     //check if the student has already borrowed the same title
     private boolean hasBorrowedSameTitle(String userId, String title) {

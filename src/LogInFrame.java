@@ -115,7 +115,7 @@ public class LogInFrame extends JFrame {
 		            // Check if the user has exceeded the maximum login attempts
 		            if (loginAttempts >= 5) {
 		            	lastLoginAttemptTime = System.currentTimeMillis();
-		                JOptionPane.showMessageDialog(getRootPane(), "Too many failed login attempts. Please try again in 5 minutes.");
+		                JOptionPane.showMessageDialog(getRootPane(), "Too many failed login attempts. Please try again later.");
 		            } else {
 		                JOptionPane.showMessageDialog(getRootPane(), "Invalid username or password. \n" + " Log in attempt: " + loginAttempts);
 		            }

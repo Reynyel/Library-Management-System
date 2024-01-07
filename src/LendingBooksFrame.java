@@ -41,6 +41,7 @@ import javax.swing.table.DefaultTableModel;
 
 import GradientBackground.gradientBackground;
 import color.AlternateColorRender;
+import color.BlockedColorRender;
 import tablemodel.NonEditTableModel;
 
 import java.awt.event.MouseAdapter;
@@ -129,7 +130,7 @@ public class LendingBooksFrame extends JPanel {
 						String userName = (String) tblTransac.getValueAt(selectedRow, 7);
 						String userId = (String) tblTransac.getValueAt(selectedRow, 8);
 						String userType = (String) tblTransac.getValueAt(selectedRow, 9);
-						
+					
 						//Populate fields
 						txtBorrID.setText(userId);
 						txtTitle.setText(title);
@@ -137,7 +138,7 @@ public class LendingBooksFrame extends JPanel {
 						txtAccession.setText(acc); //FIX THIS						
 						txtBorrDate.setText(transacDate);
 						txtReturnDate.setText(returnDate);
-						
+						comboBoxStatus.setSelectedItem(status);
 						//if Student display penalty fee, if there is a fee to be paid. If staff, only display 0
 						
 						// Display penalty fee based on user type
@@ -165,7 +166,7 @@ public class LendingBooksFrame extends JPanel {
 		panel.add(lblBookStatus);
 		
 		comboBoxStatus = new JComboBox();
-		comboBoxStatus.setModel(new DefaultComboBoxModel(new String[] {"Good", "Partially Damaged", "Damaged", "Lost"}));
+		comboBoxStatus.setModel(new DefaultComboBoxModel(new String[] {"Good", "Damaged", "Lost"}));
 		comboBoxStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		comboBoxStatus.setBounds(501, 195, 155, 22);
 		panel.add(comboBoxStatus);
@@ -180,7 +181,7 @@ public class LendingBooksFrame extends JPanel {
 		radioReturned.setForeground(new Color(255, 255, 255));
 		radioReturned.setBackground(new Color(0, 0, 51));
 		radioReturned.setFont(new Font("Verdana", Font.PLAIN, 13));
-		radioReturned.setBounds(1087, 302, 147, 23);
+		radioReturned.setBounds(1099, 302, 147, 23);
 		radioReturned.setOpaque(false);
         radioReturned.setContentAreaFilled(false);
         radioReturned.setBorderPainted(false);
@@ -246,7 +247,7 @@ public class LendingBooksFrame extends JPanel {
 		txtBorrID.setColumns(10);
 		
 		JButton btnUpdate = new JButton("Record Transaction");
-		btnUpdate.setBounds(682, 272, 170, 40);
+		btnUpdate.setBounds(666, 259, 170, 40);
 		panel.add(btnUpdate);
 		btnUpdate.setForeground(new Color(255, 255, 255));
 		btnUpdate.setBackground(new Color(0, 153, 0));
@@ -301,7 +302,7 @@ public class LendingBooksFrame extends JPanel {
 		radioBorrowed.setForeground(new Color(255, 255, 255));
 		radioBorrowed.setBackground(new Color(0, 0, 51));
 		radioBorrowed.setFont(new Font("Verdana", Font.PLAIN, 13));
-		radioBorrowed.setBounds(938, 302, 147, 23);
+		radioBorrowed.setBounds(950, 302, 147, 23);
 		radioBorrowed.setOpaque(false);
         radioBorrowed.setContentAreaFilled(false);
         radioBorrowed.setBorderPainted(false);
@@ -363,7 +364,7 @@ public class LendingBooksFrame extends JPanel {
 	private JTextField txtReturnDate;
 	private JTextField txtAccession;
 	private JTextField txtPenalty;
-	
+		
 	//UPDATE RETURN DATE
 	private void updateReturnDate() {
 		String returnDate = txtReturnDate.getText().toString();
@@ -560,7 +561,7 @@ public class LendingBooksFrame extends JPanel {
             System.out.println("Connected");
 
             // Fetch data from Transactions table
-            String selectTransactionsSql = "SELECT * FROM Transactions WHERE BookStatus = 'Borrowed'";
+            String selectTransactionsSql = "SELECT * FROM Transactions";
             
             
             try (PreparedStatement selectTransactionsStmt = conn.prepareStatement(selectTransactionsSql)) {
@@ -648,11 +649,11 @@ public class LendingBooksFrame extends JPanel {
                 JOptionPane.showMessageDialog(getRootPane(), "Please select a book from the table for return.");
                 return;
             }
-
-
-            String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = ? WHERE transaction_id = ?";
             
             double fee = calculateFee();
+            
+            String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = ? WHERE transaction_id = ?";
+            
                      
             try(PreparedStatement updatePenaltyFeeStmt = conn.prepareStatement(updatePenaltyFeeSql)){
             	// Set parameters for updatePenaltyFeeStmt
@@ -671,7 +672,76 @@ public class LendingBooksFrame extends JPanel {
     		e.printStackTrace();
     	}
     }
-      
+    
+    private void addToBlocklist(String transactionId) {
+        try {
+
+            String userType = getUserType(transactionId);
+
+            // Check if the user is a student
+            if ("Student".equals(userType)) {
+                String userId = getID(transactionId);
+                String name = getName(transactionId);
+                // Check if the user is not already on the blocklist
+                if (!isUserBlocked(userId, name)) {
+                    // Insert the user into the blocklist
+                    String insertBlockedUserSql = "INSERT INTO Blocked (user_id, borrower_name) VALUES (?, ?)";
+
+                    try (PreparedStatement pstmt = conn.prepareStatement(insertBlockedUserSql)) {
+                        pstmt.setString(1, userId);
+                        pstmt.setString(2, name);
+
+                        int rowsAffected = pstmt.executeUpdate();
+
+                        if (rowsAffected > 0) {
+                            System.out.println("User added to blocklist successfully.");
+                        } else {
+                            System.out.println("Failed to add user to blocklist.");
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        // Handle the SQL exception
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the exception
+        }
+    }
+    
+    private void removeFromBlocklistPenalty(String userId, String borrowerName) {
+        try {
+            // ... existing code to establish database connection ...
+
+            // Check if the user is on the blocklist
+            if (isUserBlocked(userId, borrowerName)) {
+                // If yes, remove the user from the blocklist
+                String deleteBlockedUserSql = "DELETE FROM Blocked WHERE user_id = ? AND borrower_name = ?";
+
+                try (PreparedStatement pstmt = conn.prepareStatement(deleteBlockedUserSql)) {
+                    pstmt.setString(1, userId);
+                    pstmt.setString(2, borrowerName);
+
+                    int rowsAffected = pstmt.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        System.out.println("User removed from blocklist successfully.");
+                    } else {
+                        System.out.println("Failed to remove user from blocklist.");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    // Handle the SQL exception
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the exception
+        }
+    }
+
+    
     public double calculateFee() {
     	double penaltyFee = 0.0;
 
@@ -731,10 +801,50 @@ public class LendingBooksFrame extends JPanel {
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
-		}
-		
-		return userType;
+		}	
+		return userType; 	
+    }
+    
+    //Get names type from both Employees and Students table
+    private String getName(String transactionId) {
+    	String name = "";
     	
+		String userTypeSql = "SELECT Borrower FROM Transactions WHERE transaction_id = ?";
+		try(PreparedStatement userTypeStmt = conn.prepareStatement(userTypeSql)) {
+			userTypeStmt.setString(1, transactionId);
+
+			
+			ResultSet userTypeResult = userTypeStmt.executeQuery();
+			
+			if(userTypeResult.next()) {
+				name = userTypeResult.getString("Borrower");
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}	
+		return name; 	
+    }
+    
+    //Get id from both Employees and Students table
+    private String getID(String transactionId) {
+    	String id = "";
+    	
+		String userTypeSql = "SELECT user_id FROM Transactions WHERE transaction_id = ?";
+		try(PreparedStatement userTypeStmt = conn.prepareStatement(userTypeSql)) {
+			userTypeStmt.setString(1, transactionId);
+
+			
+			ResultSet userTypeResult = userTypeStmt.executeQuery();
+			
+			if(userTypeResult.next()) {
+				id = userTypeResult.getString("user_id");
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}	
+		return id; 	
     }
     
     //update records
@@ -750,7 +860,11 @@ public class LendingBooksFrame extends JPanel {
             int selectedRow = tblTransac.getSelectedRow();
 
             String status = comboBoxStatus.getSelectedItem().toString();
-            
+            String id = tblTransac.getValueAt(selectedRow, 8).toString();
+        	String name = tblTransac.getValueAt(selectedRow, 7).toString();
+        	String bookNum = tblTransac.getValueAt(selectedRow, 1).toString();
+        	String acc = tblTransac.getValueAt(selectedRow, 3).toString();
+        	
             // Use a switch statement to handle different statuses
             switch (status) {
                 case "Good":
@@ -789,23 +903,35 @@ public class LendingBooksFrame extends JPanel {
                                 
                                 // Check if the user entered a valid O.R. code
                                 if (orCode != null && !orCode.isEmpty()) {
-                                	String id = tblTransac.getValueAt(selectedRow, 8).toString();
-                                	String name = tblTransac.getValueAt(selectedRow, 7).toString();
+                                	
                                     // Record the O.R. code into the database table of paid users
                                     recordPaidUser(orCode, id, name);
+                                    
+                                    // Remove student from blocklist after payment confirmation
+                                    removeFromBlocklistPenalty(id, name);
                                 } else {
                                     // Handle the case where the user canceled the input or entered an empty O.R. code
                                     JOptionPane.showMessageDialog(getRootPane(), "Invalid or empty O.R. code. Payment not recorded.");
                                 }
                             }
+ 
                             
                             if (confirmResult != JOptionPane.YES_OPTION) {
                                 // User chose not to proceed
-                                JOptionPane.showMessageDialog(getRootPane(), "Return canceled.");
+                                JOptionPane.showMessageDialog(getRootPane(), "Return canceled.\n" + "This user won't be able to borrow new titles\n" + "until they have settled their fee.");
+                                addToBlocklist(transacId);
+
                                 return;
                             }
                         } else {
+                        	
                             // No penalty fee, proceed without showing the confirmation dialog
+                        	
+                        	/*Will check if the user is on the blocklist or not
+                        	 * if the user is on the blocklist and the book has been replaced or fee paid
+                        	 * unblock the user*/
+                        	unblockUser(id, name);
+                        	
                         }
                     }
                         
@@ -853,28 +979,155 @@ public class LendingBooksFrame extends JPanel {
                     	updatePenaltyEmployee(transacId);      	
                     }
                     break;
-                case "Partially Damaged":
-                    // Handle "Partially Damaged" case
-                    JOptionPane.showMessageDialog(getRootPane(), "Books with status 'Partially Damaged' cannot be returned.");
-                    return;
                 case "Damaged":
                     // Handle "Damaged" case
-                    JOptionPane.showMessageDialog(getRootPane(), "Books with status 'Damaged' cannot be returned.");
+                    JOptionPane.showMessageDialog(getRootPane(), "Damaged books must be replaced.");
+                    recordBlockedUser(id, name);
+                    JOptionPane.showMessageDialog(getRootPane(), "The user is currently blocked from borrowing new books.\n" + "until the damaged book has been replaced.");
+                    // Update the book status to "Damaged" in the Books table
+                    updateBookStatus(bookNum, "Damaged", acc);
+                    updateTransactionStatus(bookNum, "Damaged", acc);
                     return;
                 case "Lost":
                     // Handle "Lost" case
-                    JOptionPane.showMessageDialog(getRootPane(), "Books with status 'Lost' cannot be returned.");
+                    JOptionPane.showMessageDialog(getRootPane(), "Lost books must be replaced.");
+                    recordBlockedUser(id, name);
+                    JOptionPane.showMessageDialog(getRootPane(), "The user is currently blocked from borrowing new books.\n" + "until the lost book has been replaced.");
+                    updateBookStatus(bookNum, "Lost", acc);
+                    updateTransactionStatus(bookNum, "Lost", acc);
                     return;
                 default:
                     // Handle unexpected status
                     JOptionPane.showMessageDialog(getRootPane(), "Invalid book status selected.");
                     return;
+                    
             }                                                            
         } catch (Exception e) {
             e.printStackTrace();
         }
     	    	
     }
+    // Method to record a blocked user
+    private void unblockUser(String id, String name) {
+    	// Check if the user exists on the blocklist
+        if (isUserBlocked(id, name)) {
+            // If yes, unblock the user
+            String deleteBlockedUserSql = "DELETE FROM Blocked WHERE user_id = ? AND borrower_name = ?";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteBlockedUserSql)) {
+                pstmt.setString(1, id);
+                pstmt.setString(2, name);
+
+                // Execute the update
+                int rowsAffected = pstmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    System.out.println("User unblocked successfully.");
+                    JOptionPane.showMessageDialog(getRootPane(), "The user has been unblocked.");
+                } else {
+                    System.out.println("Failed to unblock user.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Handle the SQL exception
+            }
+        }
+    }
+    
+    // Method to check if the user is on the blocklist
+    private boolean isUserBlocked(String id, String name) {
+        String selectBlockedUserSql = "SELECT * FROM Blocked WHERE user_id = ? AND borrower_name = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(selectBlockedUserSql)) {
+            pstmt.setString(1, id);
+            pstmt.setString(2, name);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                return rs.next(); // Returns true if the user is on the blocklist
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Handle the SQL exception
+        }
+    }
+       
+    private void updateTransactionStatus(String bookId, String status, String acc) {
+        String updateBookStatusSql = "UPDATE Transactions SET BookStatus = ? WHERE BooNum = ? AND AccessionNum = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(updateBookStatusSql)) {
+            // Set parameters for the prepared statement
+            pstmt.setString(1, status);
+            pstmt.setString(2, bookId);
+            pstmt.setString(3, acc);
+
+            // Execute the update
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Book status updated successfully.");
+            } else {
+                System.out.println("Failed to update book status.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the SQL exception
+        }
+    }
+    
+    //THISSS WILLLL UPDATE BOOK STATUS TO EITHER DAMAGED OR LOST DEPENDING ON DA SITUATIONSSSZZZZ
+    private void updateBookStatus(String bookId, String status, String acc) {
+        String updateBookStatusSql = "UPDATE Books SET book_status = ? WHERE Book_Num = ? AND Accession_Num = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(updateBookStatusSql)) {
+            // Set parameters for the prepared statement
+            pstmt.setString(1, status);
+            pstmt.setString(2, bookId);
+            pstmt.setString(3, acc);
+
+            // Execute the update
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Book status updated successfully.");
+            } else {
+                System.out.println("Failed to update book status.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the SQL exception
+        }
+    }
+    
+    // Method to record a blocked user
+    private void recordBlockedUser(String id, String name) {
+        // Check if the user is already on the block list
+        if (!isUserBlocked(id, name)) {
+            String insertBlockedUserSql = "INSERT INTO Blocked (user_id, borrower_name) VALUES (?, ?)";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(insertBlockedUserSql)) {
+                String userId = id;
+
+                // Set parameters for the prepared statement
+                pstmt.setString(1, userId);
+                pstmt.setString(2, name);
+
+                // Execute the update
+                int rowsAffected = pstmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                	JOptionPane.showMessageDialog(getRootPane(), "User has been blocked from borrowing new books.");
+                } else {
+                	JOptionPane.showMessageDialog(getRootPane(), "Failed to record blocked user.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Handle the SQL exception
+            }
+        } else {
+            JOptionPane.showMessageDialog(getRootPane(), "User is already on the block list");
+        }
+    }
+
     
     // Method to record a paid user with the provided O.R. code
     private void recordPaidUser(String orCode, String id, String name) {
@@ -897,8 +1150,7 @@ public class LendingBooksFrame extends JPanel {
             // Handle the SQL exception
         }
     }
-    
-    
+        
 	public void search() {
 		try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -1000,48 +1252,7 @@ public class LendingBooksFrame extends JPanel {
 	                // add string array data to JTable
 	                tblModel.addRow(tbData);
 	                
-	                tblTransac.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
-		    		    @Override
-		    		    public Component getTableCellRendererComponent(JTable table,
-		    		            Object value, boolean isSelected, boolean hasFocus, int row, int col) {
-
-		    		        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
-
-		    		        String status = (String)table.getModel().getValueAt(row, 9);
-		    		        if ("Student".equals(status)) {
-		    		        	setBackground(table.getBackground());
-		    		            setForeground(table.getForeground());
-		    		            
-		    		            // Assuming return date is in the 6th column (index 5)
-			    		        String returnDateStr = (String) table.getModel().getValueAt(row, 6);
-
-			    		        // Convert return date string to LocalDate
-			    		        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			    		        LocalDate returnDate = LocalDate.parse(returnDateStr, formatter);
-
-			    		        // Calculate the days between today and the return date
-			    		        LocalDate today = LocalDate.now();
-			    		        long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(today, returnDate);
-			    		        
-			    		        System.out.println(daysBetween);
-			    		        
-			    		        if (daysBetween == 2) {
-			    		            setBackground(Color.RED);
-			    		            setForeground(Color.WHITE);
-			    		        } else {
-			    		            setBackground(table.getBackground());
-			    		            setForeground(table.getForeground());
-			    		        }
-		    		        } else {
-		    		        	setBackground(Color.BLUE);
-		    		            setForeground(Color.WHITE);
-		    		            
-		    		        }    
-		    		        
-		    		     
-		    		        return this;
-		    		    }   
-		    		});
+	                
 	            }
 	        }
 	    } catch (Exception e) {
@@ -1194,14 +1405,14 @@ public class LendingBooksFrame extends JPanel {
 	}
 	
 	//reset text fields and radio button selection
-			private void resetFieldsAndSelection() {
-				txtBorrID.setText("");
-	            txtBookNum.setText("");
-	            txtTitle.setText("");
-	            txtAccession.setText("");
-	            txtBorrDate.setText("");
-	            txtReturnDate.setText("");
-	            txtPenalty.setText("");
-	            comboBoxStatus.setSelectedIndex(0);
-			}
+	private void resetFieldsAndSelection() {
+		txtBorrID.setText("");
+        txtBookNum.setText("");
+        txtTitle.setText("");
+        txtAccession.setText("");
+        txtBorrDate.setText("");
+        txtReturnDate.setText("");
+        txtPenalty.setText("");
+        comboBoxStatus.setSelectedIndex(0);
+	}
 }
