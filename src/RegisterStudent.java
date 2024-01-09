@@ -212,6 +212,7 @@ public class RegisterStudent extends JPanel {
 		panel.add(scrollPane);
 		
 		tblStudents = new JTable();
+		tblStudents.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		scrollPane.setViewportView(tblStudents);
 		tblStudents.setColumnSelectionAllowed(true);
 		tblStudents.setCellSelectionEnabled(true);

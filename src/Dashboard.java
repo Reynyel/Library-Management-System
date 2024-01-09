@@ -101,6 +101,7 @@ public class Dashboard extends JPanel {
 		contentPanel.add(scrollPane_3);
 		
 		tblBorrowed = new JTable();
+		tblBorrowed.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tblBorrowed.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null},
@@ -187,6 +188,7 @@ public class Dashboard extends JPanel {
 		contentPanel.add(scrollPane_2);
 		
 		tblOverdue = new JTable();
+		tblOverdue.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tblOverdue.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null},
@@ -202,6 +204,7 @@ public class Dashboard extends JPanel {
 		contentPanel.add(scrollPane);
 		
 		tblReturned = new JTable();
+		tblReturned.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tblReturned.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null},

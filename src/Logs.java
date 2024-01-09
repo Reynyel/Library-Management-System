@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 import GradientBackground.gradientBackground;
+import java.awt.Font;
 
 public class Logs extends JPanel {
 	private JTable table;
@@ -36,6 +37,7 @@ public class Logs extends JPanel {
 		panel.add(scrollPane);
 		
 		table = new JTable();
+		table.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null},

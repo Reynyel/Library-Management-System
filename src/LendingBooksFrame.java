@@ -97,6 +97,7 @@ public class LendingBooksFrame extends JPanel {
         panel.setLayout(null);
 		
 		tblTransac = new JTable();
+		tblTransac.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tblTransac.setBorder(new LineBorder(new Color(0, 0, 0)));
 		tblTransac.setColumnSelectionAllowed(true);
 		tblTransac.setCellSelectionEnabled(true);

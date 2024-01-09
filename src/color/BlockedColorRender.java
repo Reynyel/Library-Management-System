@@ -13,7 +13,7 @@ public class BlockedColorRender extends DefaultTableCellRenderer {
         Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
         String status = table.getValueAt(row, column).toString();
-	
+        
 	        // Check the status and set the background color accordingly
 	    if ("Lost".equals(status) || "Damaged".equals(status)) {
 	        component.setBackground(Color.RED);

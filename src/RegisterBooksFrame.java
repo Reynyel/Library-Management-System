@@ -266,18 +266,37 @@ public class RegisterBooksFrame extends JPanel {
 		panel.add(scrollPane);
 		
 		table = new JTable();
-		table.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		table.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		table.setShowVerticalLines(false);
 		table.setShowHorizontalLines(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null, null, null, null, null},
 			},
 			new String[] {
 				"Book Number", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Dewey", "Accession", "Status", "Date Registered"
 			}
-		));
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false, false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table.getColumnModel().getColumn(1).setPreferredWidth(170);
+		table.getColumnModel().getColumn(1).setMinWidth(75);
 		
 		table.setModel(new NonEditTableModel(data, columnNames, editableColumns));
 		table.addMouseListener(new MouseAdapter() {

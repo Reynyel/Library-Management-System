@@ -111,22 +111,27 @@ public class BackupDB extends JPanel {
 	private JTextField textField;
 	
 	public void browsePath() {
-		JFileChooser fc = new JFileChooser();
-		fc.showOpenDialog(this);
-		String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-		
-		try {
-			File f = fc.getSelectedFile();
-			path = f.getAbsolutePath();
-			path = path.replace('\\', '/');
-			path = path + "_" + date + ".sql";
-			txtPath.setText(path);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	    
-    }
+	    JFileChooser fc = new JFileChooser();
+	    fc.showOpenDialog(this);
+	    String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+	    try {
+	        File f = fc.getSelectedFile();
+
+	        // Check if the selected file is null
+	        if (f == null) {
+	            return; // User canceled the file selection
+	        }
+
+	        path = f.getAbsolutePath();
+	        path = path.replace('\\', '/');
+	        path = path + "_" + date + ".sql";
+	        txtPath.setText(path);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
 	    
 	public void importDatabase() {
 	    JFileChooser fc = new JFileChooser();
@@ -179,7 +184,7 @@ public class BackupDB extends JPanel {
 		Process p = null;
 		try {
 			Runtime runtime = Runtime.getRuntime();
-			p = runtime.exec("C:/Program Files/MySQL/MySQL Server 8.0/bin/mysqldump.exe -uroot -pranielle25 --add-drop-database -B booksdb -r" + path);
+			p = runtime.exec("C:/Program Files/MySQL/MySQL Server 8.0/bin/mysqldump.exe -uroot -pranielle25 --routines --add-drop-database -B booksdb -r" + path);
 			
 			int processComplete = p.waitFor();
 			

@@ -566,7 +566,7 @@ public class MainMenuFrame extends JFrame {
 	    
 	    Dashboard dashBoard = new Dashboard();
 		dashBoard = new Dashboard();
-		dashBoard.setBounds(0, 0, 1256, 686);
+		dashBoard.setBounds(0, 0, 1256, 756);
 		dashBoard.setLayout(null);  // Set layout to null
         contentPanel.removeAll();  // Remove existing components
         contentPanel.add(dashBoard);

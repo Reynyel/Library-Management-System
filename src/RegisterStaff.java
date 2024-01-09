@@ -232,6 +232,7 @@ public class RegisterStaff extends JPanel {
 		
 		
 		tblEmployees = new JTable();
+		tblEmployees.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		scrollPane.setViewportView(tblEmployees);
 		tblEmployees.setColumnSelectionAllowed(true);
 		tblEmployees.setCellSelectionEnabled(true);
