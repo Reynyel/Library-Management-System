@@ -183,7 +183,7 @@ public class MainMenuFrame extends JFrame {
 		btnRegisterBooks.setBorderPainted(false);
 		
 		
-		JButton btnBackupRecords = new JButton(" Backup Records");
+		JButton btnBackupRecords = new JButton(" Backup & Import");
 		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\backup.png"));
 		btnBackupRecords.setBounds(12, 431, 220, 40);
 		panel.add(btnBackupRecords);						

@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -36,21 +38,21 @@ public class BackupDB extends JPanel {
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel_1 = new JLabel("Backup Database");
-		lblNewLabel_1.setBounds(264, 270, 133, 24);
+		lblNewLabel_1.setBounds(271, 174, 133, 24);
 		panel.add(lblNewLabel_1);
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setBackground(new Color(255, 255, 255));
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		txtPath = new JTextField();
-		txtPath.setBounds(264, 324, 610, 30);
+		txtPath.setBounds(271, 209, 610, 30);
 		panel.add(txtPath);
 		txtPath.setForeground(new Color(255, 255, 255));
 		txtPath.setBackground(new Color(0, 153, 204));
 		txtPath.setColumns(10);
 		
 		JButton btnBrowse = new JButton("Browse Path");
-		btnBrowse.setBounds(884, 324, 133, 30);
+		btnBrowse.setBounds(891, 209, 133, 30);
 		panel.add(btnBrowse);
 		btnBrowse.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnBrowse.setForeground(new Color(255, 255, 255));
@@ -58,12 +60,39 @@ public class BackupDB extends JPanel {
 		btnBrowse.setBorderPainted(false);
 		
 		JButton btnBackupNow = new JButton("Backup Now");
-		btnBackupNow.setBounds(384, 367, 390, 30);
+		btnBackupNow.setBounds(391, 252, 390, 30);
 		panel.add(btnBackupNow);
 		btnBackupNow.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnBackupNow.setBackground(new Color(71, 160, 165));
 		btnBackupNow.setForeground(new Color(255, 255, 255));
 		btnBackupNow.setBorderPainted(false);
+		
+		JButton btnImportNow = new JButton("Import Now");
+		btnImportNow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				importDatabase();
+			}
+		});
+		btnImportNow.setForeground(Color.WHITE);
+		btnImportNow.setFont(new Font("Verdana", Font.BOLD, 15));
+		btnImportNow.setBorderPainted(false);
+		btnImportNow.setBackground(new Color(128, 255, 0));
+		btnImportNow.setBounds(391, 483, 390, 30);
+		panel.add(btnImportNow);
+		
+		textField = new JTextField();
+		textField.setForeground(Color.WHITE);
+		textField.setColumns(10);
+		textField.setBackground(new Color(0, 153, 204));
+		textField.setBounds(271, 440, 610, 30);
+		panel.add(textField);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("Import Database");
+		lblNewLabel_1_1.setForeground(Color.WHITE);
+		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_1_1.setBackground(Color.WHITE);
+		lblNewLabel_1_1.setBounds(271, 405, 133, 24);
+		panel.add(lblNewLabel_1_1);
 		btnBackupNow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				backup();
@@ -79,6 +108,7 @@ public class BackupDB extends JPanel {
 	
 	String path = null;
 	String fileName;
+	private JTextField textField;
 	
 	public void browsePath() {
 		JFileChooser fc = new JFileChooser();
@@ -98,6 +128,51 @@ public class BackupDB extends JPanel {
 	    
     }
 	    
+	public void importDatabase() {
+	    JFileChooser fc = new JFileChooser();
+	    fc.showOpenDialog(this);
+
+	    try {
+	        File selectedFile = fc.getSelectedFile();
+	        String filePath = selectedFile.getAbsolutePath();
+
+	        // Modify the MySQL connection details accordingly
+	        String command = "C:/Program Files/MySQL/MySQL Server 8.0/bin/mysql.exe";
+	        String user = "-uroot";
+	        String password = "-pranielle25";
+	        String database = "-Dbooksdb";
+
+	        // Run the command in a separate thread
+	        Thread importThread = new Thread(() -> {
+	            try {
+	                ProcessBuilder processBuilder = new ProcessBuilder(command, user, password, database);
+	                processBuilder.redirectInput(new File(filePath)); // Redirect input from the file
+
+	                Process process = processBuilder.start();
+
+	                // Wait for the process to complete
+	                int processComplete = process.waitFor();
+
+	                if (processComplete == 0) {
+	                    System.out.println("Import Successful");
+	                    JOptionPane.showMessageDialog(getRootPane(), "Import Successful");
+	                } else {
+	                    System.out.println("Import Failed");
+	                    JOptionPane.showMessageDialog(getRootPane(), "Import Failed");
+	                }
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        });
+
+	        importThread.start();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
+
 
 	
 	public void backup() {

@@ -334,8 +334,41 @@ public class TransactionFrame extends JPanel {
 	        FileWriter fw = new FileWriter(fileName);
 	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
 			String formattedAcadYear = ya.format( FormatStyle.FULL);
-	        fw.append("List of All Transactions");
+			fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("List of All Recorded Transactions");
 	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Prepared On: " + currentDate);
+	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
 	        fw.append("Academic Year: " + formattedAcadYear);
 	        fw.append("\n");
 	        fw.append("\n");
@@ -899,7 +932,7 @@ public class TransactionFrame extends JPanel {
 	            
 	            // Define new column names
 	            String[] newColumnNames = {"Book Number", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Dewey", "Accession", "Status"};
-
+	            
 	            // Set new column names
 	            tblModel.setColumnIdentifiers(newColumnNames);
 

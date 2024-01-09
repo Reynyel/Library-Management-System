@@ -350,13 +350,46 @@ public class RegisterStudent extends JPanel {
 	        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
 	        fileIndex++;
 	    }
-
+	    
 	    try {
 	        FileWriter fw = new FileWriter(fileName);
 	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
 			String formattedAcadYear = ya.format( FormatStyle.FULL);
+			fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
 	        fw.append("List of All Registered Students");
 	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Prepared On: " + currentDate);
+	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
 	        fw.append("Academic Year: " + formattedAcadYear);
 	        fw.append("\n");
 	        fw.append("\n");

@@ -202,7 +202,7 @@ public class LogInFrame extends JFrame {
             }
         }
     }
-
+	
 	
 	private void saveCooldownInfo() {
         prefs.putLong(PREFS_LAST_LOGIN_ATTEMPT_TIME, lastLoginAttemptTime);

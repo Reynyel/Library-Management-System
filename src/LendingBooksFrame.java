@@ -450,8 +450,41 @@ public class LendingBooksFrame extends JPanel {
 	        FileWriter fw = new FileWriter(fileName);
 	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
 			String formattedAcadYear = ya.format( FormatStyle.FULL);
+			fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
 	        fw.append("List of All Returned Books");
 	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Prepared On: " + currentDate);
+	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
 	        fw.append("Academic Year: " + formattedAcadYear);
 	        fw.append("\n");
 	        fw.append("\n");
@@ -752,7 +785,7 @@ public class LendingBooksFrame extends JPanel {
         }
     }
 
-    
+    	
     public double calculateFee() {
         double penaltyFee = 0.0;
 

@@ -356,7 +356,7 @@ public class RegisterStaff extends JPanel {
 		
 		displayData();
 	}
-	
+		
 	Connection conn;
 	PreparedStatement pst;
 	ResultSet rs;
@@ -386,8 +386,41 @@ public class RegisterStaff extends JPanel {
 	        FileWriter fw = new FileWriter(fileName);
 	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
 			String formattedAcadYear = ya.format( FormatStyle.FULL);
+			fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
 	        fw.append("List of All Registered Employee");
 	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Prepared On: " + currentDate);
+	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
 	        fw.append("Academic Year: " + formattedAcadYear);
 	        fw.append("\n");
 	        fw.append("\n");
