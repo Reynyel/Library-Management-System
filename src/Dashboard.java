@@ -15,6 +15,7 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Toolkit;
 
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -86,10 +87,19 @@ public class Dashboard extends JPanel {
 	 * Create the frame.
 	 */
 	public Dashboard() {
+		// Calculate the center of the screen
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int centerX = (screenSize.width - getWidth()) / 2;
+		int centerY = (screenSize.height - getHeight()) / 2;
+		
+		// Set the frame location
+		setLocation(centerX, centerY);
+		
 		setPreferredSize(new Dimension(1256, 815));
 	    setLayout(null);
 		setBounds(100, 100, 1687, 743);
 		
+        
 		gradientBackground contentPanel = new gradientBackground();
 		contentPanel.setLayout(null);
 		contentPanel.setBorder(null);

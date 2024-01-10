@@ -20,11 +20,9 @@ import javax.swing.JTextField;
 
 import GradientBackground.gradientBackground;
 import javax.swing.JComboBox;
-
 public class BackupDB extends JPanel {
 
 	private JTextField txtPath;
-
 	/**
 	 * Create the panel.
 	 */	
@@ -38,21 +36,21 @@ public class BackupDB extends JPanel {
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel_1 = new JLabel("Backup Database");
-		lblNewLabel_1.setBounds(271, 174, 133, 24);
+		lblNewLabel_1.setBounds(270, 116, 133, 24);
 		panel.add(lblNewLabel_1);
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setBackground(new Color(255, 255, 255));
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		txtPath = new JTextField();
-		txtPath.setBounds(271, 209, 610, 30);
+		txtPath.setBounds(270, 151, 610, 30);
 		panel.add(txtPath);
 		txtPath.setForeground(new Color(255, 255, 255));
 		txtPath.setBackground(new Color(0, 153, 204));
 		txtPath.setColumns(10);
 		
 		JButton btnBrowse = new JButton("Browse Path");
-		btnBrowse.setBounds(891, 209, 133, 30);
+		btnBrowse.setBounds(890, 151, 133, 30);
 		panel.add(btnBrowse);
 		btnBrowse.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnBrowse.setForeground(new Color(255, 255, 255));
@@ -60,7 +58,7 @@ public class BackupDB extends JPanel {
 		btnBrowse.setBorderPainted(false);
 		
 		JButton btnBackupNow = new JButton("Backup Now");
-		btnBackupNow.setBounds(391, 252, 390, 30);
+		btnBackupNow.setBounds(390, 194, 390, 30);
 		panel.add(btnBackupNow);
 		btnBackupNow.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnBackupNow.setBackground(new Color(71, 160, 165));
@@ -77,22 +75,23 @@ public class BackupDB extends JPanel {
 		btnImportNow.setFont(new Font("Verdana", Font.BOLD, 15));
 		btnImportNow.setBorderPainted(false);
 		btnImportNow.setBackground(new Color(128, 255, 0));
-		btnImportNow.setBounds(391, 483, 390, 30);
+		btnImportNow.setBounds(390, 353, 390, 30);
 		panel.add(btnImportNow);
 		
 		textField = new JTextField();
 		textField.setForeground(Color.WHITE);
 		textField.setColumns(10);
 		textField.setBackground(new Color(0, 153, 204));
-		textField.setBounds(271, 440, 610, 30);
+		textField.setBounds(270, 310, 610, 30);
 		panel.add(textField);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Import Database");
 		lblNewLabel_1_1.setForeground(Color.WHITE);
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblNewLabel_1_1.setBackground(Color.WHITE);
-		lblNewLabel_1_1.setBounds(271, 405, 133, 24);
+		lblNewLabel_1_1.setBounds(270, 275, 133, 24);
 		panel.add(lblNewLabel_1_1);
+		
 		btnBackupNow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				backup();
@@ -110,6 +109,7 @@ public class BackupDB extends JPanel {
 	String fileName;
 	private JTextField textField;
 	
+	//select file path before exporting
 	public void browsePath() {
 	    JFileChooser fc = new JFileChooser();
 	    fc.showOpenDialog(this);
@@ -132,7 +132,7 @@ public class BackupDB extends JPanel {
 	    }
 	}
 
-	    
+	//import mysql dump
 	public void importDatabase() {
 	    JFileChooser fc = new JFileChooser();
 	    fc.showOpenDialog(this);
@@ -176,10 +176,7 @@ public class BackupDB extends JPanel {
 	    }
 	}
 
-
-
-
-	
+	//export mysql dump
 	public void backup() {
 		Process p = null;
 		try {

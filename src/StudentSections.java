@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class StudentSections {
-
+	
 	/*Arrays of sections
 	 * per grade level*/
 	public String section1[] = {"1-A", "1-B", "1-C"};

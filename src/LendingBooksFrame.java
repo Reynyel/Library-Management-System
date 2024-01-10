@@ -1048,18 +1048,16 @@ public class LendingBooksFrame extends JPanel {
                         break;
                     case "Damaged":
                         // Handle "Damaged" case
-                        JOptionPane.showMessageDialog(getRootPane(), "Damaged books must be replaced.");
+                        JOptionPane.showMessageDialog(getRootPane(), "Damaged books must be replaced.\n" + "The user is currently blocked from borrowing new books\n" + "until the damaged book has been replaced.");
                         recordBlockedUser(id, name);
-                        JOptionPane.showMessageDialog(getRootPane(), "The user is currently blocked from borrowing new books.\n" + "until the damaged book has been replaced.");
                         // Update the book status to "Damaged" in the Books table
                         updateBookStatus(bookNum, "Damaged", acc);
                         updateTransactionStatus(bookNum, "Damaged", acc);
                         return;
                     case "Lost":
                         // Handle "Lost" case
-                        JOptionPane.showMessageDialog(getRootPane(), "Lost books must be replaced.");
+                        JOptionPane.showMessageDialog(getRootPane(), "Lost books must be replaced.\n" + "The user is currently blocked from borrowing new books\n" + "until the lost book has been replaced.");
                         recordBlockedUser(id, name);
-                        JOptionPane.showMessageDialog(getRootPane(), "The user is currently blocked from borrowing new books.\n" + "until the lost book has been replaced.");
                         updateBookStatus(bookNum, "Lost", acc);
                         updateTransactionStatus(bookNum, "Lost", acc);
                         return;
@@ -1188,9 +1186,7 @@ public class LendingBooksFrame extends JPanel {
                 int rowsAffected = pstmt.executeUpdate();
 
                 if (rowsAffected > 0) {
-                	JOptionPane.showMessageDialog(getRootPane(), "User has been blocked from borrowing new books.");
                 } else {
-                	JOptionPane.showMessageDialog(getRootPane(), "Failed to record blocked user.");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

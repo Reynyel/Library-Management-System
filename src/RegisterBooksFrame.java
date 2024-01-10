@@ -71,7 +71,7 @@ public class RegisterBooksFrame extends JPanel {
 	private JTextField txtPublisher;
 	private JTextField txtQuantity;
 	private JButton btnUpdate;
-	private JComboBox comboBoxSubject, languageComboBox, cbSort, statusComboBox, cbSortSub;
+	private JComboBox comboBoxSubject, languageComboBox, cbSort, cbSortSub;
 	private JTable table;
 	private String userType;
 	private JLabel lblSortSub;
@@ -408,7 +408,7 @@ public class RegisterBooksFrame extends JPanel {
 		btnSearch.setBackground(new Color(220, 20, 60));
 		panel.add(btnSearch);
 		
-		JButton btnViewData = new JButton("View All Data");
+		JButton btnViewData = new JButton("View All");
 		btnViewData.setBounds(824, 619, 124, 30);
 		btnViewData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -418,7 +418,7 @@ public class RegisterBooksFrame extends JPanel {
 		btnViewData.setForeground(Color.WHITE);
 		btnViewData.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnViewData.setBorderPainted(false);
-		btnViewData.setBackground(new Color(220, 20, 60));
+		btnViewData.setBackground(new Color(128, 128, 255));
 		panel.add(btnViewData);
 		
 		txtTitle = new JTextField();
@@ -527,19 +527,6 @@ public class RegisterBooksFrame extends JPanel {
 		btnRemove.setBounds(80, 660, 112, 30);
 		panel.add(btnRemove);
 		
-		statusComboBox = new JComboBox();
-		statusComboBox.setModel(new DefaultComboBoxModel(new String[] {"Available", "Damaged", "Lost"}));
-		statusComboBox.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		statusComboBox.setBackground(Color.WHITE);
-		statusComboBox.setBounds(497, 606, 105, 30);
-		panel.add(statusComboBox);
-		
-		JLabel lblStatus = new JLabel("Status");
-		lblStatus.setForeground(Color.WHITE);
-		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStatus.setBounds(497, 575, 66, 30);
-		panel.add(lblStatus);
-		
 		lblSortSub = new JLabel("Sort By Subject:");
 		lblSortSub.setEnabled(false);
 		lblSortSub.setForeground(Color.WHITE);
@@ -562,6 +549,66 @@ public class RegisterBooksFrame extends JPanel {
 		cbSortSub.setBounds(1098, 434, 148, 30);
 		cbSortSub.setVisible(false);
 		panel.add(cbSortSub);
+		
+		JLabel lblImportantFields = new JLabel("- Important fields");
+		lblImportantFields.setForeground(Color.WHITE);
+		lblImportantFields.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblImportantFields.setBounds(294, 661, 133, 30);
+		panel.add(lblImportantFields);
+		
+		JLabel lblStudentNo_1_2 = new JLabel("*");
+		lblStudentNo_1_2.setForeground(Color.RED);
+		lblStudentNo_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2.setBounds(283, 660, 23, 30);
+		panel.add(lblStudentNo_1_2);
+		
+		JLabel lblStudentNo_1_2_1 = new JLabel("*");
+		lblStudentNo_1_2_1.setForeground(Color.RED);
+		lblStudentNo_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2_1.setBounds(146, 432, 23, 30);
+		panel.add(lblStudentNo_1_2_1);
+		
+		JLabel lblStudentNo_1_2_2 = new JLabel("*");
+		lblStudentNo_1_2_2.setForeground(Color.RED);
+		lblStudentNo_1_2_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2_2.setBounds(451, 432, 23, 30);
+		panel.add(lblStudentNo_1_2_2);
+		
+		JLabel lblStudentNo_1_2_3 = new JLabel("*");
+		lblStudentNo_1_2_3.setForeground(Color.RED);
+		lblStudentNo_1_2_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2_3.setBounds(426, 493, 23, 40);
+		panel.add(lblStudentNo_1_2_3);
+		
+		JLabel lblStudentNo_1_2_4 = new JLabel("*");
+		lblStudentNo_1_2_4.setForeground(Color.RED);
+		lblStudentNo_1_2_4.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2_4.setBounds(146, 493, 9, 40);
+		panel.add(lblStudentNo_1_2_4);
+		
+		JLabel lblStudentNo_1_2_4_1 = new JLabel("*");
+		lblStudentNo_1_2_4_1.setForeground(Color.RED);
+		lblStudentNo_1_2_4_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2_4_1.setBounds(141, 565, 9, 40);
+		panel.add(lblStudentNo_1_2_4_1);
+		
+		JLabel lblStudentNo_1_2_4_1_1 = new JLabel("*");
+		lblStudentNo_1_2_4_1_1.setForeground(Color.RED);
+		lblStudentNo_1_2_4_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2_4_1_1.setBounds(456, 565, 9, 40);
+		panel.add(lblStudentNo_1_2_4_1_1);
+		
+		JLabel lblStudentNo_1_2_4_1_2 = new JLabel("*");
+		lblStudentNo_1_2_4_1_2.setForeground(Color.RED);
+		lblStudentNo_1_2_4_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2_4_1_2.setBounds(347, 565, 9, 40);
+		panel.add(lblStudentNo_1_2_4_1_2);
+		
+		JLabel lblStudentNo_1_2_4_1_3 = new JLabel("*");
+		lblStudentNo_1_2_4_1_3.setForeground(Color.RED);
+		lblStudentNo_1_2_4_1_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2_4_1_3.setBounds(845, 455, 9, 40);
+		panel.add(lblStudentNo_1_2_4_1_3);
 										
 		radioRegister.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -1410,82 +1457,74 @@ public class RegisterBooksFrame extends JPanel {
 	
 	
 	public void search() {
-		try {		
-			 // Load the JDBC driver (version 4.0 or later)
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}   		
-			
-			try {
-			
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
-				Statement stmt = conn.createStatement();
-				System.out.println("Connected");
-								
-				String sql = "SELECT * FROM Books WHERE Title = ?";
-				PreparedStatement pstmt = conn.prepareStatement(sql);
-				
-				String bookTitle = txtSrTitle.getText();
-				pstmt.setString(1, bookTitle);
-				
-				ResultSet rs = pstmt.executeQuery();
+	    try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        try {
+	            Class.forName("com.mysql.jdbc.Driver");
+	        } catch (ClassNotFoundException e1) {
+	            e1.printStackTrace();
+	        }
 
-		        DefaultTableModel tblModel = (DefaultTableModel) table.getModel();	        
-	
-	        	DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-	        	
-	        	
-	        	if(!rs.isBeforeFirst()) {
-	        		JOptionPane.showMessageDialog(this, "Book not found.");
-	        		txtSrBookNum.setText("");
-	        		txtTitle.setText("");
-	        	}
-	        	
-	        	else {
-	        		// Clear existing rows in the table
-		        	tblModel.setRowCount(0);	
-	        		while(rs.next()) {
-        			//add data until there is none
-        			String bookNum = rs.getString("Book_Num");
-        			String title = rs.getString("Title");
-        			String author = rs.getString("Author");
-        			String isbn = rs.getString("isbn");
-        			String publisher = rs.getString("Publisher");
-        			String language = rs.getString("Language");
-        			String subject = rs.getString("Subject");
-        			String quantity = String.valueOf(rs.getInt("Quantity"));
-        			String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
-        			String accession = String.valueOf(rs.getInt("Accession_Num"));
-        			String status = rs.getString("book_status");
-        			String dateRegistered = rs.getString("date_registered");
-        		
-        			comboBoxModel.addElement(accession);
-        			
-        			txtSrBookNum.setText(bookNum);
+	        try {
+	            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	            Statement stmt = conn.createStatement();
+	            System.out.println("Connected");
 
-        			//array to store data into jtable
-        			String tbData[] = {bookNum, title, author, isbn, publisher,
-        					language, subject, dewey, accession, status, dateRegistered};
-        			
-        			
-        			//add string array data to jtable
-        			tblModel.addRow(tbData);
-	        		}
-	        	}
-				
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}          				
-								
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}		
-		
+	            String partialTitle = txtSrTitle.getText();
+	            String sql = "SELECT * FROM Books WHERE Title LIKE ?";
+	            PreparedStatement pstmt = conn.prepareStatement(sql);
+	            
+	            // Use % as a wildcard for partial matches
+	            pstmt.setString(1, "%" + partialTitle + "%");
+
+	            ResultSet rs = pstmt.executeQuery();
+
+	            DefaultTableModel tblModel = (DefaultTableModel) table.getModel();
+
+	            DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+
+	            if (!rs.isBeforeFirst()) {
+	                JOptionPane.showMessageDialog(this, "No matching books found.");
+	                txtSrBookNum.setText("");
+	                txtTitle.setText("");
+	            } else {
+	                // Clear existing rows in the table
+	                tblModel.setRowCount(0);
+	                while (rs.next()) {
+	                    //add data until there is none
+	                    String bookNum = rs.getString("Book_Num");
+	                    String title = rs.getString("Title");
+	                    String author = rs.getString("Author");
+	                    String isbn = rs.getString("isbn");
+	                    String publisher = rs.getString("Publisher");
+	                    String language = rs.getString("Language");
+	                    String subject = rs.getString("Subject");
+	                    String quantity = String.valueOf(rs.getInt("Quantity"));
+	                    String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+	                    String accession = String.valueOf(rs.getInt("Accession_Num"));
+	                    String status = rs.getString("book_status");
+	                    String dateRegistered = rs.getString("date_registered");
+
+	                    comboBoxModel.addElement(accession);
+
+	                    txtSrBookNum.setText(bookNum);
+
+	                    //array to store data into jtable
+	                    String tbData[] = {bookNum, title, author, isbn, publisher,
+	                            language, subject, dewey, accession, status, dateRegistered};
+
+	                    //add string array data to jtable
+	                    tblModel.addRow(tbData);
+	                }
+	            }
+
+	        } catch (SQLException e1) {
+	            e1.printStackTrace();
+	        }
+
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
 	}
 	
 	public void view() {

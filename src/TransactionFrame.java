@@ -913,70 +913,81 @@ public class TransactionFrame extends JPanel {
     
 	//search books table and returns all available titles
     public void search() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	    try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        try {
+	            Class.forName("com.mysql.jdbc.Driver");
+	        } catch (ClassNotFoundException e1) {
+	            e1.printStackTrace();
+	        }
 
-            String title = txtTitle.getText();
-            String sql = "SELECT * FROM Books WHERE Title = ? AND book_status = 'Available'";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, title);
-                ResultSet rs = pstmt.executeQuery();
+	        try {
+	            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	            Statement stmt = conn.createStatement();
+	            System.out.println("Connected");
 
-                DefaultTableModel tblModel = (DefaultTableModel) tblTransac.getModel();            
-             
-                // Remove existing columns
-	            tblModel.setColumnCount(0);
+	            String partialTitle = txtTitle.getText();
+	            String sql = "SELECT * FROM Books WHERE Title LIKE ?";
+	            PreparedStatement pstmt = conn.prepareStatement(sql);
 	            
-	            // Clear existing rows
-	            tblModel.setRowCount(0); 
-	            
-	            // Define new column names
-	            String[] newColumnNames = {"Book Number", "Title", "Author", "ISBN", "Publisher", "Language", "Subject", "Dewey", "Accession", "Status"};
-	            
-	            // Set new column names
-	            tblModel.setColumnIdentifiers(newColumnNames);
+	            // Use % as a wildcard for partial matches
+	            pstmt.setString(1, "%" + partialTitle + "%");
 
-                if (!rs.isBeforeFirst()) {
-                    JOptionPane.showMessageDialog(this, "Sorry, book not found!");
+	            ResultSet rs = pstmt.executeQuery();
 
-                    txtTitle.setText("");
-                    txtAuthor.setText("");
+	            DefaultTableModel tblModel = (DefaultTableModel) tblTransac.getModel();
+
+	            DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
+
+	            if (!rs.isBeforeFirst()) {
+	                JOptionPane.showMessageDialog(this, "No matching books found.");
+	                txtBookNum.setText("");
+	                txtTitle.setText("");
+	                txtAuthor.setText("");
                     cbAccession.removeAllItems();
-                } else {
-                    DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
-                    while (rs.next()) {
-                    	//add data until there is none
-	        			String bookNum = rs.getString("Book_Num");
-	        			String searchTitle = rs.getString("Title");
-	        			String author = rs.getString("Author");
-	        			String isbn = rs.getString("isbn");
-	        			String publisher = rs.getString("Publisher");
-	        			String language = rs.getString("Language");
-	        			String subject = rs.getString("Subject");
-	        			String quantity = String.valueOf(rs.getInt("Quantity"));
-	        			String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
-	        			String accession = String.valueOf(rs.getInt("Accession_Num"));
-	        			String status = rs.getString("book_status");
-	        		
-	        			comboBoxModel.addElement(accession);
+	            } else {
+	                // Clear existing rows in the table
+	                tblModel.setRowCount(0);
+	                while (rs.next()) {
+	                    //add data until there is none
+	                    String bookNum = rs.getString("Book_Num");
+	                    String title = rs.getString("Title");
+	                    String author = rs.getString("Author");
+	                    String isbn = rs.getString("isbn");
+	                    String publisher = rs.getString("Publisher");
+	                    String language = rs.getString("Language");
+	                    String subject = rs.getString("Subject");
+	                    String quantity = String.valueOf(rs.getInt("Quantity"));
+	                    String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+	                    String accession = String.valueOf(rs.getInt("Accession_Num"));
+	                    String status = rs.getString("book_status");
+	                    String dateRegistered = rs.getString("date_registered");
 
-                        txtTitle.setText(searchTitle);
+	                    comboBoxModel.addElement(accession);
+
+	                    txtTitle.setText(title);
                         txtAuthor.setText(author);
                         txtBookNum.setText(bookNum);
                         cbAccession.setModel(comboBoxModel);
                         txtStatus.setText(status);
-                        // Update the table with search results
-                        String tbData[] = {bookNum, searchTitle, author, isbn, publisher,
-	        					language, subject, dewey, accession, status};
-                        tblModel.addRow(tbData);
-                    }
-                }
-            }
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-    }
+
+	                    //array to store data into jtable
+	                    String tbData[] = {bookNum, title, author, isbn, publisher,
+	                            language, subject, dewey, accession, status, dateRegistered};
+
+	                    //add string array data to jtable
+	                    tblModel.addRow(tbData);
+	                }
+	            }
+
+	        } catch (SQLException e1) {
+	            e1.printStackTrace();
+	        }
+
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
+	}
 	
 	public void displayTransactionHistory() {
 	    try {
