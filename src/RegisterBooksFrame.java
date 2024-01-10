@@ -1243,7 +1243,6 @@ public class RegisterBooksFrame extends JPanel {
 		String publisher = txtPublisher.getText();
 		String language = languageComboBox.getSelectedItem().toString();
 		String subject = comboBoxSubject.getSelectedItem().toString();
-		String status = statusComboBox.getSelectedItem().toString();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			
