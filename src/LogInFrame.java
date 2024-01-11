@@ -27,6 +27,10 @@ public class LogInFrame extends JFrame {
 	private JPanel contentPane;
 	private JTextField usernameTxt;
 	private JPasswordField passwordTxt;
+	private int loginAttempts = 0;
+    private long lastLoginAttemptTime = 0;
+	private static final int MAX_LOGIN_ATTEMPTS = 5;
+    private static final long COOLDOWN_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
 
 	/**
 	 * Launch the application.
@@ -98,13 +102,23 @@ public class LogInFrame extends JFrame {
 		            }
 		        }
 		        
-		        if(isValidUser) {
-		        	MainMenuFrame mainFrame = new MainMenuFrame(userType); 		        	
-		        	mainFrame.setVisible(true);	        			        	
-		        	dispose();		        	
-		        }
-		        else {
-		        	 JOptionPane.showMessageDialog(getRootPane(), "Invalid username or password. Please try again. LOG IN ATTEMPT; ?");
+		        if (isValidUser) {
+		            // Reset login attempts upon successful login
+		        	resetLoginAttempts();
+
+		            MainMenuFrame mainFrame = new MainMenuFrame(userType);
+		            mainFrame.setVisible(true);
+		            dispose();
+		        } else {
+		            incrementAttempts();
+
+		            // Check if the user has exceeded the maximum login attempts
+		            if (loginAttempts >= 5) {
+		            	lastLoginAttemptTime = System.currentTimeMillis();
+		                JOptionPane.showMessageDialog(getRootPane(), "Too many failed login attempts. Please try again later.");
+		            } else {
+		                JOptionPane.showMessageDialog(getRootPane(), "Invalid username or password. Please try again in 5 minutes.\n" + " Log in attempt: " + loginAttempts);
+		            }
 		        }
 		        
 		        passwordTxt.setText("");
@@ -158,4 +172,19 @@ public class LogInFrame extends JFrame {
 
 		
 	}
+	
+	 private boolean isLoginCooldown() {
+        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+            long currentTime = System.currentTimeMillis();
+            return currentTime - lastLoginAttemptTime < COOLDOWN_TIME;
+        }
+        return false;
+    }
+	private void incrementAttempts() {
+		loginAttempts++;
+	}
+    private void resetLoginAttempts() {
+        loginAttempts = 0;
+        lastLoginAttemptTime = 0;
+    }
 }

@@ -20,7 +20,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Date;
 import java.util.HashSet;
@@ -116,12 +118,6 @@ public class TransactionFrame extends JPanel {
 		 * set a color for books that have already reached their due date*/
 		
 		AlternateColorRender alternate = new AlternateColorRender();
-		
-		JLabel lblReturnDate = new JLabel("Return Date");
-		lblReturnDate.setForeground(Color.WHITE);
-		lblReturnDate.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblReturnDate.setBounds(548, 131, 93, 30);
-		panel.add(lblReturnDate);
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 226, 1236, 413);
 		panel.add(scrollPane);
@@ -727,8 +723,27 @@ public class TransactionFrame extends JPanel {
             				txtTitle.setText("");
             				cbAccession.removeAllItems();
             				txtStatus.setText("");
-            				txtBorrID.setText("");           				       				
-            				JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!");
+            				txtBorrID.setText("");           
+            				
+            				// Fetch the return date for the confirmation message
+            		        String fetchReturnDateSql = "SELECT ShiftHolidayToWorkday(DATE_ADD(CURDATE(), INTERVAL 3 DAY), YEAR(CURDATE())) AS return_date";
+            		        try (PreparedStatement fetchReturnDateStmt = conn.prepareStatement(fetchReturnDateSql);
+            		             ResultSet rs = fetchReturnDateStmt.executeQuery()) {
+
+            		            if (rs.next()) {
+            		            	// Parse the return date from the database
+            		                LocalDate returnDate = rs.getDate("return_date").toLocalDate();
+
+            		                // Format the return date to "MMM d, yyyy" (e.g., Jan 9, 2023)
+            		                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
+            		                String formattedReturnDate = returnDate.format(formatter);
+            		                JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!\n " +
+            		                											"Return Date: " + formattedReturnDate);
+            		            } else {
+            		                // Handle the case where the return date couldn't be fetched
+            		                JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded! Return Date: N/A");
+            		            }
+            		        }
             				   
             			} catch (SQLException e) {
             				e.printStackTrace();

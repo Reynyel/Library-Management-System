@@ -131,6 +131,7 @@ public class LendingBooksFrame extends JPanel {
 						String userType = (String) tblTransac.getValueAt(selectedRow, 9);
 						
 						//Populate fields
+						txtBorrID.setText(userId);
 						txtTitle.setText(title);
 						txtBookNum.setText(bookNum);
 						txtAccession.setText(acc); //FIX THIS						
@@ -326,6 +327,8 @@ public class LendingBooksFrame extends JPanel {
 		panel.add(btnExport);
 		
 		txtReturnDate = new JTextField();
+		txtReturnDate.setEnabled(true);
+		txtReturnDate.setEditable(true);
 		txtReturnDate.setBounds(147, 267, 155, 27);
 		panel.add(txtReturnDate);
 		txtReturnDate.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -338,6 +341,19 @@ public class LendingBooksFrame extends JPanel {
 		txtPenalty.setEditable(false);
 		txtPenalty.setColumns(10);
 		
+		JButton btnUpdateReturnDate = new JButton("Update Return Date");
+		btnUpdateReturnDate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateReturnDate();
+			}
+		});
+		btnUpdateReturnDate.setForeground(Color.WHITE);
+		btnUpdateReturnDate.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
+		btnUpdateReturnDate.setBorderPainted(false);
+		btnUpdateReturnDate.setBackground(new Color(0, 153, 0));
+		btnUpdateReturnDate.setBounds(312, 266, 163, 27);
+		panel.add(btnUpdateReturnDate);
+		
 		fetchAndDisplayData();
 	}
 	Connection conn;
@@ -348,6 +364,57 @@ public class LendingBooksFrame extends JPanel {
 	private JTextField txtAccession;
 	private JTextField txtPenalty;
 	
+	//UPDATE RETURN DATE
+	private void updateReturnDate() {
+		String returnDate = txtReturnDate.getText().toString();
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+			Statement stmt = conn.createStatement();
+			System.out.println("Connected");
+							
+			String sql = "UPDATE Transactions SET return_date = ? WHERE transaction_id= ?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			
+			int selectedRow = tblTransac.getSelectedRow();
+			
+			if(selectedRow != -1) {
+				
+				//get book_num value from row
+				String transactionId = (String) tblTransac.getValueAt(selectedRow, 0);
+				
+				pstmt.setString(1, returnDate);
+				pstmt.setString(2, transactionId);
+				
+				int rowsAffected = pstmt.executeUpdate();
+				if(rowsAffected > 0) {
+					JOptionPane.showMessageDialog(getRootPane(), "Updated succesfully");
+					fetchAndDisplayData();
+				}
+				
+				else {
+					JOptionPane.showMessageDialog(getRootPane(), "No rows updated");
+				}
+				
+			}
+			else {
+	            JOptionPane.showMessageDialog(getRootPane(), "No row selected");
+	        }
+			
+		}
+		
+		
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	public void export() {
 	    // Create a format for the date in the file name
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -705,17 +772,24 @@ public class LendingBooksFrame extends JPanel {
                     //String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = '10' WHERE transaction_id = ?";
                     
                     if ("Student".equals(userType)) {
-                        int confirmResult = JOptionPane.showConfirmDialog(
-                                getRootPane(),
-                                "This student has penalty fee of: PHP" + calculateFee() + ". Is this paid already or not?",
-                                "Confirmation",
-                                JOptionPane.YES_NO_OPTION
-                        );
+                    	double penaltyFee = Double.parseDouble(txtPenalty.getText());
 
-                        if (confirmResult != JOptionPane.YES_OPTION) {
-                            // User chose not to proceed
-                            JOptionPane.showMessageDialog(getRootPane(), "Return canceled.");
-                            return;
+                        // Check if penalty fee is greater than 0
+                        if (penaltyFee > 0) {
+                            int confirmResult = JOptionPane.showConfirmDialog(
+                                    getRootPane(),
+                                    "This student has a penalty fee of: PHP" + penaltyFee + ". Is this paid already or not?",
+                                    "Confirmation",
+                                    JOptionPane.YES_NO_OPTION
+                            );
+
+                            if (confirmResult != JOptionPane.YES_OPTION) {
+                                // User chose not to proceed
+                                JOptionPane.showMessageDialog(getRootPane(), "Return canceled.");
+                                return;
+                            }
+                        } else {
+                            // No penalty fee, proceed without showing the confirmation dialog
                         }
                     }
                         
@@ -1089,6 +1163,7 @@ public class LendingBooksFrame extends JPanel {
 	            txtAccession.setText("");
 	            txtBorrDate.setText("");
 	            txtReturnDate.setText("");
+	            txtPenalty.setText("");
 	            comboBoxStatus.setSelectedIndex(0);
 			}
 }
