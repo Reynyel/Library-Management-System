@@ -279,7 +279,13 @@ public class RegisterStaff extends JPanel {
 						txtFirstName.setText(firstName);
 						txtMiddleName.setText(middleName);
 						txtEmail.setText(email);
-						txtContactNum.setText(contactNum);;										
+						txtContactNum.setText(contactNum);
+						// Set the corresponding radio button
+		                if (employeeType.equals("Faculty")) {
+		                    radioFaculty.setSelected(true);
+		                } else if (employeeType.equals("Staff")) {
+		                    radioStaff.setSelected(true);
+		                }
 					}
 				}
 			}
@@ -548,7 +554,7 @@ private boolean fileExists(String fileName) {
 			Statement stmt = conn.createStatement();
 			System.out.println("Connected");
 							
-			String sql = "UPDATE Employees SET LastName = ?, FirstName = ?, MiddleName = ?, email = ?, ContactNo = ?, UserType = ? WHERE employeeID = ?";
+			String sql = "UPDATE Employees SET LastName = ?, FirstName = ?, MiddleName = ?, email = ?, ContactNo = ?, UserType = ?, employeeID = ? WHERE employeeID = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			
 			int selectedRow = tblEmployees.getSelectedRow();
@@ -557,18 +563,20 @@ private boolean fileExists(String fileName) {
 				
 				//get book_num value from row
 				String employeeID = (String) tblEmployees.getValueAt(selectedRow, 0);
-				
+				String id = txtEmployeeID.getText();
 				pstmt.setString(1, lastName);
 				pstmt.setString(2, firstName);
 				pstmt.setString(3, middleName);
 				pstmt.setString(4, email);
 				pstmt.setString(5, contactNo);
 				pstmt.setString(6, employeeType);
-				pstmt.setString(7, employeeID);
+				pstmt.setString(7, id);
+				pstmt.setString(8, employeeID);
 				
 				int rowsAffected = pstmt.executeUpdate();
 				if(rowsAffected > 0) {
 					JOptionPane.showMessageDialog(getRootPane(), "Updated succesfully");
+					resetFieldsAndSelection();
 					displayData();
 				}
 				

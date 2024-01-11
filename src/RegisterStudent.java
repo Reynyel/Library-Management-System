@@ -187,11 +187,11 @@ public class RegisterStudent extends JPanel {
 		sectionComboBox.setBounds(205, 371, 108, 30);
 		panel.add(sectionComboBox);
 		
-		int[] level = new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
+		String[] level = new String[] {"1","2","3","4","5","6","7","8","9","10","11","12"};
 	
 		try {
-			for(int i = 1; i <= level.length; i++) {
-				gradeComboBox.addItem(i);
+			for(String s : level) {
+				gradeComboBox.addItem(s);
 			}
 			
 		}
@@ -259,13 +259,14 @@ public class RegisterStudent extends JPanel {
 						String section = (String) tblStudents.getValueAt(selectedRow, 5);
 						String userType = (String) tblStudents.getValueAt(selectedRow, 6);
 						
+						
 						//Populate fields
 						txtLastName.setText(lastName);
 						txtFirstName.setText(firstName);
 						txtMiddleName.setText(middleName);
+						txtStudentNum.setText(studentNum);
 						gradeComboBox.setSelectedItem(gradeLevel);
 						sectionComboBox.setSelectedItem(section);
-						txtStudentNum.setText(studentNum);
 							
 					}
 				}
@@ -472,7 +473,7 @@ private boolean fileExists(String fileName) {
 
 	
 	public void updateSectionComboBox() {
-		int selectedGrade = (int) gradeComboBox.getSelectedItem();
+		String selectedGrade = gradeComboBox.getSelectedItem().toString();
 		String[] sectionsForGrade = section.getSectionsForGrade(selectedGrade);
 		
 		sectionComboBox.removeAllItems();
@@ -506,7 +507,7 @@ private boolean fileExists(String fileName) {
 			Statement stmt = conn.createStatement();
 			System.out.println("Connected");
 							
-			String sql = "UPDATE Students SET LastName = ?, FirstName = ?, MiddleName = ?, GradeLevel = ?, Section = ? WHERE StudentNo = ?";
+			String sql = "UPDATE Students SET LastName = ?, FirstName = ?, MiddleName = ?, GradeLevel = ?, Section = ?, StudentNo = ? WHERE StudentNo = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			
 			int selectedRow = tblStudents.getSelectedRow();
@@ -514,7 +515,7 @@ private boolean fileExists(String fileName) {
 			if(selectedRow != -1) {
 				
 				//get book_num value from row
-				String bookNum = (String) tblStudents.getValueAt(selectedRow, 0);
+				String id = (String) tblStudents.getValueAt(selectedRow, 0);
 				
 				pstmt.setString(1, lastName);
 				pstmt.setString(2, firstName);
@@ -522,10 +523,12 @@ private boolean fileExists(String fileName) {
 				pstmt.setString(4, gradeLevel);
 				pstmt.setString(5, section);
 				pstmt.setString(6, studentNo);
+				pstmt.setString(7, id);
 				
 				int rowsAffected = pstmt.executeUpdate();
 				if(rowsAffected > 0) {
 					JOptionPane.showMessageDialog(getRootPane(), "Updated succesfully");
+					resetFieldsAndSelection();
 					displayData();
 				}
 				

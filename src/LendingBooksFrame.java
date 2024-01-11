@@ -1061,7 +1061,16 @@ public class LendingBooksFrame extends JPanel {
                             
                             if (rowsAffectedBook > 0 && rowsAffectedTransaction > 0) {
                             	resetFieldsAndSelection();
-                                JOptionPane.showMessageDialog(getRootPane(), "Book returned successfully.");
+                            	Font customFont = new Font("Arial", Font.PLAIN, 16);
+            	                UIManager.put("OptionPane.messageFont", customFont);
+            	                UIManager.put("OptionPane.buttonFont", customFont);
+            	                
+            	                JOptionPane.showMessageDialog(getRootPane(), "Book returned.",
+            	                        "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            	                // Reset UIManager properties to default
+            	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+            	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
                             } else {
                                 JOptionPane.showMessageDialog(getRootPane(), "Error updating book and transaction status with penalty fee.");
                             }
@@ -1132,8 +1141,16 @@ public class LendingBooksFrame extends JPanel {
                 int rowsAffected = pstmt.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    System.out.println("User unblocked successfully.");
-                    JOptionPane.showMessageDialog(getRootPane(), "The user has been unblocked.");
+                	Font customFont = new Font("Arial", Font.PLAIN, 16);
+	                UIManager.put("OptionPane.messageFont", customFont);
+	                UIManager.put("OptionPane.buttonFont", customFont);
+	                
+	                JOptionPane.showMessageDialog(getRootPane(), "The user has been unblocked.",
+	                        "Success", JOptionPane.INFORMATION_MESSAGE);
+
+	                // Reset UIManager properties to default
+	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
                 } else {
                     System.out.println("Failed to unblock user.");
                 }

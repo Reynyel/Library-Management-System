@@ -1398,6 +1398,12 @@ public class RegisterBooksFrame extends JPanel {
 	
 	
 	public void registerBooks() {
+		String quantityText = txtQuantity.getText().trim();
+        if (quantityText.isEmpty()) {
+            JOptionPane.showMessageDialog(getRootPane(), "Please enter the book details first.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return; // Stop further processing
+        }
+        
 	    try {
 	        // Load the JDBC driver (version 4.0 or later)
 	        try {
@@ -1422,7 +1428,9 @@ public class RegisterBooksFrame extends JPanel {
 	            int quantity = Integer.valueOf(txtQuantity.getText()); // Converts String to Int
 	            DeweyMap deweyMap = new DeweyMap();
 	            double deweyDecimal = deweyMap.getDeweyForSubject(subject);
-
+	            
+	            
+	            
 	            // Create a map to store used book numbers for each title
 	            Map<String, Integer> titleToUsedBookNumber = new HashMap<>();
 
@@ -1496,6 +1504,11 @@ public class RegisterBooksFrame extends JPanel {
 	
 	
 	public void search() {
+		String title1 = txtSrTitle.getText().trim();
+        if (title1.isEmpty()) {
+            JOptionPane.showMessageDialog(getRootPane(), "Please enter the book title first.", "Input Error", JOptionPane.ERROR_MESSAGE);
+            return; // Stop further processing
+        }
 	    try {
 	        // Load the JDBC driver (version 4.0 or later)
 	        try {
