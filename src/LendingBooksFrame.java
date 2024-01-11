@@ -35,6 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -576,8 +577,16 @@ public class LendingBooksFrame extends JPanel {
      		} else if ("Admin".equalsIgnoreCase(userType)) {
      			fw.append("Prepared by: " + "Admin");
      		}
-	        
-	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        Font customFont = new Font("Arial", Font.PLAIN, 16);
+            UIManager.put("OptionPane.messageFont", customFont);
+            UIManager.put("OptionPane.buttonFont", customFont);
+            
+            JOptionPane.showMessageDialog(getRootPane(), "Export success",
+                    "Sucess", JOptionPane.INFORMATION_MESSAGE);
+
+            // Reset UIManager properties to default
+            UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+            UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
 	        
 	        // Flush and close the FileWriter
 	        fw.flush();
@@ -691,7 +700,16 @@ public class LendingBooksFrame extends JPanel {
             
             // Check if a row is selected
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(getRootPane(), "Please select a book from the table for return.");
+            	Font customFont = new Font("Arial", Font.PLAIN, 16);
+                UIManager.put("OptionPane.messageFont", customFont);
+                UIManager.put("OptionPane.buttonFont", customFont);
+                
+                JOptionPane.showMessageDialog(getRootPane(), "Please select a book from the table for return.",
+                        "Note", JOptionPane.INFORMATION_MESSAGE);
+
+                // Reset UIManager properties to default
+                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
                 return;
             }
             
@@ -916,7 +934,24 @@ public class LendingBooksFrame extends JPanel {
             System.out.println("Connected");
             // Get the selected row from the table
             int selectedRow = tblTransac.getSelectedRow();
+            
+            // Check if a row is selected
+            if (selectedRow == -1) {
+            	Font customFont = new Font("Arial", Font.PLAIN, 16);
+                UIManager.put("OptionPane.messageFont", customFont);
+                UIManager.put("OptionPane.buttonFont", customFont);
+                
+                JOptionPane.showMessageDialog(getRootPane(), "Please select a book from the table for return.",
+                        "Note", JOptionPane.INFORMATION_MESSAGE);
 
+                // Reset UIManager properties to default
+                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+              
+                return;
+            }
+
+            
             String status = comboBoxStatus.getSelectedItem().toString();
             String id = tblTransac.getValueAt(selectedRow, 8).toString();
         	String name = tblTransac.getValueAt(selectedRow, 7).toString();
@@ -1000,6 +1035,10 @@ public class LendingBooksFrame extends JPanel {
                             	unblockUser(id, name);
                             	
                             }
+                        }
+                        //IF FACULTY/STAFF
+                        else {
+                        	unblockUser(id, name);
                         }
                             
                         try (PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql);

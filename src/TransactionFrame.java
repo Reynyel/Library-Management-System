@@ -52,6 +52,7 @@ import tablemodel.NonEditTableModel;
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JDateChooser;
@@ -294,6 +295,24 @@ public class TransactionFrame extends JPanel {
 		btnSearchBook.setBackground(new Color(220, 20, 60));
 		btnSearchBook.setBorderPainted(false);
 		btnSearchBook.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
+		
+		JLabel lblImportantFields = new JLabel("- Important fields");
+		lblImportantFields.setForeground(Color.WHITE);
+		lblImportantFields.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblImportantFields.setBounds(835, 17, 133, 30);
+		panel.add(lblImportantFields);
+		
+		JLabel lblStudentNo_1_2 = new JLabel("*");
+		lblStudentNo_1_2.setForeground(Color.RED);
+		lblStudentNo_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2.setBounds(824, 16, 23, 30);
+		panel.add(lblStudentNo_1_2);
+		
+		JLabel lblStudentNo_1_2_1 = new JLabel("*");
+		lblStudentNo_1_2_1.setForeground(Color.RED);
+		lblStudentNo_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2_1.setBounds(90, 11, 23, 30);
+		panel.add(lblStudentNo_1_2_1);
 		btnSearchBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
@@ -454,8 +473,16 @@ public class TransactionFrame extends JPanel {
      		} else if ("Admin".equalsIgnoreCase(userType)) {
      			fw.append("Prepared by: " + "Admin");
      		}
-	        
-	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        Font customFont = new Font("Arial", Font.PLAIN, 16);
+            UIManager.put("OptionPane.messageFont", customFont);
+            UIManager.put("OptionPane.buttonFont", customFont);
+            
+            JOptionPane.showMessageDialog(getRootPane(), "Export success",
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            // Reset UIManager properties to default
+            UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+            UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
 	        
 	        // Flush and close the FileWriter
 	        fw.flush();
@@ -595,17 +622,44 @@ public class TransactionFrame extends JPanel {
             			
             			// Check if the student has already borrowed the same title
             		    if (hasBorrowedSameTitle(userId, tl)) {
-            		        JOptionPane.showMessageDialog(getRootPane(), "This student cannot borrow the same title twice.");
+            		    	Font customFont = new Font("Arial", Font.PLAIN, 16);
+        	                UIManager.put("OptionPane.messageFont", customFont);
+        	                UIManager.put("OptionPane.buttonFont", customFont);
+        	                
+        	                JOptionPane.showMessageDialog(getRootPane(), "Students cannot borrow the same title twice.",
+        	                        "Note", JOptionPane.INFORMATION_MESSAGE);
+
+        	                // Reset UIManager properties to default
+        	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+        	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
             		        return; // Exit the method without proceeding with the transaction
             		    } 
             		    if(borrowedBooksCount >= 3) {
-            		    	JOptionPane.showMessageDialog(getRootPane(), "This student cannot borrow more than 3 books.");
+            		    	Font customFont = new Font("Arial", Font.PLAIN, 16);
+        	                UIManager.put("OptionPane.messageFont", customFont);
+        	                UIManager.put("OptionPane.buttonFont", customFont);
+        	                
+        	                JOptionPane.showMessageDialog(getRootPane(), "This student cannot borrow more than 3 books.",
+        	                        "Note", JOptionPane.INFORMATION_MESSAGE);
+
+        	                // Reset UIManager properties to default
+        	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+        	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
             		        return; // Exit the method without proceeding with the transaction        		    	
             		    }
             		    
             		    //check if the user is currently in the blocklist
             		    if(blockedFromBorrwing(userId)) {
-            				JOptionPane.showMessageDialog(getRootPane(), "This user is currently blocked from borrowing another book!");
+            		    	Font customFont = new Font("Arial", Font.PLAIN, 16);
+        	                UIManager.put("OptionPane.messageFont", customFont);
+        	                UIManager.put("OptionPane.buttonFont", customFont);
+        	                
+        	                JOptionPane.showMessageDialog(getRootPane(), "This user is currently blocked from borrowing another book!",
+        	                        "Note", JOptionPane.INFORMATION_MESSAGE);
+
+        	                // Reset UIManager properties to default
+        	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+        	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
             				return;
             			}
             		    
@@ -636,7 +690,16 @@ public class TransactionFrame extends JPanel {
             			ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
             			
             			if(blockedFromBorrwing(userId)) {
-            				JOptionPane.showMessageDialog(getRootPane(), "This user is currently blocked from borrowing another book!");
+            				Font customFont = new Font("Arial", Font.PLAIN, 16);
+        	                UIManager.put("OptionPane.messageFont", customFont);
+        	                UIManager.put("OptionPane.buttonFont", customFont);
+        	                
+        	                JOptionPane.showMessageDialog(getRootPane(), "This user is currently blocked from borrowing another book!",
+        	                        "Note", JOptionPane.INFORMATION_MESSAGE);
+
+        	                // Reset UIManager properties to default
+        	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+        	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
             				return;
             			}
             			
@@ -651,13 +714,32 @@ public class TransactionFrame extends JPanel {
             			
 
             			else {
-            				JOptionPane.showMessageDialog(getRootPane(), "Name not found!");
+            				Font customFont = new Font("Arial", Font.PLAIN, 16);
+        	                UIManager.put("OptionPane.messageFont", customFont);
+        	                UIManager.put("OptionPane.buttonFont", customFont);
+        	                
+        	                JOptionPane.showMessageDialog(getRootPane(), "Name not found.",
+        	                        "Note", JOptionPane.INFORMATION_MESSAGE);
+
+        	                // Reset UIManager properties to default
+        	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+        	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
             				return;
             			}
             		}
             		
             		
             	} else {
+            		Font customFont = new Font("Arial", Font.PLAIN, 16);
+	                UIManager.put("OptionPane.messageFont", customFont);
+	                UIManager.put("OptionPane.buttonFont", customFont);
+	                
+	                JOptionPane.showMessageDialog(getRootPane(), "Invalid user ID format",
+	                        "Note", JOptionPane.INFORMATION_MESSAGE);
+
+	                // Reset UIManager properties to default
+	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
             		JOptionPane.showMessageDialog(getRootPane(), "Invalid user ID format!");
             	}
             	
@@ -676,7 +758,19 @@ public class TransactionFrame extends JPanel {
                 + "Grade Level: " + gradeLevel + "\n"
                 + "Section: " + section + "\n\n"                
                 + "Proceed with the transaction?";
-        return JOptionPane.showConfirmDialog(getRootPane(), message, "Confirmation", JOptionPane.YES_NO_OPTION);
+        Font customFont = new Font("Arial", Font.PLAIN, 16);
+        UIManager.put("OptionPane.messageFont", customFont);
+        UIManager.put("OptionPane.buttonFont", customFont);
+        
+        
+
+        // Reset UIManager properties to default
+        UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+        UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+        
+        
+        return JOptionPane.showConfirmDialog(getRootPane(), message,
+                "Confirmation", JOptionPane.YES_NO_OPTION);
     }
 
 
@@ -780,12 +874,20 @@ public class TransactionFrame extends JPanel {
             		            if (rs.next()) {
             		            	// Parse the return date from the database
             		                LocalDate returnDate = rs.getDate("return_date").toLocalDate();
-
+            		                
+            		                Font customFont = new Font("Arial", Font.PLAIN, 16);
+            		                UIManager.put("OptionPane.messageFont", customFont);
+            		                UIManager.put("OptionPane.buttonFont", customFont);
+            		                
             		                // Format the return date to "MMM d, yyyy" (e.g., Jan 9, 2023)
             		                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d, yyyy");
             		                String formattedReturnDate = returnDate.format(formatter);
-            		                JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!\n " +
-            		                											"Return Date: " + formattedReturnDate);
+            		                JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!\nReturn Date: " + formattedReturnDate,
+            		                        "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            		                // Reset UIManager properties to default
+            		                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+            		                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
             		            } else {
             		                // Handle the case where the return date couldn't be fetched
             		                JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded! Return Date: N/A");
@@ -927,7 +1029,7 @@ public class TransactionFrame extends JPanel {
 	            System.out.println("Connected");
 
 	            String partialTitle = txtTitle.getText();
-	            String sql = "SELECT * FROM Books WHERE Title LIKE ?";
+	            String sql = "SELECT * FROM Books WHERE Title LIKE ? AND book_status = 'Available'";
 	            PreparedStatement pstmt = conn.prepareStatement(sql);
 	            
 	            // Use % as a wildcard for partial matches

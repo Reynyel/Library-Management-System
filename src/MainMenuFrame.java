@@ -240,6 +240,9 @@ public class MainMenuFrame extends JFrame {
         JMenuItem btnStaff = new JMenuItem("Faculty/Staff");
         JMenuItem btnBlocked = new JMenuItem("Blocked Users");
         
+        btnStudents.setFont(new Font("Verdana", Font.PLAIN, 15));
+        btnStaff.setFont(new Font("Verdana", Font.PLAIN, 15));
+        btnBlocked.setFont(new Font("Verdana", Font.PLAIN, 15));
         popupMenu.add(btnStudents);
         popupMenu.add(btnStaff);
         popupMenu.add(btnBlocked);

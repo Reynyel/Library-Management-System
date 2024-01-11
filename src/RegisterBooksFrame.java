@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +51,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -429,40 +431,43 @@ public class RegisterBooksFrame extends JPanel {
 			
 		JButton btnExport = new JButton("Export to CSV");
 		btnExport.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				 // Show a dialog to get user's choice
-		        String[] exportOptions = {"All Books", "Specific Subject"};
-		        String selectedOption = (String) JOptionPane.showInputDialog(
-		                getRootPane(),
-		                "Choose export type:",
-		                "Export Options",
-		                JOptionPane.QUESTION_MESSAGE,
-		                null,
-		                exportOptions,
-		                exportOptions[0]
-		        );
+			 public void actionPerformed(ActionEvent e) {
+			        // Show a dialog to get user's choice
+			        String[] exportOptions = {"All Books", "Specific Subject"};
+			        String selectedOption = (String) JOptionPane.showInputDialog(
+			                getRootPane(),
+			                "Choose export type:",
+			                "Export Options",
+			                JOptionPane.QUESTION_MESSAGE,
+			                null,
+			                exportOptions,
+			                exportOptions[0]
+			        );
 
-		        // If the user chose "Specific Subject," show another dialog to get the subject
-		        if ("Specific Subject".equals(selectedOption)) {
-		            String selectedSubject = (String) JOptionPane.showInputDialog(
-		                    getRootPane(),
-		                    "Choose subject:",
-		                    "Subject Selection",
-		                    JOptionPane.QUESTION_MESSAGE,
-		                    null,
-		                    getSubjectsArray(),  // You need to implement getSubjectsArray() to provide subject options
-		                    null
-		            );
+			        // Proceed with export only if a valid option is selected
+			        if (selectedOption != null) {
+			            // If the user chose "Specific Subject," show another dialog to get the subject
+			            if ("Specific Subject".equals(selectedOption)) {
+			                String selectedSubject = (String) JOptionPane.showInputDialog(
+			                        getRootPane(),
+			                        "Choose subject:",
+			                        "Subject Selection",
+			                        JOptionPane.QUESTION_MESSAGE,
+			                        null,
+			                        getSubjectsArray(),  // You need to implement getSubjectsArray() to provide subject options
+			                        null
+			                );
 
-		            if (selectedSubject != null) {
-		                export(selectedSubject);
-		            }
-		        } else {
-		            // User chose "All Books"
-		            export();
-		        }								
-			}
-		});
+			                if (selectedSubject != null) {
+			                    export(selectedSubject);
+			                }
+			            } else {
+			                // User chose "All Books"
+			                export();
+			            }
+			        }
+			    }
+			});
 		btnExport.setForeground(Color.WHITE);
 		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnExport.setBorderPainted(false);
@@ -1053,7 +1058,16 @@ public class RegisterBooksFrame extends JPanel {
      		}
 	        
 	        
-	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        Font customFont = new Font("Arial", Font.PLAIN, 16);
+            UIManager.put("OptionPane.messageFont", customFont);
+            UIManager.put("OptionPane.buttonFont", customFont);
+            
+            JOptionPane.showMessageDialog(getRootPane(), "Export success",
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            // Reset UIManager properties to default
+            UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+            UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
 	        
 	        // Flush and close the FileWriter
 	        fw.flush();
@@ -1218,8 +1232,17 @@ public class RegisterBooksFrame extends JPanel {
      			fw.append("Prepared by: " + "Admin");
      		}
 	        
-	        
-	        JOptionPane.showMessageDialog(getRootPane(), "Export success");
+	        Font customFont = new Font("Arial", Font.PLAIN, 16);
+            UIManager.put("OptionPane.messageFont", customFont);
+            UIManager.put("OptionPane.buttonFont", customFont);
+            
+            JOptionPane.showMessageDialog(getRootPane(), "Export success",
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            // Reset UIManager properties to default
+            UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+            UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+
 	        
 	        // Flush and close the FileWriter
 	        fw.flush();
@@ -1276,7 +1299,16 @@ public class RegisterBooksFrame extends JPanel {
 				
 				int rowsAffected = pstmt.executeUpdate();
 				if(rowsAffected > 0) {
-					JOptionPane.showMessageDialog(getRootPane(), "Updated succesfully");
+					Font customFont = new Font("Arial", Font.PLAIN, 16);
+	                UIManager.put("OptionPane.messageFont", customFont);
+	                UIManager.put("OptionPane.buttonFont", customFont);
+	                
+	                JOptionPane.showMessageDialog(getRootPane(), "Updated succesfully",
+	                        "Success", JOptionPane.INFORMATION_MESSAGE);
+
+	                // Reset UIManager properties to default
+	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
 					displayLatestData();
 				}
 				
@@ -1439,8 +1471,16 @@ public class RegisterBooksFrame extends JPanel {
 	                    }
 	                }
 	            }
+	            Font customFont = new Font("Arial", Font.PLAIN, 16);
+                UIManager.put("OptionPane.messageFont", customFont);
+                UIManager.put("OptionPane.buttonFont", customFont);
+                
+                JOptionPane.showMessageDialog(getRootPane(), "Book Registered",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
 
-	            JOptionPane.showMessageDialog(getRootPane(), "Book Registered");
+                // Reset UIManager properties to default
+                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
 	            // Fetch and display the latest data
 	            displayLatestData();
 
