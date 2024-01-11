@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.JLabel;
@@ -27,6 +28,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,10 +45,11 @@ import javax.swing.table.DefaultTableModel;
 import color.AlternateColorRender;
 import tablemodel.NonEditTableModel;
 import javax.swing.ImageIcon;
+import GradientBackground.gradientBackground;
+import com.toedter.calendar.JCalendar;
+import javax.swing.JScrollPane;
 
 public class Dashboard extends JPanel {
-
-	private JPanel panel;
 	
 	private StudentSections section;
 	
@@ -80,112 +86,399 @@ public class Dashboard extends JPanel {
 	 * Create the frame.
 	 */
 	public Dashboard() {
-		setPreferredSize(new Dimension(1256, 686));
+		setPreferredSize(new Dimension(1256, 815));
 	    setLayout(null);
 		setBounds(100, 100, 1687, 743);
 		
-		panel = new JPanel();
-        panel.setBounds(0, 0, 1256, 686);
-        add(panel);
-        panel.setLayout(null);
+		gradientBackground contentPanel = new gradientBackground();
+		contentPanel.setLayout(null);
+		contentPanel.setBorder(null);
+		contentPanel.setBounds(0, 0, 1255, 756);
+		add(contentPanel);
 		
-		JLabel lblNewLabel_1 = new JLabel("Overdue Book Loans");
-		lblNewLabel_1.setForeground(new Color(255, 255, 255));
-		lblNewLabel_1.setFont(new Font("Orbitron", Font.PLAIN, 25));
-		lblNewLabel_1.setBounds(10, 370, 366, 40);
-		panel.add(lblNewLabel_1);
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(798, 260, 444, 125);
+		contentPanel.add(scrollPane_3);
 		
-		table = new JTable();
-		table.setBackground(new Color(255, 255, 255));
-		table.setBounds(10, 409, 783, 266);
-		panel.add(table);
-		
-		JLabel lblNewLabel_1_1 = new JLabel("Borrowed Books");
-		lblNewLabel_1_1.setForeground(Color.WHITE);
-		lblNewLabel_1_1.setFont(new Font("Orbitron", Font.PLAIN, 25));
-		lblNewLabel_1_1.setBounds(969, 11, 247, 40);
-		panel.add(lblNewLabel_1_1);
-		
-		table_1 = new JTable();
-		table_1.setBackground(Color.WHITE);
-		table_1.setBounds(969, 50, 277, 312);
-		panel.add(table_1);
-		
-		lblNewLabel_1_2 = new JLabel("Book Circulation History");
-		lblNewLabel_1_2.setForeground(Color.WHITE);
-		lblNewLabel_1_2.setFont(new Font("Orbitron", Font.PLAIN, 20));
-		lblNewLabel_1_2.setBounds(803, 373, 382, 40);
-		panel.add(lblNewLabel_1_2);
-		
-		table_2 = new JTable();
-		table_2.setBackground(Color.WHITE);
-		table_2.setBounds(803, 409, 443, 266);
-		panel.add(table_2);
-		
-		panel_1 = new JPanel();
-		panel_1.setBounds(38, 50, 208, 266);
-		panel.add(panel_1);
-		panel_1.setLayout(null);
-		
-		btnNewButton_3 = new JButton("");
-		btnNewButton_3.setBounds(0, 0, 208, 266);
-		panel_1.add(btnNewButton_3);
-		
-		panel_2 = new JPanel();
-		panel_2.setBounds(256, 50, 208, 266);
-		panel.add(panel_2);
-		panel_2.setLayout(null);
-		
-		btnNewButton_4 = new JButton("");
-		btnNewButton_4.setBackground(new Color(255, 255, 255));
-		btnNewButton_4.setBounds(0, 0, 208, 266);
-		panel_2.add(btnNewButton_4);
-		
-		panel_3 = new JPanel();
-		panel_3.setBounds(474, 50, 208, 266);
-		panel.add(panel_3);
-		panel_3.setLayout(null);
-		
-		btnNewButton_5 = new JButton("");
-		btnNewButton_5.setBackground(new Color(255, 255, 255));
-		btnNewButton_5.setBounds(0, 0, 208, 266);
-		panel_3.add(btnNewButton_5);
-		
-		panel_4 = new JPanel();
-		panel_4.setLayout(null);
-		panel_4.setBounds(692, 50, 208, 266);
-		panel.add(panel_4);
-		
-		btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		tblBorrowed = new JTable();
+		tblBorrowed.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+			},
+			new String[] {
+				"Title", "Return Date"
 			}
-		});
-		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.setBounds(0, 0, 208, 266);
-		panel_4.add(btnNewButton);
+		));
+		scrollPane_3.setViewportView(tblBorrowed);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setBackground(new Color(0, 0, 0));
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\pc\\Library-Management-System\\res\\Untitled design.png"));
-		lblNewLabel.setBounds(0, 0, 1256, 686);
-		panel.add(lblNewLabel);
+		JCalendar calendar = new JCalendar();
+		calendar.setBounds(992, 26, 250, 211);
+		contentPanel.add(calendar);
+		
+		JLabel label = new JLabel("Overdue Books");
+		label.setForeground(Color.WHITE);
+		label.setFont(new Font("Dialog", Font.PLAIN, 22));
+		label.setBounds(10, 386, 164, 39);
+		contentPanel.add(label);
+		
+		JLabel label_1 = new JLabel("Book Circulation History");
+		label_1.setForeground(Color.WHITE);
+		label_1.setFont(new Font("Dialog", Font.PLAIN, 22));
+		label_1.setBounds(801, 391, 275, 29);
+		contentPanel.add(label_1);
+		
+		JLabel label_1_1 = new JLabel("Borrowed Books");
+		label_1_1.setForeground(Color.WHITE);
+		label_1_1.setFont(new Font("Dialog", Font.PLAIN, 22));
+		label_1_1.setBounds(801, 222, 275, 39);
+		contentPanel.add(label_1_1);
+		
+		String borrowedCount = countBorrowedBooks();
+        String borrowedCountOD = countOverdue();
+        String countBooks = countBooks();
+        String countAvail = countBooksAvailable();
+        
+		JLabel numBorr = new JLabel("0");
+		numBorr.setForeground(Color.WHITE);
+		numBorr.setFont(new Font("Dialog", Font.PLAIN, 22));
+		numBorr.setBounds(77, 103, 164, 22);
+		numBorr.setText(borrowedCount);
+		contentPanel.add(numBorr);
+		
+		JLabel numOD = new JLabel("0");
+		numOD.setForeground(Color.WHITE);
+		numOD.setFont(new Font("Dialog", Font.PLAIN, 22));
+		numOD.setBounds(322, 103, 164, 22);
+		numOD.setText(borrowedCountOD);
+		contentPanel.add(numOD);
+		
+		JLabel numBooks = new JLabel("0");
+		numBooks.setForeground(Color.WHITE);
+		numBooks.setFont(new Font("Dialog", Font.PLAIN, 22));
+		numBooks.setBounds(558, 103, 164, 22);
+		numBooks.setText(countBooks);
+		contentPanel.add(numBooks);
+		
+		JLabel label_2_2 = new JLabel("Borrowed");
+		label_2_2.setForeground(Color.WHITE);
+		label_2_2.setFont(new Font("Dialog", Font.PLAIN, 13));
+		label_2_2.setBounds(77, 71, 164, 22);
+		contentPanel.add(label_2_2);
+		
+		JLabel label_2_2_1 = new JLabel("Overdue");
+		label_2_2_1.setForeground(Color.WHITE);
+		label_2_2_1.setFont(new Font("Dialog", Font.PLAIN, 13));
+		label_2_2_1.setBounds(322, 71, 164, 22);
+		contentPanel.add(label_2_2_1);
+		
+		JLabel label_2_2_1_1 = new JLabel("Registered Books");
+		label_2_2_1_1.setForeground(Color.WHITE);
+		label_2_2_1_1.setFont(new Font("Dialog", Font.PLAIN, 13));
+		label_2_2_1_1.setBounds(558, 71, 164, 22);
+		contentPanel.add(label_2_2_1_1);
+		
+		JLabel label_2_2_1_1_1 = new JLabel("Calendar");
+		label_2_2_1_1_1.setForeground(Color.WHITE);
+		label_2_2_1_1_1.setBounds(992, 11, 84, 14);
+		contentPanel.add(label_2_2_1_1_1);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(10, 424, 756, 321);
+		contentPanel.add(scrollPane_2);
+		
+		tblOverdue = new JTable();
+		tblOverdue.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null},
+			},
+			new String[] {
+				"ID", "Member", "Title", "Accession", "Overdue", "Return Date"
+			}
+		));
+		scrollPane_2.setViewportView(tblOverdue);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(801, 424, 444, 321);
+		contentPanel.add(scrollPane);
+		
+		tblReturned = new JTable();
+		tblReturned.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null},
+			},
+			new String[] {
+				"Title", "Date Returned", "Status"
+			}
+		));
+		scrollPane.setViewportView(tblReturned);
+		
+		
+		setupDashboardView();
 	}
 	
 	Connection conn;
 	PreparedStatement pst;
 	ResultSet rs;
-	private JTable table;
-	private JTable table_1;
-	private JLabel lblNewLabel_1_2;
-	private JTable table_2;
-	private JPanel panel_1;
-	private JPanel panel_2;
-	private JPanel panel_3;
-	private JButton btnNewButton_3;
-	private JButton btnNewButton_4;
-	private JButton btnNewButton_5;
-	private JPanel panel_4;
-	private JButton btnNewButton;
+	private JTable tblBorrowed;
+	private JTable tblOverdue;
+	private JTable tblReturned;
 	
+	private void setupDashboardView() {		    	    
+		// Call the methods to display the relevant data
+	    displayOverdue();
+	    displayReturned();
+	    displayBorrowed();
+	    	 
+	}
+	
+	
+	public void displayOverdue() {
+		try {
+	        Class.forName("com.mysql.jdbc.Driver");
+	    } catch (ClassNotFoundException e1) {
+	        e1.printStackTrace();
+	    }
+
+	    try {
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	        Statement stmt = conn.createStatement();
+	        System.out.println("Connected");
+
+	        String sql = "SELECT * FROM Transactions WHERE user_type = 'Student' AND return_date < CURDATE()";
+	        ResultSet rs = stmt.executeQuery(sql);
+
+	        DefaultTableModel tblModel = (DefaultTableModel) tblOverdue.getModel();
+
+	        // Clear existing rows in the table
+	        tblModel.setRowCount(0);
+
+	        while (rs.next()) {
+	            String id = String.valueOf(rs.getInt("user_id"));
+	            String title = rs.getString("Title");
+	            String acc = rs.getString("AccessionNum");
+	            String name = rs.getString("Borrower");
+	            String returnDateStr = rs.getString("return_date");
+
+	            // Convert the return date string to LocalDate
+	            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	            LocalDate returnDate = LocalDate.parse(returnDateStr, formatter);
+
+	            // Calculate the days between today and the return date
+	            LocalDate today = LocalDate.now();
+	            long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(today, returnDate);
+
+	            // Display the days as a string in the overdue column
+	            String overdue = (daysBetween < 0) ?  Math.abs(daysBetween) + " days" : "On time";
+
+	            // array to store data into jtable
+	            String tbData[] = {id, name, title, acc, overdue, returnDateStr};
+
+	            // add string array data to jtable
+	            tblModel.addRow(tbData); 
+	            
+	        }
+
+	    } catch (SQLException e1) {
+	        e1.printStackTrace();
+	    }
+	}
+	
+	public void displayReturned() {
+		try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        Class.forName("com.mysql.jdbc.Driver");
+
+	        // Establish a connection
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	        System.out.println("Connected");
+	        
+	        // Fetch data from Transactions table
+	        String selectTransactionsSql = "SELECT * FROM Returned WHERE date_returned >= CURDATE() - INTERVAL 8 DAY ORDER BY date_returned DESC";
+
+	        try (PreparedStatement stmtTransacSql = conn.prepareStatement(selectTransactionsSql)) {
+	            ResultSet rs = stmtTransacSql.executeQuery();
+
+	            DefaultTableModel tblModel = (DefaultTableModel) tblReturned.getModel();
+	            
+	            // Clear existing rows in the table
+		        tblModel.setRowCount(0);
+	            // Fetch and add new data
+	            while (rs.next()) {
+	                String title = rs.getString("title");
+	                String status = rs.getString("status");
+	                String dateReturned = rs.getString("date_returned");
+
+
+	                // array to store data into JTable
+	                String tbData[] = {title, dateReturned, status};
+
+	                // add string array data to JTable
+	                tblModel.addRow(tbData);	                
+
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }		
+	}
+	
+	public void displayBorrowed() {
+		
+		try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        Class.forName("com.mysql.jdbc.Driver");
+
+	        // Establish a connection
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	        System.out.println("Connected");
+
+	        // Fetch data from Transactions table
+	        String selectTransactionsSql = "SELECT * FROM Transactions";
+
+	        try (PreparedStatement stmtTransacSql = conn.prepareStatement(selectTransactionsSql)) {
+	            ResultSet rs = stmtTransacSql.executeQuery();
+
+	            DefaultTableModel tblModel = (DefaultTableModel) tblBorrowed.getModel();
+	            
+	            // Clear existing rows in the table
+		        tblModel.setRowCount(0);
+	            // Fetch and add new data
+	            while (rs.next()) {
+	                String title = rs.getString("Title");
+	                String returnDate = rs.getString("return_date");
+
+
+	                // array to store data into JTable
+	                String tbData[] = {title, returnDate};
+
+	                // add string array data to JTable
+	                tblModel.addRow(tbData);	                
+
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+		
+	}
+	
+	public String countBooks() {
+	    String countString = "0";
+
+	    try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        Class.forName("com.mysql.jdbc.Driver");
+
+	        // Establish a connection
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	        System.out.println("Connected");
+
+	        // Count the number of borrowed books
+	        String countBooksSql = "SELECT COUNT(*) AS borrowedCount FROM Books";
+
+	        try (PreparedStatement stmtCountBooksSql = conn.prepareStatement(countBooksSql)) {
+	            ResultSet rs = stmtCountBooksSql.executeQuery();
+
+	            // Fetch the count
+	            if (rs.next()) {
+	                int count = rs.getInt("borrowedCount");
+	                countString = Integer.toString(count);
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return countString;
+	}
+	
+	public String countBooksAvailable() {
+	    String countString = "0";
+
+	    try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        Class.forName("com.mysql.jdbc.Driver");
+
+	        // Establish a connection
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	        System.out.println("Connected");
+
+	        // Count the number of borrowed books
+	        String countBooksSql = "SELECT COUNT(*) AS borrowedCount FROM Books WHERE book_status = 'Available'";
+
+	        try (PreparedStatement stmtCountBooksSql = conn.prepareStatement(countBooksSql)) {
+	            ResultSet rs = stmtCountBooksSql.executeQuery();
+
+	            // Fetch the count
+	            if (rs.next()) {
+	                int count = rs.getInt("borrowedCount");
+	                countString = Integer.toString(count);
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return countString;
+	}
+	
+	public String countBorrowedBooks() {
+	    String countString = "0";
+
+	    try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        Class.forName("com.mysql.jdbc.Driver");
+
+	        // Establish a connection
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	        System.out.println("Connected");
+
+	        // Count the number of borrowed books
+	        String countBooksSql = "SELECT COUNT(*) AS borrowedCount FROM Transactions";
+
+	        try (PreparedStatement stmtCountBooksSql = conn.prepareStatement(countBooksSql)) {
+	            ResultSet rs = stmtCountBooksSql.executeQuery();
+
+	            // Fetch the count
+	            if (rs.next()) {
+	                int count = rs.getInt("borrowedCount");
+	                countString = Integer.toString(count);
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return countString;
+	}
+	
+	public String countOverdue() {
+	    String countString = "0";
+
+	    try {
+	        // Load the JDBC driver (version 4.0 or later)
+	        Class.forName("com.mysql.jdbc.Driver");
+
+	        // Establish a connection
+	        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/BooksDB", "root", "ranielle25");
+	        System.out.println("Connected");
+
+	        // Count the number of borrowed books
+	        String countBooksSql = "SELECT COUNT(*) AS borrowedCount FROM Transactions WHERE user_type = 'Student' AND return_date < CURDATE()";
+
+	        try (PreparedStatement stmtCountBooksSql = conn.prepareStatement(countBooksSql)) {
+	            ResultSet rs = stmtCountBooksSql.executeQuery();
+
+	            // Fetch the count
+	            if (rs.next()) {
+	                int count = rs.getInt("borrowedCount");
+	                countString = Integer.toString(count);
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return countString;
+	}
 }

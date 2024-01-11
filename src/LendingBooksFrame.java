@@ -764,7 +764,7 @@ public class LendingBooksFrame extends JPanel {
                     String transacId = tblTransac.getValueAt(selectedRow, 0).toString();
                     
                     String userType = getUserType(transacId);
-
+                    
                     
                     // Update the book and transaction status
                     String updateBookStatusSql = "UPDATE Books SET book_status = 'Available' WHERE Book_Num = (SELECT BooNum FROM Transactions WHERE transaction_id = ?)";
@@ -782,7 +782,23 @@ public class LendingBooksFrame extends JPanel {
                                     "Confirmation",
                                     JOptionPane.YES_NO_OPTION
                             );
-
+                            
+                            if (confirmResult == JOptionPane.YES_OPTION) {
+                                // User clicked "Yes"
+                                String orCode = JOptionPane.showInputDialog(getRootPane(), "Please enter the O.R. code:");
+                                
+                                // Check if the user entered a valid O.R. code
+                                if (orCode != null && !orCode.isEmpty()) {
+                                	String id = tblTransac.getValueAt(selectedRow, 8).toString();
+                                	String name = tblTransac.getValueAt(selectedRow, 7).toString();
+                                    // Record the O.R. code into the database table of paid users
+                                    recordPaidUser(orCode, id, name);
+                                } else {
+                                    // Handle the case where the user canceled the input or entered an empty O.R. code
+                                    JOptionPane.showMessageDialog(getRootPane(), "Invalid or empty O.R. code. Payment not recorded.");
+                                }
+                            }
+                            
                             if (confirmResult != JOptionPane.YES_OPTION) {
                                 // User chose not to proceed
                                 JOptionPane.showMessageDialog(getRootPane(), "Return canceled.");
@@ -859,7 +875,29 @@ public class LendingBooksFrame extends JPanel {
         }
     	    	
     }
+    
+    // Method to record a paid user with the provided O.R. code
+    private void recordPaidUser(String orCode, String id, String name) {
+        String insertSql = "INSERT INTO Paid (or_code, borrower_name, user_id) VALUES (?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+            // Set parameters for the prepared statement
+            pstmt.setString(1, orCode);
+            pstmt.setString(2, id);
+            pstmt.setString(3, id);
 
+            // Execute the update
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Payment recorded successfully.");
+            } else {
+                System.out.println("Failed to record payment.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the SQL exception
+        }
+    }
+    
     
 	public void search() {
 		try {
