@@ -623,7 +623,7 @@ private boolean fileExists(String fileName) {
 	            String lastName = txtLastName.getText();
 	            String firstName = txtFirstName.getText();
 	            String middleName = txtMiddleName.getText();
-	            int level = (int) gradeComboBox.getSelectedItem();
+	            String level = gradeComboBox.getSelectedItem().toString();
 	            String section = sectionComboBox.getSelectedItem().toString();
 
 	            // Check if the student with the same ID already exists
@@ -634,8 +634,7 @@ private boolean fileExists(String fileName) {
 
 	                if (existingStudentResult.next()) {
 	                    // Student with the same ID already exists, show an error message
-	                	resetFieldsAndSelection();
-	                    JOptionPane.showMessageDialog(getRootPane(), "Student with the same ID already exists.", "Error", JOptionPane.ERROR_MESSAGE);
+	                    JOptionPane.showMessageDialog(getRootPane(), "Student with ID " + studentNum + " is already registered.", "Error", JOptionPane.ERROR_MESSAGE);
 	                } else {
 	                    // Student with the same ID doesn't exist, proceed with registration
 
@@ -649,7 +648,7 @@ private boolean fileExists(String fileName) {
 	                        insertStudentStmt.setString(2, lastName);
 	                        insertStudentStmt.setString(3, firstName);
 	                        insertStudentStmt.setString(4, middleName);
-	                        insertStudentStmt.setInt(5, level);
+	                        insertStudentStmt.setString(5, level);
 	                        insertStudentStmt.setString(6, section);
 	                        insertStudentStmt.setString(7, "Student");
 
@@ -669,6 +668,7 @@ private boolean fileExists(String fileName) {
 	        e1.printStackTrace();
 	    }
 	}
+
 	//reset text fields and radio button selection
 		private void resetFieldsAndSelection() {
 			txtStudentNum.setText("");

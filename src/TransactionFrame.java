@@ -740,7 +740,6 @@ public class TransactionFrame extends JPanel {
 	                // Reset UIManager properties to default
 	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
 	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
-            		JOptionPane.showMessageDialog(getRootPane(), "Invalid user ID format!");
             	}
             	
             }                                             

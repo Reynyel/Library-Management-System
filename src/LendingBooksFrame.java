@@ -978,10 +978,7 @@ public class LendingBooksFrame extends JPanel {
                         String transacId = tblTransac.getValueAt(selectedRow, 0).toString();
                         
                         String userType = getUserType(transacId);
-                        
-                        
-                        
-                        
+                                                                                           
                         // Update the book and transaction status
                         String updateBookStatusSql = "UPDATE Books SET book_status = 'Available' WHERE Book_Num = (SELECT BooNum FROM Transactions WHERE transaction_id = ?)";
                         String updateTransactionStatusSql = "UPDATE Transactions SET BookStatus = 'Returned' WHERE transaction_id = ?";
@@ -1016,9 +1013,8 @@ public class LendingBooksFrame extends JPanel {
                                         JOptionPane.showMessageDialog(getRootPane(), "Invalid or empty O.R. code. Payment not recorded.");
                                     }
                                 }
-     
-                                
-                                if (confirmResult != JOptionPane.YES_OPTION) {
+                                     
+                                else if (confirmResult1 != JOptionPane.YES_OPTION) {
                                     // User chose not to proceed
                                     JOptionPane.showMessageDialog(getRootPane(), "Return canceled.\n" + "This user won't be able to borrow new titles\n" + "until they have settled their fee.");
                                     addToBlocklist(transacId);
@@ -1126,6 +1122,28 @@ public class LendingBooksFrame extends JPanel {
         }
     	    	
     }
+    
+    private void addToBlocklist(String userId, String borrowerName) {
+        String insertBlockedUserSql = "INSERT INTO Blocked (user_id, borrower_name) VALUES (?, ?)";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(insertBlockedUserSql)) {
+            pstmt.setString(1, userId);
+            pstmt.setString(2, borrowerName);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                // Successfully added to blocklist
+                System.out.println("User added to blocklist successfully.");
+            } else {
+                System.out.println("Failed to add user to blocklist.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle the SQL exception
+        }
+    }
+    
     // Method to record a blocked user
     private void unblockUser(String id, String name) {
     	// Check if the user exists on the blocklist

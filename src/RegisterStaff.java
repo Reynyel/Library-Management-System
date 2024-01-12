@@ -45,6 +45,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 
@@ -682,8 +683,17 @@ private boolean fileExists(String fileName) {
 
 	            if (resultSet.next()) {
 	                // User ID already exists, show an error message
-	            	resetFieldsAndSelection();
-	                JOptionPane.showMessageDialog(getRootPane(), "Employee with this ID already exists.");
+	            	Font customFont = new Font("Arial", Font.PLAIN, 16);
+	                UIManager.put("OptionPane.messageFont", customFont);
+	                UIManager.put("OptionPane.buttonFont", customFont);
+	                
+	                JOptionPane.showMessageDialog(getRootPane(), "Employee with this ID already exists.",
+	                        "Note", JOptionPane.ERROR_MESSAGE);
+
+	                // Reset UIManager properties to default
+	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+	                resetFieldsAndSelection();
 	                return;
 	            }
 
@@ -696,8 +706,17 @@ private boolean fileExists(String fileName) {
 
 	                // Execute query
 	                stmt.executeUpdate(sql);
+	                Font customFont = new Font("Arial", Font.PLAIN, 16);
+	                UIManager.put("OptionPane.messageFont", customFont);
+	                UIManager.put("OptionPane.buttonFont", customFont);
+	                
+	                JOptionPane.showMessageDialog(getRootPane(), "Employee Registered",
+	                        "Success", JOptionPane.INFORMATION_MESSAGE);
+
+	                // Reset UIManager properties to default
+	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
 	                resetFieldsAndSelection();
-	                JOptionPane.showMessageDialog(getRootPane(), "Employee Registered");
 	            }
 
 	            // If radioFaculty is ticked, set the employee type to 'Staff'
