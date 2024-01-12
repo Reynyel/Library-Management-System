@@ -66,8 +66,8 @@ public class Logs extends JPanel {
 			}   		
 			
 			try {
-			
-				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/logsDB", "root", "ranielle25");
+				
+				conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/booksDB", "root", "ranielle25");
 				Statement stmt = conn.createStatement();
 				System.out.println("Connected");
 								

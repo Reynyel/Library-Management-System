@@ -118,7 +118,7 @@ public class LogInFrame extends JFrame {
 			            break;
 			        }
 			    }
-
+			    
 			    if (isValidUser) {
 			        // Reset login attempts upon successful login
 			        resetLoginAttempts();
