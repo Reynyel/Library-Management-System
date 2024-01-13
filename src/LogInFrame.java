@@ -101,7 +101,7 @@ public class LogInFrame extends JFrame {
 			 * disposing the LogInFrame*/
 			public void actionPerformed(ActionEvent e) {
 				if (isLoginCooldown()) {
-			        JOptionPane.showMessageDialog(getRootPane(), "Too many failed login attempts. Please try again later.");
+			        JOptionPane.showMessageDialog(getRootPane(), "Too many failed login attempts. Please try again later");
 			        return;
 			    }
 
@@ -132,7 +132,8 @@ public class LogInFrame extends JFrame {
 			        // Check if the user has exceeded the maximum login attempts
 			        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
 			            lastLoginAttemptTime = System.currentTimeMillis();
-			            JOptionPane.showMessageDialog(getRootPane(), "Too many failed login attempts. Please try again after 5 minutes.");
+			            JOptionPane.showMessageDialog(getRootPane(), "Too many failed login attempts. Exiting application.");
+		                System.exit(0);  // Terminate the application
 			        } else {
 			            JOptionPane.showMessageDialog(getRootPane(), "Invalid username or password. \n" + " Log in attempt: " + loginAttempts +"/5");
 			        }
