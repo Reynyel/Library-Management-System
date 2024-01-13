@@ -328,6 +328,7 @@ public class LendingBooksFrame extends JPanel {
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				export();
+				exportPaid();
 			}
 		});
 		btnExport.setForeground(Color.WHITE);
@@ -598,6 +599,131 @@ public class LendingBooksFrame extends JPanel {
 	        // Write the total number of books registered
 	        fw.append('\n');
 	        fw.append("Total Returned Books Recorded: " + totalBooks);
+	        fw.append('\n');
+	        String userType = MainMenuFrame.getUser();
+	        
+	        if ("Librarian".equalsIgnoreCase(userType)) {
+	        	fw.append("Prepared by: " + "Librarian");
+     		} else if ("Admin".equalsIgnoreCase(userType)) {
+     			fw.append("Prepared by: " + "Admin");
+     		}
+	        Font customFont = new Font("Arial", Font.PLAIN, 16);
+            UIManager.put("OptionPane.messageFont", customFont);
+            UIManager.put("OptionPane.buttonFont", customFont);
+            
+            JOptionPane.showMessageDialog(getRootPane(), "Export success",
+                    "Sucess", JOptionPane.INFORMATION_MESSAGE);
+
+            // Reset UIManager properties to default
+            UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+            UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+	        
+	        // Flush and close the FileWriter
+	        fw.flush();
+	        fw.close();
+	    } catch (IOException | SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void exportPaid() {
+	    // Create a format for the date in the file name
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+	    // Get the current date and format it
+	    String currentDate = dateFormat.format(new Date());
+
+	    // Construct the base file name with the current date
+	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\paid_export_" + currentDate + ".csv";
+
+	    // Initialize the file name
+	    String fileName = baseFileName;
+
+	    // Check if the file already exists
+	    int fileIndex = 1;
+	    while (fileExists(fileName)) {
+	        // Append a suffix to make the file name unique
+	        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
+	        fileIndex++;
+	    }
+
+	    try {
+	        FileWriter fw = new FileWriter(fileName);
+	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
+			String formattedAcadYear = ya.format( FormatStyle.FULL);
+			fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("List of All Confirmed Payments ");
+	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Prepared On: " + currentDate);
+	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Academic Year: " + formattedAcadYear);
+	        fw.append("\n");
+	        fw.append("\n");
+	        // Add headers to the CSV file
+	        fw.append("OR Code");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Borrower Name");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("User ID");
+	        fw.append('\n');
+
+	        // Fetch data from the database
+	        pst = conn.prepareStatement("SELECT * FROM Paid ");
+	        rs = pst.executeQuery();
+
+	        int totalBooks = 0;
+
+	        while (rs.next()) {
+	        	fw.append(rs.getString(1));  //the column index for ID
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(2));  //the column index for Last
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(3));  //the column index for First
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(',');           
+	            fw.append('\n');
+
+	            totalBooks++;
+	        }
+
+	        // Write the total number of books registered
+	        fw.append('\n');
+	        fw.append("Total Confirmed Payments: " + totalBooks);
 	        fw.append('\n');
 	        String userType = MainMenuFrame.getUser();
 	        
