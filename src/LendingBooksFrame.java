@@ -392,6 +392,12 @@ public class LendingBooksFrame extends JPanel {
 			Statement stmt = conn.createStatement();
 			System.out.println("Connected");
 							
+			 // Validate return date
+	        if (!isValidReturnDate(returnDate)) {
+	            JOptionPane.showMessageDialog(getRootPane(), "Invalid return date. Please select a date on or after the current date.");
+	            return;
+	        }
+	        
 			String sql = "UPDATE Transactions SET return_date = ? WHERE transaction_id= ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			
@@ -426,6 +432,29 @@ public class LendingBooksFrame extends JPanel {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private boolean isValidReturnDate(String returnDate) {
+	    try {
+	        // Parse the return date string into a Date object
+	        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	        Date parsedReturnDate = dateFormat.parse(returnDate);
+
+	        // Get the current date
+	        Date currentDate = new Date();
+
+	        // Compare return date with the current date
+	        if (parsedReturnDate.before(currentDate)) {
+	            return false; // Return date is before the current date
+	        }
+
+	        // Return date is valid
+	        return true;
+
+	    } catch (ParseException e) {
+	        e.printStackTrace();
+	        return false; // Error parsing the date
+	    }
 	}
 	public void export() {
 	    // Create a format for the date in the file name
@@ -1018,7 +1047,7 @@ public class LendingBooksFrame extends JPanel {
                                     // User chose not to proceed
                                     JOptionPane.showMessageDialog(getRootPane(), "Return canceled.\n" + "This user won't be able to borrow new titles\n" + "until they have settled their fee.");
                                     addToBlocklist(transacId);
-
+                                    
                                     return;
                                 }
                             } else {
@@ -1028,13 +1057,25 @@ public class LendingBooksFrame extends JPanel {
                             	/*Will check if the user is on the blocklist or not
                             	 * if the user is on the blocklist and the book has been replaced or fee paid
                             	 * unblock the user*/
-                            	unblockUser(id, name);
+                            	if (hasPendingIssues(id)) {
+                                    // User still has unresolved issues, block them
+                                    addToBlocklist(id, name);
+                                } else if(!hasPendingIssues(id)){
+                                    // No pending issues, unblock the user
+                                    unblockUser(id, name);
+                                }
                             	
                             }
                         }
                         //IF FACULTY/STAFF
                         else {
-                        	unblockUser(id, name);
+                        	if (hasPendingIssues(id)) {
+                                // User still has unresolved issues, block them
+                                addToBlocklist(id, name);
+                            } else if(!hasPendingIssues(id)){
+                                // No pending issues, unblock the user
+                                unblockUser(id, name);
+                            }
                         }
                             
                         try (PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql);
@@ -1123,24 +1164,49 @@ public class LendingBooksFrame extends JPanel {
     	    	
     }
     
-    private void addToBlocklist(String userId, String borrowerName) {
-        String insertBlockedUserSql = "INSERT INTO Blocked (user_id, borrower_name) VALUES (?, ?)";
+ // Method to check if the user has any pending issues (damaged or lost books)
+    private boolean hasPendingIssues(String userId) {
+        String selectPendingIssuesSql = "SELECT * FROM Transactions WHERE user_id = ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(insertBlockedUserSql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(selectPendingIssuesSql)) {
             pstmt.setString(1, userId);
-            pstmt.setString(2, borrowerName);
 
-            int rowsAffected = pstmt.executeUpdate();
-
-            if (rowsAffected > 0) {
-                // Successfully added to blocklist
-                System.out.println("User added to blocklist successfully.");
-            } else {
-                System.out.println("Failed to add user to blocklist.");
+            try (ResultSet rs = pstmt.executeQuery()) {
+            	if(rs.next()) {
+            		return rs.next(); // Returns true if there are pending issues         		
+            	}
+            	else {
+            		return false;
+            	}
+            	
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Handle the SQL exception
+            return false; // Handle the SQL exception
+        }
+    }
+    
+    private void addToBlocklist(String userId, String borrowerName) {
+
+        // Check if the user is not already on the blocklist
+        if (!isUserBlocked(userId, borrowerName)) {
+            String insertBlockedUserSql = "INSERT INTO Blocked (user_id, borrower_name) VALUES (?, ?)";
+
+            try (PreparedStatement pstmt = conn.prepareStatement(insertBlockedUserSql)) {
+                pstmt.setString(1, userId);
+                pstmt.setString(2, borrowerName);
+
+                int rowsAffected = pstmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    System.out.println("User added to blocklist successfully.");
+                } else {
+                    System.out.println("Failed to add user to blocklist.");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                // Handle the SQL exception
+            }
         }
     }
     
@@ -1316,7 +1382,7 @@ public class LendingBooksFrame extends JPanel {
 	            tblModel.setRowCount(0);
 	            
 	            // Define new column names
-	            String[] newColumnNames = {"Transaction ID", "Book Num", "Title", "Accession", "Status", "Transaction Date", "Return Date", "Borrower", "ID"};
+	            String[] newColumnNames = {"Transaction ID", "Book Num", "Title", "Accession", "Status", "Transaction Date", "Return Date", "Borrower", "ID", "User Type"};
 
 	            // Set new column names
 	            tblModel.setColumnIdentifiers(newColumnNames);
@@ -1332,9 +1398,10 @@ public class LendingBooksFrame extends JPanel {
 	                String returnDate = rs.getString("return_date");
 	                String borrower = rs.getString("Borrower");
 	                String userId = rs.getString("user_id");
-
+	                String userType = rs.getString("user_type");
+	                
 	                // array to store data into JTable
-	                String tbData[] = {transacId, bookNum, title, accession, status, transacDate, returnDate, borrower, userId};
+	                String tbData[] = {transacId, bookNum, title, accession, status, transacDate, returnDate, borrower, userId, userType};
 
 	                // add string array data to JTable
 	                tblModel.addRow(tbData);

@@ -771,7 +771,7 @@ public class TransactionFrame extends JPanel {
         return JOptionPane.showConfirmDialog(getRootPane(), message,
                 "Confirmation", JOptionPane.YES_NO_OPTION);
     }
-
+    
 
     private void insertTransaction(String bn, String tl, int acc, String borrowerName) {
         String checkId = userId;

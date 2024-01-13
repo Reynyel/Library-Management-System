@@ -495,7 +495,7 @@ public class RegisterBooksFrame extends JPanel {
 		
 
 		panel.add(cbSort);
-		
+			
 		JButton btnRemove = new JButton("Remove");
 		btnRemove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -998,6 +998,9 @@ public class RegisterBooksFrame extends JPanel {
 	        fw.append("Accession Num");
 	        fw.append(',');
 	        fw.append(',');
+	        fw.append("Status");
+	        fw.append(',');
+	        fw.append(',');
 	        fw.append("Date Registered");
 	        fw.append('\n');
 
@@ -1036,6 +1039,9 @@ public class RegisterBooksFrame extends JPanel {
 	            fw.append(',');
 	            fw.append(',');
 	            fw.append(rs.getString(10)); //column index for Dewey_Decimal
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(11)); //column index for Book_Status
 	            fw.append(',');
 	            fw.append(',');
 	            fw.append(rs.getString(12)); //column index for Book_Status
@@ -1172,6 +1178,9 @@ public class RegisterBooksFrame extends JPanel {
 	        fw.append("Accession Num");
 	        fw.append(',');
 	        fw.append(',');
+	        fw.append("Status");
+	        fw.append(',');
+	        fw.append(',');
 	        fw.append("Date Registered");
 	        fw.append('\n');
 
@@ -1211,6 +1220,9 @@ public class RegisterBooksFrame extends JPanel {
 	            fw.append(',');
 	            fw.append(',');
 	            fw.append(rs.getString(10)); //column index for Dewey_Decimal
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(11)); //column index for Book_Status
 	            fw.append(',');
 	            fw.append(',');
 	            fw.append(rs.getString(12)); //column index for Book_Status

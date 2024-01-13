@@ -168,7 +168,7 @@ public class RegisterStudent extends JPanel {
 		btnRegister.setForeground(Color.WHITE);
 		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnRegister.setBorderPainted(false);
-		btnRegister.setBackground(new Color(220, 20, 60));
+		btnRegister.setBackground(new Color(0, 128, 128));
 		btnRegister.setBounds(276, 453, 205, 33);
 		panel.add(btnRegister);
 		
@@ -282,7 +282,7 @@ public class RegisterStudent extends JPanel {
 		btnUpdate.setForeground(new Color(245, 255, 250));
 		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnUpdate.setBorderPainted(false);
-		btnUpdate.setBackground(new Color(32, 178, 170));
+		btnUpdate.setBackground(new Color(255, 128, 64));
 		btnUpdate.setBounds(62, 453, 205, 33);
 		panel.add(btnUpdate);
 		
@@ -296,7 +296,7 @@ public class RegisterStudent extends JPanel {
 		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnExport.setBorderPainted(false);
 		btnExport.setBackground(new Color(0, 128, 0));
-		btnExport.setBounds(62, 497, 419, 30);
+		btnExport.setBounds(276, 497, 205, 30);
 		panel.add(btnExport);
 		
 		JLabel lblStudentNo_1 = new JLabel("*");
@@ -329,9 +329,59 @@ public class RegisterStudent extends JPanel {
 		lblImportantFields.setBounds(73, 551, 133, 30);
 		panel.add(lblImportantFields);
 		
+		JButton btnRemove = new JButton("Remove");
+		btnRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = tblStudents.getSelectedRow();
+
+		        if (selectedRow == -1) {
+		            // No row selected, show an error message
+		            JOptionPane.showMessageDialog(getRootPane(), "Please select a book to remove.", "Error", JOptionPane.ERROR_MESSAGE);
+		        } else {
+		            // Get the Book_Num from the selected row
+		            String id = tblStudents.getValueAt(selectedRow, 0).toString(); // Assuming Book_Num is in the first column (index 0)
+		            // Confirm the removal with a dialog
+		            int dialogResult = JOptionPane.showConfirmDialog(getRootPane(), "Are you sure you want to remove this user?", "Confirmation", JOptionPane.YES_NO_OPTION);
+		            
+		            if (dialogResult == JOptionPane.YES_OPTION) {
+		                // User confirmed, proceed with removal
+		                removeUser(id);
+		                displayData();
+		            }
+		        }
+			}
+		});
+		btnRemove.setForeground(Color.WHITE);
+		btnRemove.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnRemove.setBorderPainted(false);
+		btnRemove.setBackground(new Color(220, 20, 60));
+		btnRemove.setBounds(62, 497, 204, 30);
+		panel.add(btnRemove);
+		
 		displayData();
 	}
 	
+	// Method to remove a book by Book_Num
+		private void removeUser(String id) {
+		    try {
+		        String deleteSql = "DELETE FROM Students WHERE StudentNo = ?";
+
+		        try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
+		            deleteStmt.setString(1, id);
+		            // Execute the update
+		            int rowsAffected = deleteStmt.executeUpdate();
+
+		            if (rowsAffected > 0) {
+		                JOptionPane.showMessageDialog(getRootPane(), "User has been removed.");
+		            } else {
+		                JOptionPane.showMessageDialog(getRootPane(), "Failed to remove the book.", "Error", JOptionPane.ERROR_MESSAGE);
+		            }
+		        }
+		    } catch (SQLException ex) {
+		        ex.printStackTrace();
+		    }
+		}
+		
 	public void export() {
 	    // Create a format for the date in the file name
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -612,7 +662,7 @@ private boolean fileExists(String fileName) {
 	        }
 
 	        Connection conn;
-
+	        
 	        try {
 	            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/booksDB", "root", "ranielle25");
 	            Statement stmt = conn.createStatement();
