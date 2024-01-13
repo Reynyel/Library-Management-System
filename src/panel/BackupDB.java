@@ -58,9 +58,9 @@ public class BackupDB extends JPanel {
 		btnBrowse.setBorderPainted(false);
 		
 		JButton btnBackupNow = new JButton("Backup Now");
-		btnBackupNow.setBounds(390, 194, 390, 30);
+		btnBackupNow.setBounds(390, 192, 390, 30);
 		panel.add(btnBackupNow);
-		btnBackupNow.setFont(new Font("Verdana", Font.PLAIN, 13));
+		btnBackupNow.setFont(new Font("Verdana", Font.BOLD, 15));
 		btnBackupNow.setBackground(new Color(71, 160, 165));
 		btnBackupNow.setForeground(new Color(255, 255, 255));
 		btnBackupNow.setBorderPainted(false);
@@ -74,22 +74,22 @@ public class BackupDB extends JPanel {
 		btnImportNow.setForeground(Color.WHITE);
 		btnImportNow.setFont(new Font("Verdana", Font.BOLD, 15));
 		btnImportNow.setBorderPainted(false);
-		btnImportNow.setBackground(new Color(128, 255, 0));
-		btnImportNow.setBounds(390, 353, 390, 30);
+		btnImportNow.setBackground(new Color(0, 153, 0));
+		btnImportNow.setBounds(390, 476, 390, 30);
 		panel.add(btnImportNow);
 		
 		textField = new JTextField();
 		textField.setForeground(Color.WHITE);
 		textField.setColumns(10);
 		textField.setBackground(new Color(0, 153, 204));
-		textField.setBounds(270, 310, 610, 30);
+		textField.setBounds(270, 433, 610, 30);
 		panel.add(textField);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Import Database");
 		lblNewLabel_1_1.setForeground(Color.WHITE);
 		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblNewLabel_1_1.setBackground(Color.WHITE);
-		lblNewLabel_1_1.setBounds(270, 275, 133, 24);
+		lblNewLabel_1_1.setBounds(270, 398, 133, 24);
 		panel.add(lblNewLabel_1_1);
 		
 		btnBackupNow.addActionListener(new ActionListener() {
