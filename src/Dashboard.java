@@ -151,22 +151,22 @@ public class Dashboard extends JPanel {
         
 		JLabel numBorr = new JLabel("0");
 		numBorr.setForeground(Color.WHITE);
-		numBorr.setFont(new Font("Dialog", Font.PLAIN, 22));
-		numBorr.setBounds(77, 103, 164, 22);
+		numBorr.setFont(new Font("Dialog", Font.PLAIN, 35));
+		numBorr.setBounds(77, 103, 164, 40);
 		numBorr.setText(borrowedCount);
 		contentPanel.add(numBorr);
 		
 		JLabel numOD = new JLabel("0");
 		numOD.setForeground(Color.WHITE);
-		numOD.setFont(new Font("Dialog", Font.PLAIN, 22));
-		numOD.setBounds(322, 103, 164, 22);
+		numOD.setFont(new Font("Dialog", Font.PLAIN, 35));
+		numOD.setBounds(322, 103, 164, 40);
 		numOD.setText(borrowedCountOD);
 		contentPanel.add(numOD);
 		
 		JLabel numBooks = new JLabel("0");
 		numBooks.setForeground(Color.WHITE);
-		numBooks.setFont(new Font("Dialog", Font.PLAIN, 22));
-		numBooks.setBounds(558, 103, 164, 22);
+		numBooks.setFont(new Font("Dialog", Font.PLAIN, 35));
+		numBooks.setBounds(558, 103, 164, 40);
 		numBooks.setText(countBooks);
 		contentPanel.add(numBooks);
 		
