@@ -152,40 +152,40 @@ public class Dashboard extends JPanel {
 		JLabel numBorr = new JLabel("0");
 		numBorr.setForeground(Color.WHITE);
 		numBorr.setFont(new Font("Dialog", Font.PLAIN, 35));
-		numBorr.setBounds(71, 218, 164, 40);
+		numBorr.setBounds(69, 173, 164, 40);
 		numBorr.setText(borrowedCount);
 		contentPanel.add(numBorr);
 		
 		JLabel numOD = new JLabel("0");
 		numOD.setForeground(Color.WHITE);
 		numOD.setFont(new Font("Dialog", Font.PLAIN, 35));
-		numOD.setBounds(316, 218, 164, 40);
+		numOD.setBounds(341, 173, 164, 40);
 		numOD.setText(borrowedCountOD);
 		contentPanel.add(numOD);
 		
 		JLabel numBooks = new JLabel("0");
 		numBooks.setForeground(Color.WHITE);
 		numBooks.setFont(new Font("Dialog", Font.PLAIN, 35));
-		numBooks.setBounds(552, 218, 164, 40);
+		numBooks.setBounds(592, 173, 164, 40);
 		numBooks.setText(countBooks);
 		contentPanel.add(numBooks);
 		
 		JLabel label_2_2 = new JLabel("Borrowed");
 		label_2_2.setForeground(Color.WHITE);
 		label_2_2.setFont(new Font("Dialog", Font.BOLD, 25));
-		label_2_2.setBounds(71, 186, 173, 22);
+		label_2_2.setBounds(70, 140, 173, 22);
 		contentPanel.add(label_2_2);
 		
 		JLabel label_2_2_1 = new JLabel("Overdue");
 		label_2_2_1.setForeground(Color.WHITE);
 		label_2_2_1.setFont(new Font("Dialog", Font.BOLD, 25));
-		label_2_2_1.setBounds(316, 186, 200, 22);
+		label_2_2_1.setBounds(339, 140, 200, 22);
 		contentPanel.add(label_2_2_1);
 		
 		JLabel label_2_2_1_1 = new JLabel("Registered Books");
 		label_2_2_1_1.setForeground(Color.WHITE);
 		label_2_2_1_1.setFont(new Font("Dialog", Font.BOLD, 25));
-		label_2_2_1_1.setBounds(552, 179, 216, 29);
+		label_2_2_1_1.setBounds(592, 134, 216, 29);
 		contentPanel.add(label_2_2_1_1);
 		
 		JLabel label_2_2_1_1_1 = new JLabel("Calendar");

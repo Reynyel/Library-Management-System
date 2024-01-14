@@ -36,11 +36,11 @@ public class BackupDB extends JPanel {
 		panel.setLayout(null);
 		
 		JLabel lblNewLabel_1 = new JLabel("Backup Database");
-		lblNewLabel_1.setBounds(270, 116, 133, 24);
+		lblNewLabel_1.setBounds(270, 116, 195, 24);
 		panel.add(lblNewLabel_1);
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setBackground(new Color(255, 255, 255));
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_1.setFont(new Font("Verdana", Font.PLAIN, 20));
 		
 		txtPath = new JTextField();
 		txtPath.setBounds(270, 151, 610, 30);
@@ -87,9 +87,9 @@ public class BackupDB extends JPanel {
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Import Database");
 		lblNewLabel_1_1.setForeground(Color.WHITE);
-		lblNewLabel_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_1_1.setFont(new Font("Verdana", Font.PLAIN, 20));
 		lblNewLabel_1_1.setBackground(Color.WHITE);
-		lblNewLabel_1_1.setBounds(270, 398, 133, 24);
+		lblNewLabel_1_1.setBounds(270, 398, 195, 24);
 		panel.add(lblNewLabel_1_1);
 		
 		btnBackupNow.addActionListener(new ActionListener() {
