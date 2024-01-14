@@ -19,8 +19,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,6 +32,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -46,6 +51,7 @@ import javax.swing.JComboBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
@@ -68,6 +74,14 @@ import java.awt.FlowLayout;
 import javax.swing.SpringLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JRadioButton;
+
+import java.io.FileOutputStream;
+
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.FontFactory;
+
+import com.itextpdf.text.Paragraph;
 
 
 public class RegisterBooksFrame extends JPanel {
@@ -469,7 +483,9 @@ public class RegisterBooksFrame extends JPanel {
 			                }
 			            } else {
 			                // User chose "All Books"
-			                export();
+			            	//export();
+			            	testPdf();
+
 			            }
 			        }
 			    }
@@ -917,7 +933,7 @@ public class RegisterBooksFrame extends JPanel {
 	    String currentDate = dateFormat.format(new Date());
 
 	    // Construct the base file name with the current date
-	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\books_export_" + currentDate + ".pdf";
+	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\books_export_" + currentDate + ".csv";
 
 	    // Initialize the file name
 	    String fileName = baseFileName;
@@ -926,85 +942,351 @@ public class RegisterBooksFrame extends JPanel {
 	    int fileIndex = 1;
 	    while (fileExists(fileName)) {
 	        // Append a suffix to make the file name unique
-	        fileName = baseFileName.replace(".pdf", "_" + fileIndex + ".pdf");
+	        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
 	        fileIndex++;
 	    }
 
-	 // Create a new document
-	    try (PDDocument document = new PDDocument()) {
-	        PDPage page = new PDPage();
-	        document.addPage(page);
+	    try {
+	        FileWriter fw = new FileWriter(fileName);
+	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
+			String formattedAcadYear = ya.format( FormatStyle.FULL);
+			fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("List of All Books");
+	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Prepared On: " + currentDate);
+	        fw.append("\n");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Academic Year: " + formattedAcadYear);
+	        fw.append("\n");
+	        fw.append("\n");
+	        
+	        // Add headers to the CSV file
+	        fw.append("Book Num");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Title");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Author");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("ISBN");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Publisher");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Language");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Subject");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Quantity");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Dewey Decimal");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Accession Num");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Status");
+	        fw.append(',');
+	        fw.append(',');
+	        fw.append("Date Registered");
+	        fw.append('\n');
 
-	        // Create a content stream for writing to the page
-	        try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-	        	AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
-				String formattedAcadYear = ya.format( FormatStyle.FULL);
-	            // Set font and font size
-				 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 15);
+	        // Fetch data from the database
+	        pst = conn.prepareStatement("SELECT * FROM Books");
+	        rs = pst.executeQuery();
 
-	            // Add title and date
-	            contentStream.beginText();
-	            contentStream.newLineAtOffset(100, 900);
-	            contentStream.showText("List of All Books");
-	            contentStream.newLineAtOffset(0, -15);
-	            contentStream.showText("Prepared On: " + currentDate);
-	            contentStream.newLineAtOffset(0, -15);
-	            contentStream.showText("Academic Year: " + formattedAcadYear);
-	            contentStream.newLineAtOffset(0, -30);
+	        int totalBooks = 0;
 
-	            // Add headers to the PDF
-	            contentStream.showText("Book Num       Title           Author         ISBN          Publisher     Language     Subject       Quantity      Dewey Decimal  Accession Num  Status         Date Registered");
-	            contentStream.newLineAtOffset(0, -15);
+	        while (rs.next()) {
+	        	fw.append(rs.getString(1));  //column index for Title
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(2));  //column index for Title
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(3));  //column index for Author
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(4));  //column index for ISBN
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(5));  //column index for Publisher
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(6));  //column index for Language
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(7));  //column index for Subject
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(8));  //column index for Quantity
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(9));  //column index for Book_Num
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(10)); //column index for Dewey_Decimal
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(11)); //column index for Book_Status
+	            fw.append(',');
+	            fw.append(',');
+	            fw.append(rs.getString(12)); //column index for Book_Status
+	            fw.append('\n');
 
-	            // Fetch data from the database
-	            pst = conn.prepareStatement("SELECT * FROM Books");
-	            rs = pst.executeQuery();
-
-	            int totalBooks = 0;
-
-	            while (rs.next()) {
-	                // Add book details to the PDF
-	                contentStream.showText(rs.getString(1) + "                  " +
-	                                        rs.getString(2) + "                  " +
-	                                        rs.getString(3) + "                  " +
-	                                        rs.getString(4) + "                  " +
-	                                        rs.getString(5) + "                  " +
-	                                        rs.getString(6) + "                  " +
-	                                        rs.getString(7) + "                  " +
-	                                        rs.getString(8) + "                  " +
-	                                        rs.getString(9) + "                  " +
-	                                        rs.getString(10) + "                  " +
-	                                        rs.getString(11) + "                  " +
-	                                        rs.getString(12));
-	                contentStream.newLineAtOffset(0, -15);
-
-	                totalBooks++;
-	            }
-
-	            // Write the total number of books registered
-	            contentStream.showText("Total Books Registered: " + totalBooks);
-	            contentStream.newLineAtOffset(0, -15);
-
-	            String userType = MainMenuFrame.getUser();
-
-	            if ("Librarian".equalsIgnoreCase(userType)) {
-	                contentStream.showText("Prepared by: Librarian");
-	            } else if ("Admin".equalsIgnoreCase(userType)) {
-	                contentStream.showText("Prepared by: Admin");
-	            }
-
-	            // Show export success message
-	            JOptionPane.showMessageDialog(getRootPane(), "Export success",
-	                    "Success", JOptionPane.INFORMATION_MESSAGE);
+	            totalBooks++;
 	        }
 
-	        // Save the document to a file
-	        document.save("C:\\Users\\LINDELL\\Desktop\\books_export_" + currentDate + ".pdf");
+	        // Write the total number of books registered
+	        fw.append('\n');
+	        fw.append("Total Books Registered: " + totalBooks);
+	        fw.append('\n');
+	        
+	        String userType = MainMenuFrame.getUser();
+	        
+	        if ("Librarian".equalsIgnoreCase(userType)) {
+	        	fw.append("Prepared by: " + "Librarian");
+     		} else if ("Admin".equalsIgnoreCase(userType)) {
+     			fw.append("Prepared by: " + "Admin");
+     		}
+	        
+	        
+	        Font customFont = new Font("Arial", Font.PLAIN, 16);
+            UIManager.put("OptionPane.messageFont", customFont);
+            UIManager.put("OptionPane.buttonFont", customFont);
+            
+            JOptionPane.showMessageDialog(getRootPane(), "Export success",
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            // Reset UIManager properties to default
+            UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+            UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+	        
+	        // Flush and close the FileWriter
+	        fw.flush();
+	        fw.close();
+	        
+
 	    } catch (IOException | SQLException e) {
 	        e.printStackTrace();
 	    }
 	}
+
 	
+	
+	public void testPdf() {
+		// Fetch data from the database
+        try {
+			pst = conn.prepareStatement("SELECT * FROM Books");
+			rs = pst.executeQuery();
+			
+			Document PDFReport = new Document();
+			    
+		    
+			try {
+				// Set the page size to landscape
+	            PDFReport.setPageSize(PageSize.A3.rotate());
+				PdfWriter.getInstance(PDFReport, new FileOutputStream("C:\\Users\\LINDELL\\Desktop\\OutputReport.pdf"));
+
+				PDFReport.open();
+				
+				com.itextpdf.text.Font customFont = FontFactory.getFont(FontFactory.HELVETICA, 18, Font.BOLD, BaseColor.BLACK);
+				com.itextpdf.text.Font customFont2 = FontFactory.getFont(FontFactory.HELVETICA, 15, Font.BOLD, BaseColor.BLACK);
+				// Add table header
+				com.itextpdf.text.Font headerFont = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD, BaseColor.BLACK);
+				// Add image
+	            try {
+	                Image logo = Image.getInstance("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\logo1.png");  // Replace with the actual path to your image
+	                logo.setAlignment(Element.ALIGN_MIDDLE); // Adjust the alignment as needed
+	                PDFReport.add(logo);
+	                
+	            } catch (BadElementException | IOException e) {
+	                e.printStackTrace();
+	            }
+	            
+	            Font boldFont = new Font(FontFactory.HELVETICA, 16, Font.BOLD);
+	            // Define a custom font
+	            
+	         // Add title
+	            Paragraph title1 = new Paragraph(" Santa Rosa Educational Institute", customFont);
+	            title1.setAlignment(Element.ALIGN_CENTER);
+	            PDFReport.add(title1);
+	            
+				// Add title
+	            Paragraph title2 = new Paragraph("List of All Books");
+	            title2.setAlignment(Element.ALIGN_CENTER);
+	            PDFReport.add(title2);
+
+	            // Add academic year
+	            AcademicYear ya = AcademicYear.now(ZoneId.systemDefault());
+	            String formattedAcadYear = ya.format(FormatStyle.FULL);
+	            Paragraph acadYear = new Paragraph("Academic Year: " + formattedAcadYear);
+	            acadYear.setAlignment(Element.ALIGN_CENTER);
+	            PDFReport.add(acadYear);
+	         
+	            // Add space (empty line) between academic year and table header
+	            PDFReport.add(new Paragraph("\n"));
+	            
+				PdfPTable PDFTable = new PdfPTable(11);
+				
+				 // Add table header
+	            String[] headers = {"Book Num", "Title", "Author", "ISBN", "Publisher", "Language", "Subject",
+	                                "Dewey Decimal", "Accession Num", "Status", "Date Registered"};
+	            
+	            
+	            int totalBooks = 0;
+	            String preparedBy = ""; // Initialize with an empty string
+	            
+	            for (String header : headers) {
+	            	PdfPCell headerCell = new PdfPCell(new Phrase(header, headerFont));
+	                headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	                headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	                headerCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	                PDFTable.addCell(headerCell);
+	            }
+	            
+				PdfPCell table_cell;
+				
+				while(rs.next()) {
+					String bookNum = rs.getString("Book_Num");
+					table_cell = new PdfPCell(new Phrase(bookNum));
+					PDFTable.addCell(table_cell);
+					String title = rs.getString("Title");
+					table_cell = new PdfPCell(new Phrase(title));
+					PDFTable.addCell(table_cell);
+					String author = rs.getString("Author");
+					table_cell = new PdfPCell(new Phrase(author));
+					PDFTable.addCell(table_cell);
+					String isbn = rs.getString("isbn");
+					table_cell = new PdfPCell(new Phrase(isbn));
+					PDFTable.addCell(table_cell);
+					String publisher = rs.getString("Publisher");
+					table_cell = new PdfPCell(new Phrase(publisher));
+					PDFTable.addCell(table_cell);
+					String language = rs.getString("Language");
+					table_cell = new PdfPCell(new Phrase(language));
+					PDFTable.addCell(table_cell);
+					String subject = rs.getString("Subject");
+					table_cell = new PdfPCell(new Phrase(subject));
+					PDFTable.addCell(table_cell);
+					String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+					table_cell = new PdfPCell(new Phrase(dewey));
+					PDFTable.addCell(table_cell);
+					String accession = String.valueOf(rs.getInt("Accession_Num"));
+					table_cell = new PdfPCell(new Phrase(accession));
+					PDFTable.addCell(table_cell);
+					String status = rs.getString("book_status");
+					table_cell = new PdfPCell(new Phrase(status));
+					PDFTable.addCell(table_cell);
+					String dateRegistered = rs.getString("date_registered");
+					table_cell = new PdfPCell(new Phrase(dateRegistered));
+					PDFTable.addCell(table_cell);
+					
+					totalBooks++;
+				}
+				
+										
+			
+				PDFReport.add(PDFTable);
+				// Add total number of books
+				Paragraph line = new Paragraph("\n");
+				line.setAlignment(Element.ALIGN_RIGHT);
+				PDFReport.add(line);
+				
+				// Add total number of books
+				Paragraph totalBooksParagraph = new Paragraph("Total Books: " + totalBooks, customFont2);
+				totalBooksParagraph.setAlignment(Element.ALIGN_LEFT);
+				totalBooksParagraph.setIndentationLeft(125);
+				PDFReport.add(totalBooksParagraph);
+
+				// Add who generated the report
+				String userType = MainMenuFrame.getUser();
+				if ("Librarian".equalsIgnoreCase(userType)) {
+				    preparedBy = "Librarian";
+				} else if ("Admin".equalsIgnoreCase(userType)) {
+				    preparedBy = "Admin";
+				}
+				
+				// Add who generated the report
+				Paragraph generatedByParagraph = new Paragraph("Prepared by: " + preparedBy, customFont2);
+				generatedByParagraph.setAlignment(Element.ALIGN_LEFT);
+				generatedByParagraph.setIndentationLeft(125);
+				PDFReport.add(generatedByParagraph);
+				
+				// Get the current date and time
+			    LocalDateTime currentTime = LocalDateTime.now();
+
+			    // Format the date and time using the desired pattern
+			    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy hh:mma");
+			    String formattedDateTime = currentTime.format(formatter);
+			    
+				// Add who generated the report
+				Paragraph reportGenerated = new Paragraph("Report Generated: " + formattedDateTime, customFont2);
+				reportGenerated.setAlignment(Element.ALIGN_LEFT);
+				reportGenerated.setIndentationLeft(125);
+				PDFReport.add(reportGenerated);
+				
+				// Add who generated the report with underlined name
+				Paragraph principal = new Paragraph();
+				Chunk nameChunk = new Chunk("Elaine B. Santos, Ed.D.", customFont2);
+				nameChunk.setUnderline(1.5f, -1);  // Adjust the values for underline thickness and position
+				principal.add(nameChunk);
+				principal.add(Chunk.NEWLINE);
+				
+				// Add indentation for "Principal"
+				Paragraph principalRole = new Paragraph("Principal", customFont2);
+				principalRole.setIndentationLeft(50);  // Adjust the indentation as needed
+				principal.add(principalRole);
+				principal.setIndentationLeft(800);
+				PDFReport.add(principal);
+				PDFReport.close();
+			} catch (FileNotFoundException | DocumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+
 	public void export(String subject) {
 	    // Create a format for the date in the file name
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
