@@ -42,6 +42,12 @@ import java.util.Random;
 import java.util.Set;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import GradientBackground.gradientBackground;
@@ -104,7 +110,7 @@ public class RegisterBooksFrame extends JPanel {
 	public RegisterBooksFrame() throws SQLException {
 		setBackground(new Color(0, 255, 204));
 		setBorder(null);				
-		setPreferredSize(new Dimension(1255, 756));
+		setPreferredSize(new Dimension(1425, 980));
 	    setLayout(null);
 					
 		Object[][] data = {null, null, null, null, null, null, null, null, null, null, null};
@@ -114,7 +120,7 @@ public class RegisterBooksFrame extends JPanel {
 		
         panel = new gradientBackground();
         panel.setBackground(new Color(0, 153, 255));
-        panel.setBounds(0, 0, 1255, 756);
+        panel.setBounds(0, 0, 1425, 980);
         add(panel);
         panel.setLayout(null);
         
@@ -250,7 +256,7 @@ public class RegisterBooksFrame extends JPanel {
 		languageComboBox.setBackground(Color.WHITE);
 		panel.add(languageComboBox);
 		
-		String[] subjects = {"General Information", "Philosophy & Psychology", "Religion",
+		String[] subjects = {"", "General Information", "Philosophy & Psychology", "Religion",
 				"Social Sciences", "Language", "Science", "Technology", "Arts & Recreation",
 				"Literature", "History & Geography"};
 		
@@ -911,7 +917,7 @@ public class RegisterBooksFrame extends JPanel {
 	    String currentDate = dateFormat.format(new Date());
 
 	    // Construct the base file name with the current date
-	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\books_export_" + currentDate + ".csv";
+	    String baseFileName = "C:\\Users\\LINDELL\\Desktop\\books_export_" + currentDate + ".pdf";
 
 	    // Initialize the file name
 	    String fileName = baseFileName;
@@ -920,164 +926,80 @@ public class RegisterBooksFrame extends JPanel {
 	    int fileIndex = 1;
 	    while (fileExists(fileName)) {
 	        // Append a suffix to make the file name unique
-	        fileName = baseFileName.replace(".csv", "_" + fileIndex + ".csv");
+	        fileName = baseFileName.replace(".pdf", "_" + fileIndex + ".pdf");
 	        fileIndex++;
 	    }
 
-	    try {
-	        FileWriter fw = new FileWriter(fileName);
-	        AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
-			String formattedAcadYear = ya.format( FormatStyle.FULL);
-			fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("List of All Books");
-	        fw.append("\n");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Prepared On: " + currentDate);
-	        fw.append("\n");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Academic Year: " + formattedAcadYear);
-	        fw.append("\n");
-	        fw.append("\n");
-	        
-	        // Add headers to the CSV file
-	        fw.append("Book Num");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Title");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Author");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("ISBN");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Publisher");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Language");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Subject");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Quantity");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Dewey Decimal");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Accession Num");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Status");
-	        fw.append(',');
-	        fw.append(',');
-	        fw.append("Date Registered");
-	        fw.append('\n');
+	 // Create a new document
+	    try (PDDocument document = new PDDocument()) {
+	        PDPage page = new PDPage();
+	        document.addPage(page);
 
-	        // Fetch data from the database
-	        pst = conn.prepareStatement("SELECT * FROM Books");
-	        rs = pst.executeQuery();
+	        // Create a content stream for writing to the page
+	        try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+	        	AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
+				String formattedAcadYear = ya.format( FormatStyle.FULL);
+	            // Set font and font size
+				 contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.COURIER), 15);
 
-	        int totalBooks = 0;
+	            // Add title and date
+	            contentStream.beginText();
+	            contentStream.newLineAtOffset(100, 900);
+	            contentStream.showText("List of All Books");
+	            contentStream.newLineAtOffset(0, -15);
+	            contentStream.showText("Prepared On: " + currentDate);
+	            contentStream.newLineAtOffset(0, -15);
+	            contentStream.showText("Academic Year: " + formattedAcadYear);
+	            contentStream.newLineAtOffset(0, -30);
 
-	        while (rs.next()) {
-	        	fw.append(rs.getString(1));  //column index for Title
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(2));  //column index for Title
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(3));  //column index for Author
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(4));  //column index for ISBN
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(5));  //column index for Publisher
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(6));  //column index for Language
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(7));  //column index for Subject
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(8));  //column index for Quantity
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(9));  //column index for Book_Num
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(10)); //column index for Dewey_Decimal
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(11)); //column index for Book_Status
-	            fw.append(',');
-	            fw.append(',');
-	            fw.append(rs.getString(12)); //column index for Book_Status
-	            fw.append('\n');
+	            // Add headers to the PDF
+	            contentStream.showText("Book Num       Title           Author         ISBN          Publisher     Language     Subject       Quantity      Dewey Decimal  Accession Num  Status         Date Registered");
+	            contentStream.newLineAtOffset(0, -15);
 
-	            totalBooks++;
+	            // Fetch data from the database
+	            pst = conn.prepareStatement("SELECT * FROM Books");
+	            rs = pst.executeQuery();
+
+	            int totalBooks = 0;
+
+	            while (rs.next()) {
+	                // Add book details to the PDF
+	                contentStream.showText(rs.getString(1) + "                  " +
+	                                        rs.getString(2) + "                  " +
+	                                        rs.getString(3) + "                  " +
+	                                        rs.getString(4) + "                  " +
+	                                        rs.getString(5) + "                  " +
+	                                        rs.getString(6) + "                  " +
+	                                        rs.getString(7) + "                  " +
+	                                        rs.getString(8) + "                  " +
+	                                        rs.getString(9) + "                  " +
+	                                        rs.getString(10) + "                  " +
+	                                        rs.getString(11) + "                  " +
+	                                        rs.getString(12));
+	                contentStream.newLineAtOffset(0, -15);
+
+	                totalBooks++;
+	            }
+
+	            // Write the total number of books registered
+	            contentStream.showText("Total Books Registered: " + totalBooks);
+	            contentStream.newLineAtOffset(0, -15);
+
+	            String userType = MainMenuFrame.getUser();
+
+	            if ("Librarian".equalsIgnoreCase(userType)) {
+	                contentStream.showText("Prepared by: Librarian");
+	            } else if ("Admin".equalsIgnoreCase(userType)) {
+	                contentStream.showText("Prepared by: Admin");
+	            }
+
+	            // Show export success message
+	            JOptionPane.showMessageDialog(getRootPane(), "Export success",
+	                    "Success", JOptionPane.INFORMATION_MESSAGE);
 	        }
 
-	        // Write the total number of books registered
-	        fw.append('\n');
-	        fw.append("Total Books Registered: " + totalBooks);
-	        fw.append('\n');
-	        
-	        String userType = MainMenuFrame.getUser();
-	        
-	        if ("Librarian".equalsIgnoreCase(userType)) {
-	        	fw.append("Prepared by: " + "Librarian");
-     		} else if ("Admin".equalsIgnoreCase(userType)) {
-     			fw.append("Prepared by: " + "Admin");
-     		}
-	        
-	        
-	        Font customFont = new Font("Arial", Font.PLAIN, 16);
-            UIManager.put("OptionPane.messageFont", customFont);
-            UIManager.put("OptionPane.buttonFont", customFont);
-            
-            JOptionPane.showMessageDialog(getRootPane(), "Export success",
-                    "Success", JOptionPane.INFORMATION_MESSAGE);
-
-            // Reset UIManager properties to default
-            UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
-            UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
-	        
-	        // Flush and close the FileWriter
-	        fw.flush();
-	        fw.close();
+	        // Save the document to a file
+	        document.save("C:\\Users\\LINDELL\\Desktop\\books_export_" + currentDate + ".pdf");
 	    } catch (IOException | SQLException e) {
 	        e.printStackTrace();
 	    }
@@ -1278,6 +1200,8 @@ public class RegisterBooksFrame extends JPanel {
 		String publisher = txtPublisher.getText();
 		String language = languageComboBox.getSelectedItem().toString();
 		String subject = comboBoxSubject.getSelectedItem().toString();
+		DeweyMap deweyMap = new DeweyMap();
+        String deweyDecimal = deweyMap.getDeweyForSubject(subject);
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			
@@ -1290,7 +1214,7 @@ public class RegisterBooksFrame extends JPanel {
 			Statement stmt = conn.createStatement();
 			System.out.println("Connected");
 							
-			String sql = "UPDATE Books SET Title = ?, Author = ?, ISBN = ?, Publisher = ?, Language = ?, Subject = ? WHERE Book_Num = ?";
+			String sql = "UPDATE Books SET Title = ?, Author = ?, ISBN = ?, Publisher = ?, Language = ?, Subject = ?, Dewey_Decimal = ? WHERE Book_Num = ?";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			
 			int selectedRow = table.getSelectedRow();
@@ -1306,8 +1230,8 @@ public class RegisterBooksFrame extends JPanel {
 				pstmt.setString(4, publisher);
 				pstmt.setString(5, language);
 				pstmt.setString(6, subject);
-				
-				pstmt.setString(7, bookNum);
+				pstmt.setString(7, deweyDecimal);
+				pstmt.setString(8, bookNum);
 				
 				int rowsAffected = pstmt.executeUpdate();
 				if(rowsAffected > 0) {
@@ -1439,7 +1363,7 @@ public class RegisterBooksFrame extends JPanel {
 	            String subject = comboBoxSubject.getSelectedItem().toString();
 	            int quantity = Integer.valueOf(txtQuantity.getText()); // Converts String to Int
 	            DeweyMap deweyMap = new DeweyMap();
-	            double deweyDecimal = deweyMap.getDeweyForSubject(subject);
+	            String deweyDecimal = deweyMap.getDeweyForSubject(subject);
 	            
 	            
 	            
@@ -1482,7 +1406,7 @@ public class RegisterBooksFrame extends JPanel {
 	                        insertBookStmt.setString(6, subject);
 	                        insertBookStmt.setInt(7, quantity);
 	                        insertBookStmt.setInt(8, usedBookNum);
-	                        insertBookStmt.setDouble(9, deweyDecimal);
+	                        insertBookStmt.setString(9, deweyDecimal);
 	                        insertBookStmt.setInt(10, accessionNum);
 	                        insertBookStmt.setString(11, "Available");
 
@@ -1564,7 +1488,7 @@ public class RegisterBooksFrame extends JPanel {
 	                    String language = rs.getString("Language");
 	                    String subject = rs.getString("Subject");
 	                    String quantity = String.valueOf(rs.getInt("Quantity"));
-	                    String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+	                    String dewey = String.valueOf(rs.getString("Dewey_Decimal"));
 	                    String accession = String.valueOf(rs.getInt("Accession_Num"));
 	                    String status = rs.getString("book_status");
 	                    String dateRegistered = rs.getString("date_registered");
@@ -1626,7 +1550,7 @@ public class RegisterBooksFrame extends JPanel {
 					String language = rs.getString("Language");
 					String subject = rs.getString("Subject");
 					String quantity = String.valueOf(rs.getInt("Quantity"));
-					String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+					String dewey = rs.getString("Dewey_Decimal");
 					String accession = String.valueOf(rs.getInt("Accession_Num"));
 					String status = rs.getString("book_status");
 					String dateRegistered = rs.getString("date_registered");

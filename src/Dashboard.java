@@ -95,23 +95,23 @@ public class Dashboard extends JPanel {
 		// Set the frame location
 		setLocation(centerX, centerY);
 		
-		setPreferredSize(new Dimension(1256, 815));
+		setPreferredSize(new Dimension(1425, 980));
 	    setLayout(null);
-		setBounds(100, 100, 1687, 743);
+		setBounds(100, 100, 1425, 980);
 		
         
 		gradientBackground contentPanel = new gradientBackground();
 		contentPanel.setLayout(null);
 		contentPanel.setBorder(null);
-		contentPanel.setBounds(0, 0, 1255, 756);
+		contentPanel.setBounds(0, 0, 1425, 980);
 		add(contentPanel);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(798, 260, 444, 125);
+		scrollPane_3.setBounds(894, 397, 521, 125);
 		contentPanel.add(scrollPane_3);
 		
 		tblBorrowed = new JTable();
-		tblBorrowed.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tblBorrowed.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		tblBorrowed.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null},
@@ -123,25 +123,25 @@ public class Dashboard extends JPanel {
 		scrollPane_3.setViewportView(tblBorrowed);
 		
 		JCalendar calendar = new JCalendar();
-		calendar.setBounds(992, 26, 250, 211);
+		calendar.setBounds(1063, 84, 352, 252);
 		contentPanel.add(calendar);
 		
 		JLabel label = new JLabel("Overdue Books");
 		label.setForeground(Color.WHITE);
-		label.setFont(new Font("Dialog", Font.PLAIN, 22));
-		label.setBounds(10, 386, 164, 39);
+		label.setFont(new Font("Dialog", Font.BOLD, 25));
+		label.setBounds(10, 581, 210, 39);
 		contentPanel.add(label);
 		
 		JLabel label_1 = new JLabel("Book Circulation History");
 		label_1.setForeground(Color.WHITE);
-		label_1.setFont(new Font("Dialog", Font.PLAIN, 22));
-		label_1.setBounds(801, 391, 275, 29);
+		label_1.setFont(new Font("Dialog", Font.BOLD, 25));
+		label_1.setBounds(904, 591, 325, 29);
 		contentPanel.add(label_1);
 		
 		JLabel label_1_1 = new JLabel("Borrowed Books");
 		label_1_1.setForeground(Color.WHITE);
-		label_1_1.setFont(new Font("Dialog", Font.PLAIN, 22));
-		label_1_1.setBounds(801, 222, 275, 39);
+		label_1_1.setFont(new Font("Dialog", Font.BOLD, 25));
+		label_1_1.setBounds(904, 352, 275, 39);
 		contentPanel.add(label_1_1);
 		
 		String borrowedCount = countBorrowedBooks();
@@ -152,53 +152,54 @@ public class Dashboard extends JPanel {
 		JLabel numBorr = new JLabel("0");
 		numBorr.setForeground(Color.WHITE);
 		numBorr.setFont(new Font("Dialog", Font.PLAIN, 35));
-		numBorr.setBounds(77, 103, 164, 40);
+		numBorr.setBounds(71, 218, 164, 40);
 		numBorr.setText(borrowedCount);
 		contentPanel.add(numBorr);
 		
 		JLabel numOD = new JLabel("0");
 		numOD.setForeground(Color.WHITE);
 		numOD.setFont(new Font("Dialog", Font.PLAIN, 35));
-		numOD.setBounds(322, 103, 164, 40);
+		numOD.setBounds(316, 218, 164, 40);
 		numOD.setText(borrowedCountOD);
 		contentPanel.add(numOD);
 		
 		JLabel numBooks = new JLabel("0");
 		numBooks.setForeground(Color.WHITE);
 		numBooks.setFont(new Font("Dialog", Font.PLAIN, 35));
-		numBooks.setBounds(558, 103, 164, 40);
+		numBooks.setBounds(552, 218, 164, 40);
 		numBooks.setText(countBooks);
 		contentPanel.add(numBooks);
 		
 		JLabel label_2_2 = new JLabel("Borrowed");
 		label_2_2.setForeground(Color.WHITE);
-		label_2_2.setFont(new Font("Dialog", Font.PLAIN, 13));
-		label_2_2.setBounds(77, 71, 164, 22);
+		label_2_2.setFont(new Font("Dialog", Font.BOLD, 25));
+		label_2_2.setBounds(71, 186, 173, 22);
 		contentPanel.add(label_2_2);
 		
 		JLabel label_2_2_1 = new JLabel("Overdue");
 		label_2_2_1.setForeground(Color.WHITE);
-		label_2_2_1.setFont(new Font("Dialog", Font.PLAIN, 13));
-		label_2_2_1.setBounds(322, 71, 164, 22);
+		label_2_2_1.setFont(new Font("Dialog", Font.BOLD, 25));
+		label_2_2_1.setBounds(316, 186, 200, 22);
 		contentPanel.add(label_2_2_1);
 		
 		JLabel label_2_2_1_1 = new JLabel("Registered Books");
 		label_2_2_1_1.setForeground(Color.WHITE);
-		label_2_2_1_1.setFont(new Font("Dialog", Font.PLAIN, 13));
-		label_2_2_1_1.setBounds(558, 71, 164, 22);
+		label_2_2_1_1.setFont(new Font("Dialog", Font.BOLD, 25));
+		label_2_2_1_1.setBounds(552, 179, 216, 29);
 		contentPanel.add(label_2_2_1_1);
 		
 		JLabel label_2_2_1_1_1 = new JLabel("Calendar");
+		label_2_2_1_1_1.setFont(new Font("Tahoma", Font.BOLD, 25));
 		label_2_2_1_1_1.setForeground(Color.WHITE);
-		label_2_2_1_1_1.setBounds(992, 11, 84, 14);
+		label_2_2_1_1_1.setBounds(1063, 37, 146, 36);
 		contentPanel.add(label_2_2_1_1_1);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(10, 424, 756, 321);
+		scrollPane_2.setBounds(10, 619, 798, 321);
 		contentPanel.add(scrollPane_2);
 		
 		tblOverdue = new JTable();
-		tblOverdue.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tblOverdue.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		tblOverdue.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null},
@@ -210,11 +211,11 @@ public class Dashboard extends JPanel {
 		scrollPane_2.setViewportView(tblOverdue);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(801, 424, 444, 321);
+		scrollPane.setBounds(894, 619, 521, 321);
 		contentPanel.add(scrollPane);
 		
 		tblReturned = new JTable();
-		tblReturned.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tblReturned.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		tblReturned.setModel(new DefaultTableModel(
 			new Object[][] {
 				{null, null, null},

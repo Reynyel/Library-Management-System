@@ -85,15 +85,15 @@ public class LendingBooksFrame extends JPanel {
 	 * Create the frame.
 	 */
 	public LendingBooksFrame() {
-		setPreferredSize(new Dimension(1256, 754));
+		setPreferredSize(new Dimension(1425, 980));
 	    setLayout(null);
-		setBounds(100, 100, 1687, 743);
+		setBounds(100, 100, 1425, 980);
 		
 		ButtonGroup radioGroup = new ButtonGroup();
 		
 		panel = new gradientBackground();
 		panel.setBackground(new Color(0, 153, 255));
-        panel.setBounds(0, 0, 1255, 756);
+        panel.setBounds(0, 0, 1425, 980);
         add(panel);
         panel.setLayout(null);
 		

@@ -49,6 +49,8 @@ import java.awt.BorderLayout;
 import javax.swing.JScrollPane;
 import java.awt.Dimension;
 import java.awt.ScrollPane;
+import java.awt.Toolkit;
+
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -133,8 +135,10 @@ public class MainMenuFrame extends JFrame {
 		setBackground(new Color(255, 255, 255));
 		setResizable(false);
 		setTitle("Library Management System");
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 1510, 845);
+		setBounds(100, 100, 1680, 1050);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(204, 255, 204));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -144,19 +148,19 @@ public class MainMenuFrame extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(0, 51, 102));
-		panel.setBounds(0, 0, 240, 806);
+		panel.setBounds(0, 0, 240, 1018);
 		contentPane.add(panel);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(0, 51, 102));
 		panel_1.setForeground(new Color(255, 255, 255));
-		panel_1.setBounds(239, 0, 1255, 50);
+		panel_1.setBounds(239, 0, 1425, 50);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
 		contentPanel = new gradientBackground();
 		contentPanel.setBorder(null);
-		contentPanel.setBounds(239, 50, 1255, 756);
+		contentPanel.setBounds(239, 50, 1425, 968);
 		contentPane.add(contentPanel);
 		
 		lblPageTitle = new JLabel("Dashboard");
@@ -173,19 +177,19 @@ public class MainMenuFrame extends JFrame {
 		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\Santa Rosa Educational Institution.png"));
 		
 		JButton btnRegisterBooks = new JButton("Manage Books");
-		btnRegisterBooks.setBounds(14, 226, 218, 41);
+		btnRegisterBooks.setBounds(14, 274, 218, 41);
 		panel.add(btnRegisterBooks);
 		btnRegisterBooks.setHorizontalAlignment(SwingConstants.LEFT);
 		btnRegisterBooks.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\book (1).png"));
 		btnRegisterBooks.setForeground(new Color(255, 255, 255));
-		btnRegisterBooks.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnRegisterBooks.setFont(new Font("Verdana", Font.BOLD, 15));
 		btnRegisterBooks.setBackground(new Color(0, 51, 102));
 		btnRegisterBooks.setBorderPainted(false);
 		
 		
 		JButton btnBackupRecords = new JButton(" Backup & Import");
 		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\backup.png"));
-		btnBackupRecords.setBounds(12, 431, 220, 40);
+		btnBackupRecords.setBounds(14, 481, 220, 40);
 		panel.add(btnBackupRecords);						
 		
 		btnBackupRecords.addActionListener(new ActionListener() {
@@ -203,37 +207,37 @@ public class MainMenuFrame extends JFrame {
 		});
 		btnBackupRecords.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBackupRecords.setForeground(Color.WHITE);
-		btnBackupRecords.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnBackupRecords.setFont(new Font("Verdana", Font.BOLD, 15));
 		btnBackupRecords.setBorderPainted(false);
 		btnBackupRecords.setBackground(new Color(0, 51, 102));
 		
 		JButton btnReturnBooks = new JButton(" Returning");
-		btnReturnBooks.setBounds(12, 380, 220, 40);
+		btnReturnBooks.setBounds(14, 430, 220, 40);
 		panel.add(btnReturnBooks);
 		btnReturnBooks.setHorizontalAlignment(SwingConstants.LEFT);
 		btnReturnBooks.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\return.png"));
 		btnReturnBooks.setForeground(new Color(255, 255, 255));
-		btnReturnBooks.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnReturnBooks.setFont(new Font("Verdana", Font.BOLD, 15));
 		btnReturnBooks.setBackground(new Color(0, 51, 102));
 		btnReturnBooks.setBorderPainted(false);			                  		
 		
 		JButton btnTransac = new JButton(" Lending");
-		btnTransac.setBounds(12, 329, 220, 40);
+		btnTransac.setBounds(14, 379, 220, 40);
 		panel.add(btnTransac);
 		btnTransac.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\transaction.png"));
 		btnTransac.setHorizontalAlignment(SwingConstants.LEFT);
 		btnTransac.setForeground(new Color(255, 255, 255));
-		btnTransac.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnTransac.setFont(new Font("Verdana", Font.BOLD, 15));
 		btnTransac.setBackground(new Color(0, 51, 102));
 		btnTransac.setBorderPainted(false);
 		
 		JButton btnRegisterUser = new JButton(" Manage Users");
-		btnRegisterUser.setBounds(12, 278, 220, 40);
+		btnRegisterUser.setBounds(14, 328, 220, 40);
 		panel.add(btnRegisterUser);
 		btnRegisterUser.setHorizontalAlignment(SwingConstants.LEFT);
 		btnRegisterUser.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\management.png"));
 		btnRegisterUser.setForeground(new Color(255, 255, 255));
-		btnRegisterUser.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnRegisterUser.setFont(new Font("Verdana", Font.BOLD, 15));
 		
 		JPopupMenu popupMenu = new JPopupMenu();
 		JMenuItem btnStudents = new JMenuItem("Students");
@@ -258,7 +262,7 @@ public class MainMenuFrame extends JFrame {
 		JPanel UserPanel = new JPanel();
 		UserPanel.setBackground(new Color(0, 51, 102));
 		UserPanel.setForeground(new Color(0, 51, 102));
-		UserPanel.setBounds(12, 592, 220, 203);
+		UserPanel.setBounds(14, 728, 220, 203);
 		panel.add(UserPanel);
 		UserPanel.setLayout(null);
 		
@@ -270,27 +274,27 @@ public class MainMenuFrame extends JFrame {
 		JLabel lblNewLabel_2 = new JLabel("User:");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNewLabel_2.setForeground(new Color(255, 255, 255));
-		lblNewLabel_2.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2.setBounds(51, 11, 42, 32);
+		lblNewLabel_2.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblNewLabel_2.setBounds(51, 11, 56, 32);
 		UserPanel.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("Date:");
 		lblNewLabel_2_1.setForeground(Color.WHITE);
-		lblNewLabel_2_1.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblNewLabel_2_1.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblNewLabel_2_1.setBounds(10, 76, 56, 18);
 		UserPanel.add(lblNewLabel_2_1);
 		
 		JLabel lblNewLabel_2_1_1 = new JLabel("Login Time:");
 		lblNewLabel_2_1_1.setForeground(Color.WHITE);
-		lblNewLabel_2_1_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_1_1.setBounds(10, 134, 83, 18);
+		lblNewLabel_2_1_1.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblNewLabel_2_1_1.setBounds(10, 134, 97, 18);
 		UserPanel.add(lblNewLabel_2_1_1);
 		
 		lblUserType = new JLabel("Librarian");
 		lblUserType.setHorizontalAlignment(SwingConstants.LEFT);
 		lblUserType.setForeground(Color.WHITE);
-		lblUserType.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblUserType.setBounds(91, 11, 107, 32);
+		lblUserType.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblUserType.setBounds(108, 11, 107, 32);
 		lblUserType.setText(userType);
 		
 		UserPanel.add(lblUserType);
@@ -299,7 +303,7 @@ public class MainMenuFrame extends JFrame {
 		btnLogOut.setBounds(0, 163, 220, 32);
 		UserPanel.add(btnLogOut);
 		btnLogOut.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\exit (3).png"));
-		btnLogOut.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnLogOut.setFont(new Font("Verdana", Font.PLAIN, 20));
 		btnLogOut.setBackground(new Color(0, 51, 102));
 		btnLogOut.setForeground(new Color(255, 255, 255));
 		
@@ -308,26 +312,26 @@ public class MainMenuFrame extends JFrame {
 		
 		JLabel lblNewLabel_2_1_2 = new JLabel("Time:");
 		lblNewLabel_2_1_2.setForeground(Color.WHITE);
-		lblNewLabel_2_1_2.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblNewLabel_2_1_2.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblNewLabel_2_1_2.setBounds(10, 105, 56, 18);
 		UserPanel.add(lblNewLabel_2_1_2);
 		
 		l_date = new JLabel("0");
 		l_date.setForeground(Color.WHITE);
-		l_date.setFont(new Font("Verdana", Font.PLAIN, 14));
-		l_date.setBounds(76, 76, 122, 18);
+		l_date.setFont(new Font("Verdana", Font.PLAIN, 15));
+		l_date.setBounds(108, 76, 102, 18);
 		UserPanel.add(l_date);
 		
 		l_time = new JLabel("0");
 		l_time.setForeground(Color.WHITE);
-		l_time.setFont(new Font("Verdana", Font.PLAIN, 14));
-		l_time.setBounds(76, 105, 122, 18);
+		l_time.setFont(new Font("Verdana", Font.PLAIN, 15));
+		l_time.setBounds(108, 105, 102, 18);
 		UserPanel.add(l_time);
 		
 		l_log = new JLabel("0");
 		l_log.setForeground(Color.WHITE);
-		l_log.setFont(new Font("Verdana", Font.PLAIN, 14));
-		l_log.setBounds(100, 134, 113, 18);
+		l_log.setFont(new Font("Verdana", Font.PLAIN, 15));
+		l_log.setBounds(107, 134, 113, 18);
 		SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         loginTime = timeFormat.format(new Date());
         l_log.setText(loginTime);
@@ -338,8 +342,8 @@ public class MainMenuFrame extends JFrame {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
 		String formattedYear = currentYear.format(formatter);
 		lblAcadYear.setForeground(Color.WHITE);
-		lblAcadYear.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblAcadYear.setBounds(76, 47, 97, 18);
+		lblAcadYear.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblAcadYear.setBounds(101, 47, 97, 18);
 		AcademicYear ya = AcademicYear.now( ZoneId.systemDefault( ));
 		String formattedAcadYear = ya.format( FormatStyle.FULL);
 		lblAcadYear.setText(formattedAcadYear);
@@ -347,18 +351,18 @@ public class MainMenuFrame extends JFrame {
 		
 		JLabel lblNewLabel_2_1_2_1 = new JLabel("Acad Yr:");
 		lblNewLabel_2_1_2_1.setForeground(Color.WHITE);
-		lblNewLabel_2_1_2_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_1_2_1.setBounds(10, 47, 70, 18);
+		lblNewLabel_2_1_2_1.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblNewLabel_2_1_2_1.setBounds(10, 47, 83, 18);
 		UserPanel.add(lblNewLabel_2_1_2_1);
 		
 		JButton btnDashboard = new JButton(" Dashboard");
 		btnDashboard.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\webpage.png"));
 		btnDashboard.setHorizontalAlignment(SwingConstants.LEFT);
 		btnDashboard.setForeground(Color.WHITE);
-		btnDashboard.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnDashboard.setFont(new Font("Verdana", Font.BOLD, 15));
 		btnDashboard.setBorderPainted(false);
 		btnDashboard.setBackground(new Color(0, 51, 102));
-		btnDashboard.setBounds(14, 174, 218, 41);
+		btnDashboard.setBounds(14, 222, 218, 41);
 		panel.add(btnDashboard);
 		
 		JButton btnLogs = new JButton(" Log-in Trail");
@@ -378,10 +382,10 @@ public class MainMenuFrame extends JFrame {
 		btnLogs.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\logimg-small.png"));
 		btnLogs.setHorizontalAlignment(SwingConstants.LEFT);
 		btnLogs.setForeground(Color.WHITE);
-		btnLogs.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnLogs.setFont(new Font("Verdana", Font.BOLD, 15));
 		btnLogs.setBorderPainted(false);
 		btnLogs.setBackground(new Color(0, 51, 102));
-		btnLogs.setBounds(12, 475, 220, 40);
+		btnLogs.setBounds(14, 542, 220, 40);
 		panel.add(btnLogs);
         contentPanel.removeAll();  // Remove existing components
         contentPanel.setLayout(null);
@@ -569,7 +573,7 @@ public class MainMenuFrame extends JFrame {
 	    
 	    Dashboard dashBoard = new Dashboard();
 		dashBoard = new Dashboard();
-		dashBoard.setBounds(0, 0, 1256, 756);
+		dashBoard.setBounds(0, 0, 1425, 980);
 		dashBoard.setLayout(null);  // Set layout to null
         contentPanel.removeAll();  // Remove existing components
         contentPanel.add(dashBoard);

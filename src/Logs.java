@@ -28,7 +28,7 @@ public class Logs extends JPanel {
 		setLayout(null);
 		
 		JPanel panel = new gradientBackground();
-		panel.setBounds(0, 0, 1338, 744);
+		panel.setBounds(0, 0, 1425, 980);
 		add(panel);
 		panel.setLayout(null);
 		

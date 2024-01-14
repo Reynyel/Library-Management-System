@@ -80,12 +80,12 @@ public class RegisterStudent extends JPanel {
 	 * Create the frame.
 	 */
 	public RegisterStudent() {
-		setPreferredSize(new Dimension(1256, 686));
+		setPreferredSize(new Dimension(1425, 980));
 	    setLayout(null);
-		setBounds(100, 100, 1687, 743);
+		setBounds(100, 100, 1425, 980);
 		
 		panel = new gradientBackground();
-        panel.setBounds(0, 0, 1256, 686);
+        panel.setBounds(0, 0, 1425, 980);
         add(panel);
         panel.setLayout(null);
 		

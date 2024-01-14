@@ -81,13 +81,13 @@ public class RegisterStaff extends JPanel {
 	 * Create the frame.
 	 */
 	public RegisterStaff() {
-		setPreferredSize(new Dimension(1256, 686));
+		setPreferredSize(new Dimension(1425, 980));
 	    setLayout(null);
 		setBounds(100, 100, 1687, 743);
 		
 		panel = new gradientBackground();
 		panel.setBackground(new Color(153, 153, 255));
-        panel.setBounds(0, 0, 1510, 743);
+        panel.setBounds(0, 0, 1425, 980);
         add(panel);
         panel.setLayout(null);
 		

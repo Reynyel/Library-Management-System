@@ -31,7 +31,7 @@ public class BackupDB extends JPanel {
 		setLayout(null);
 		
 		JPanel panel = new gradientBackground();
-		panel.setBounds(0, 0, 1346, 718);
+		panel.setBounds(0, 0, 1425, 980);
 		add(panel);
 		panel.setLayout(null);
 		
