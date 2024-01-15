@@ -450,7 +450,7 @@ public class RegisterBooksFrame extends JPanel {
 		txtTitle.setBounds(51, 610, 300, 35);
 		txtTitle.setColumns(10);
 			
-		JButton btnExport = new JButton("Export to CSV");
+		JButton btnExport = new JButton("Generate Report");
 		btnExport.addActionListener(new ActionListener() {
 			 public void actionPerformed(ActionEvent e) {
 			        // Show a dialog to get user's choice
