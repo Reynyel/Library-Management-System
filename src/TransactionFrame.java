@@ -120,7 +120,7 @@ public class TransactionFrame extends JPanel {
 		
 		AlternateColorRender alternate = new AlternateColorRender();
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 226, 1236, 413);
+		scrollPane.setBounds(10, 480, 1405, 447);
 		panel.add(scrollPane);
 				
 		Object[][] data = {null, null, null, null, null, null, null, null, null, null};
@@ -148,28 +148,28 @@ public class TransactionFrame extends JPanel {
 
 		
 		txtBorrID = new JTextField();
-		txtBorrID.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtBorrID.setFont(new Font("Verdana", Font.PLAIN, 18));
 		txtBorrID.setColumns(10);
-		txtBorrID.setBounds(133, 185, 681, 30);
+		txtBorrID.setBounds(952, 231, 342, 35);
 		panel.add(txtBorrID);
 		
 		JLabel lblBorrowersName = new JLabel("Borrower's ID");
 		lblBorrowersName.setForeground(new Color(255, 255, 255));
-		lblBorrowersName.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblBorrowersName.setBounds(10, 184, 113, 30);
+		lblBorrowersName.setFont(new Font("Tahoma", Font.BOLD, 17));
+		lblBorrowersName.setBounds(952, 195, 133, 30);
 		panel.add(lblBorrowersName);
 		
 				
-		JButton btnUpdate = new JButton("Update");
+		JButton btnUpdate = new JButton("Enter");
 		btnUpdate.setBackground(new Color(34, 139, 34));
 		btnUpdate.setForeground(new Color(255, 255, 255));
-		btnUpdate.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
-		btnUpdate.setBounds(824, 183, 128, 30);
+		btnUpdate.setFont(new Font("Verdana", Font.BOLD, 17));
+		btnUpdate.setBounds(1034, 277, 173, 40);
 		btnUpdate.setBorderPainted(false);
 		panel.add(btnUpdate);
 		
 		JRadioButton radioTransaction = new JRadioButton("View Transactions");
-		radioTransaction.setFont(new Font("Verdana", Font.PLAIN, 12));
+		radioTransaction.setFont(new Font("Verdana", Font.BOLD, 15));
 		radioTransaction.setForeground(new Color(255, 255, 255));
 		radioTransaction.setBackground(new Color(0, 0, 0));
 		radioTransaction.setOpaque(false);
@@ -180,11 +180,11 @@ public class TransactionFrame extends JPanel {
 				displayTransactionHistory();
 			}
 		});
-		radioTransaction.setBounds(981, 185, 145, 30);
+		radioTransaction.setBounds(1121, 443, 173, 30);
 		panel.add(radioTransaction);
 		
 		JRadioButton radioBooks = new JRadioButton("View Books");
-		radioBooks.setFont(new Font("Verdana", Font.PLAIN, 12));
+		radioBooks.setFont(new Font("Verdana", Font.BOLD, 15));
 		radioBooks.setForeground(new Color(255, 255, 255));
 		radioBooks.setBackground(new Color(0, 0, 0));
 		radioBooks.setOpaque(false);
@@ -195,7 +195,7 @@ public class TransactionFrame extends JPanel {
 				viewBooks();
 			}
 		});	
-		radioBooks.setBounds(1128, 185, 109, 30);
+		radioBooks.setBounds(1296, 443, 119, 30);
 		panel.add(radioBooks);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -220,98 +220,98 @@ public class TransactionFrame extends JPanel {
 		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnExport.setBorderPainted(false);
 		btnExport.setBackground(new Color(0, 128, 0));
-		btnExport.setBounds(1096, 650, 150, 25);
+		btnExport.setBounds(1165, 944, 250, 25);
 		panel.add(btnExport);
 		
 		txtBookNum = new JTextField();
-		txtBookNum.setBounds(133, 53, 469, 27);
+		txtBookNum.setBounds(113, 187, 529, 35);
 		panel.add(txtBookNum);
-		txtBookNum.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtBookNum.setFont(new Font("Verdana", Font.PLAIN, 18));
 		txtBookNum.setColumns(10);
 		
 		JLabel lblBookNumber = new JLabel("Book Number");
 		lblBookNumber.setForeground(new Color(255, 255, 255));
-		lblBookNumber.setBounds(20, 52, 91, 28);
+		lblBookNumber.setBounds(113, 158, 123, 28);
 		panel.add(lblBookNumber);
-		lblBookNumber.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblBookNumber.setFont(new Font("Tahoma", Font.BOLD, 17));
 		
 		JLabel lblAuthors = new JLabel("Author(s)");
 		lblAuthors.setForeground(new Color(255, 255, 255));
-		lblAuthors.setBounds(20, 91, 91, 27);
+		lblAuthors.setBounds(113, 247, 91, 27);
 		panel.add(lblAuthors);
-		lblAuthors.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblAuthors.setFont(new Font("Tahoma", Font.BOLD, 17));
 		
 		JLabel lblAccession = new JLabel("Accession");
 		lblAccession.setForeground(new Color(255, 255, 255));
-		lblAccession.setBounds(20, 134, 73, 24);
+		lblAccession.setBounds(113, 336, 91, 24);
 		panel.add(lblAccession);
-		lblAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblAccession.setFont(new Font("Tahoma", Font.BOLD, 17));
 		
 		cbAccession = new JComboBox();
-		cbAccession.setBounds(133, 132, 168, 28);
+		cbAccession.setBounds(113, 365, 168, 28);
 		panel.add(cbAccession);
 		cbAccession.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setStatusBasedOnAccession();
 			}
 		});
-		cbAccession.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		cbAccession.setFont(new Font("Verdana", Font.PLAIN, 18));
 		cbAccession.setBackground(Color.WHITE);
 		
 		txtAuthor = new JTextField();
-		txtAuthor.setBounds(133, 91, 469, 27);
+		txtAuthor.setBounds(113, 272, 529, 35);
 		panel.add(txtAuthor);
-		txtAuthor.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtAuthor.setFont(new Font("Verdana", Font.PLAIN, 18));
 		txtAuthor.setColumns(10);
 		
 		txtStatus = new JTextField();
-		txtStatus.setBounds(383, 133, 114, 27);
+		txtStatus.setBounds(445, 366, 197, 27);
 		panel.add(txtStatus);
-		txtStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtStatus.setFont(new Font("Verdana", Font.PLAIN, 18));
 		txtStatus.setColumns(10);
 		
 		JLabel lblStatus = new JLabel("Status");
 		lblStatus.setForeground(new Color(255, 255, 255));
-		lblStatus.setBounds(323, 131, 50, 30);
+		lblStatus.setBounds(445, 333, 73, 30);
 		panel.add(lblStatus);
-		lblStatus.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStatus.setFont(new Font("Tahoma", Font.BOLD, 17));
 		
 		txtTitle = new JTextField();
-		txtTitle.setBounds(133, 16, 468, 27);
+		txtTitle.setBounds(113, 99, 529, 35);
 		panel.add(txtTitle);
-		txtTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		txtTitle.setFont(new Font("Verdana", Font.PLAIN, 18));
 		txtTitle.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("Book Title");
 		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setBounds(10, 15, 90, 28);
+		lblNewLabel.setBounds(113, 60, 90, 28);
 		panel.add(lblNewLabel);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
 		JButton btnSearchBook = new JButton("Search Book");
-		btnSearchBook.setBounds(611, 13, 128, 30);
+		btnSearchBook.setBounds(652, 98, 155, 35);
 		panel.add(btnSearchBook);
 		btnSearchBook.setForeground(new Color(255, 255, 255));
-		btnSearchBook.setBackground(new Color(220, 20, 60));
+		btnSearchBook.setBackground(new Color(65, 105, 225));
 		btnSearchBook.setBorderPainted(false);
-		btnSearchBook.setFont(new Font("Segoe UI Light", Font.BOLD, 15));
+		btnSearchBook.setFont(new Font("Verdana", Font.BOLD, 15));
 		
 		JLabel lblImportantFields = new JLabel("- Important fields");
 		lblImportantFields.setForeground(Color.WHITE);
 		lblImportantFields.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblImportantFields.setBounds(835, 17, 133, 30);
+		lblImportantFields.setBounds(542, 71, 100, 30);
 		panel.add(lblImportantFields);
 		
 		JLabel lblStudentNo_1_2 = new JLabel("*");
 		lblStudentNo_1_2.setForeground(Color.RED);
 		lblStudentNo_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStudentNo_1_2.setBounds(824, 16, 23, 30);
+		lblStudentNo_1_2.setBounds(531, 70, 23, 30);
 		panel.add(lblStudentNo_1_2);
 		
 		JLabel lblStudentNo_1_2_1 = new JLabel("*");
 		lblStudentNo_1_2_1.setForeground(Color.RED);
 		lblStudentNo_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblStudentNo_1_2_1.setBounds(90, 11, 23, 30);
+		lblStudentNo_1_2_1.setBounds(206, 60, 16, 28);
 		panel.add(lblStudentNo_1_2_1);
 		btnSearchBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
