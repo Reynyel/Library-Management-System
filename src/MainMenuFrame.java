@@ -417,7 +417,7 @@ public class MainMenuFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				TransactionFrame transacFrame;
 				transacFrame = new TransactionFrame();
-				transacFrame.setBounds(0, 0, 1256, 686);
+				transacFrame.setBounds(0, 0, 1425, 980);
 				transacFrame.setLayout(null);  // Set layout to null
 	            contentPanel.removeAll();  // Remove existing components
 	            contentPanel.add(transacFrame);
@@ -431,7 +431,7 @@ public class MainMenuFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				LendingBooksFrame returning = new LendingBooksFrame();
 				returning = new LendingBooksFrame();
-				returning.setBounds(0, 0, 1256, 686);
+				returning.setBounds(0, 0, 1425, 980);
 				returning.setLayout(null);  // Set layout to null
 	            contentPanel.removeAll();  // Remove existing components
 	            contentPanel.add(returning);
@@ -447,7 +447,7 @@ public class MainMenuFrame extends JFrame {
 				RegisterBooksFrame registerFrame;
 				try {
 		            registerFrame = new RegisterBooksFrame();
-		            registerFrame.setBounds(0, 0, 1256, 686);
+		            registerFrame.setBounds(0, 0, 1425, 980);
 		            registerFrame.setLayout(null);  // Set layout to null
 		            contentPanel.removeAll();  // Remove existing components
 		            contentPanel.add(registerFrame);
@@ -465,7 +465,7 @@ public class MainMenuFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	RegisterStudent student = new RegisterStudent();
             	student = new RegisterStudent();
-            	student.setBounds(0, 0, 1256, 686);
+            	student.setBounds(0, 0, 1425, 980);
             	student.setLayout(null);  // Set layout to null
 	            contentPanel.removeAll();  // Remove existing components
 	            contentPanel.add(student);
@@ -480,7 +480,7 @@ public class MainMenuFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	RegisterStaff staff = new RegisterStaff();
             	staff = new RegisterStaff();
-            	staff.setBounds(0, 0, 1256, 686);
+            	staff.setBounds(0, 0, 1425, 980);
             	staff.setLayout(null);  // Set layout to null
 	            contentPanel.removeAll();  // Remove existing components
 	            contentPanel.add(staff);
@@ -496,7 +496,7 @@ public class MainMenuFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
             	BlockedUsers blocked = new BlockedUsers();
             	blocked = new BlockedUsers();
-            	blocked.setBounds(0, 0, 1256, 686);
+            	blocked.setBounds(0, 0, 1425, 980);
             	blocked.setLayout(null);  // Set layout to null
 	            contentPanel.removeAll();  // Remove existing components
 	            contentPanel.add(blocked);
