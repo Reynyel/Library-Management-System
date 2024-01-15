@@ -128,7 +128,13 @@ public class MainMenuFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public MainMenuFrame(String userType) {
-
+		// Calculate the center of the screen
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int centerX = (screenSize.width - getWidth()) / 2;
+		int centerY = (screenSize.height - getHeight()) / 2;
+		
+		// Set the frame location
+		setLocation(centerX, centerY);
 		this.userType = userType;
 		
 		       
@@ -160,7 +166,7 @@ public class MainMenuFrame extends JFrame {
 		
 		contentPanel = new gradientBackground();
 		contentPanel.setBorder(null);
-		contentPanel.setBounds(239, 50, 1425, 968);
+		contentPanel.setBounds(239, 50, 1425, 980);
 		contentPane.add(contentPanel);
 		
 		lblPageTitle = new JLabel("Dashboard");
