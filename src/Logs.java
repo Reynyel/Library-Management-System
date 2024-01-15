@@ -17,6 +17,8 @@ import javax.swing.table.DefaultTableModel;
 
 import GradientBackground.gradientBackground;
 import java.awt.Font;
+import javax.swing.SwingConstants;
+import java.awt.Color;
 
 public class Logs extends JPanel {
 	private JTable table;
@@ -33,7 +35,7 @@ public class Logs extends JPanel {
 		panel.setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(319, 169, 655, 400);
+		scrollPane.setBounds(319, 209, 767, 544);
 		panel.add(scrollPane);
 		
 		table = new JTable();
@@ -47,6 +49,13 @@ public class Logs extends JPanel {
 			}
 		));
 		scrollPane.setViewportView(table);
+		
+		JLabel lblNewLabel = new JLabel("User Log Trail");
+		lblNewLabel.setForeground(new Color(255, 255, 255));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Verdana", Font.BOLD, 40));
+		lblNewLabel.setBounds(536, 119, 337, 61);
+		panel.add(lblNewLabel);
 		
 		viewLogs();
 	}
