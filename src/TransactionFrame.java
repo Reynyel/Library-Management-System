@@ -20,12 +20,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JTextField;
@@ -42,6 +46,8 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
@@ -54,6 +60,20 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.toedter.calendar.IDateEvaluator;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
@@ -71,6 +91,7 @@ public class TransactionFrame extends JPanel {
 	private JTable tblTransac;
 	private JTextField txtBorrID;
 	private JComboBox cbAccession;
+	private List<Book> selectedBooks = new ArrayList<>();
 	/**
 	 * Launch the application.
 	 */
@@ -213,7 +234,7 @@ public class TransactionFrame extends JPanel {
 		JButton btnExport = new JButton("Export to CSV");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				export();
+				testPdf();
 			}
 		});
 		btnExport.setForeground(Color.WHITE);
@@ -313,6 +334,20 @@ public class TransactionFrame extends JPanel {
 		lblStudentNo_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblStudentNo_1_2_1.setBounds(206, 60, 16, 28);
 		panel.add(lblStudentNo_1_2_1);
+		
+		JButton btnCheckout = new JButton("Checkout");
+		btnCheckout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				displaySelectedBooksDetails(selectedBooks);
+				checkout();
+			}
+		});
+		btnCheckout.setForeground(Color.WHITE);
+		btnCheckout.setFont(new Font("Verdana", Font.BOLD, 17));
+		btnCheckout.setBorderPainted(false);
+		btnCheckout.setBackground(new Color(34, 139, 34));
+		btnCheckout.setBounds(1034, 340, 173, 40);
+		panel.add(btnCheckout);
 		btnSearchBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
@@ -328,6 +363,213 @@ public class TransactionFrame extends JPanel {
 	PreparedStatement pst;
 	ResultSet rs;
 	
+	// Method to display details of selected books in a pop-up message
+    private void displaySelectedBooksDetails(List<Book> selectedBooks) {
+        // Build the message for the pop-up dialog
+        StringBuilder message = new StringBuilder("Books to be borrowed:\n\n");
+        for (Book book : selectedBooks) {
+            message.append("Book Number: ").append(book.getBookNum()).append("\n");
+            message.append("Title: ").append(book.getTitle()).append("\n");
+            message.append("Accession Number: ").append(book.getAccessionNum()).append("\n");
+            message.append("Borrower: ").append(book.getBorrowerName()).append("\n\n");
+        }
+
+        // Display the details in a pop-up message
+        JOptionPane.showMessageDialog(getRootPane(), message.toString(), "Selected Books Details", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+ // check if file already exissts
+ 		private String getUniqueFileName(String baseFileName) {
+ 		    File file = new File(baseFileName);
+ 		    if (!file.exists()) {
+ 		        return baseFileName;  // File doesn't exist, return the original name
+ 		    }
+
+ 		    int counter = 1;
+ 		    String fileName;
+ 		    do {
+ 		        fileName = baseFileName.replaceFirst("[.][^.]+$", "(" + counter + ").$0");
+ 		        file = new File(fileName);
+ 		        counter++;
+ 		    } while (file.exists());
+
+ 		    return fileName;
+ 		}
+
+ 		
+ 		public void testPdf() {
+ 			// Fetch data from the database
+ 	        try {
+ 				pst = conn.prepareStatement("SELECT * FROM Transactions WHERE BookStatus = 'Borrowed'");
+ 				rs = pst.executeQuery();
+ 				
+ 				Document PDFReport = new Document();
+ 				    
+ 			    
+ 				try {
+ 					// Set the page size to landscape
+ 		            PDFReport.setPageSize(PageSize.A3.rotate());
+ 		         // Inside testPdf and testPdfBySub methods
+ 		            String outputFileName = getUniqueFileName("C:\\Users\\LINDELL\\Desktop\\TransactionReport.pdf");
+ 		            PdfWriter.getInstance(PDFReport, new FileOutputStream(outputFileName));
+
+ 					PDFReport.open();
+ 					
+ 					com.itextpdf.text.Font customFont = FontFactory.getFont(FontFactory.HELVETICA, 18, Font.BOLD, BaseColor.BLACK);
+ 					com.itextpdf.text.Font customFont2 = FontFactory.getFont(FontFactory.HELVETICA, 15, Font.BOLD, BaseColor.BLACK);
+ 					// Add table header
+ 					com.itextpdf.text.Font headerFont = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD, BaseColor.BLACK);
+ 					// Add image
+ 		            try {
+ 		                Image logo = Image.getInstance("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\logo1.png");  // Replace with the actual path to your image
+ 		                logo.setAlignment(Element.ALIGN_MIDDLE); // Adjust the alignment as needed
+ 		                PDFReport.add(logo);
+ 		                
+ 		            } catch (BadElementException | IOException e) {
+ 		                e.printStackTrace();
+ 		            }
+ 		            
+ 		            Font boldFont = new Font(FontFactory.HELVETICA, 16, Font.BOLD);
+ 		            // Define a custom font
+ 		            
+ 		         // Add title
+ 		            Paragraph title1 = new Paragraph(" Santa Rosa Educational Institute", customFont);
+ 		            title1.setAlignment(Element.ALIGN_CENTER);
+ 		            PDFReport.add(title1);
+ 		            
+ 					// Add title
+ 		            Paragraph title2 = new Paragraph("List of Recorded Transactions");
+ 		            title2.setAlignment(Element.ALIGN_CENTER);
+ 		            PDFReport.add(title2);
+
+ 		            // Add academic year
+ 		            AcademicYear ya = AcademicYear.now(ZoneId.systemDefault());
+ 		            String formattedAcadYear = ya.format(FormatStyle.FULL);
+ 		            Paragraph acadYear = new Paragraph("Academic Year: " + formattedAcadYear);
+ 		            acadYear.setAlignment(Element.ALIGN_CENTER);
+ 		            PDFReport.add(acadYear);
+ 		         
+ 		            // Add space (empty line) between academic year and table header
+ 		            PDFReport.add(new Paragraph("\n"));
+ 		            
+ 					PdfPTable PDFTable = new PdfPTable(9);
+ 					
+ 					 // Add table header
+ 		            String[] headers = {"Transaction ID", "Book Num", "Title", "Accession Number", "Status", "Transaction Date", "Return Date",
+ 		            		"Borrower", "ID"};
+ 		            
+ 		            
+ 		            int totalStudents = 0;
+ 		            String preparedBy = ""; // Initialize with an empty string
+ 		            
+ 		            for (String header : headers) {
+ 		            	PdfPCell headerCell = new PdfPCell(new Phrase(header, headerFont));
+ 		                headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+ 		                headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+ 		                headerCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+ 		                PDFTable.addCell(headerCell);
+ 		            }
+ 		            
+ 					PdfPCell table_cell;
+ 					
+ 					while(rs.next()) {
+ 						String transaction_id = rs.getString("transaction_id");
+ 						table_cell = new PdfPCell(new Phrase(transaction_id));
+ 						PDFTable.addCell(table_cell);
+ 						String BooNum = rs.getString("BooNum");
+ 						table_cell = new PdfPCell(new Phrase(BooNum));
+ 						PDFTable.addCell(table_cell);
+ 						String Title = rs.getString("Title");
+ 						table_cell = new PdfPCell(new Phrase(Title));
+ 						PDFTable.addCell(table_cell);
+ 						String AccessionNum = rs.getString("AccessionNum");
+ 						table_cell = new PdfPCell(new Phrase(AccessionNum));
+ 						PDFTable.addCell(table_cell);
+ 						String BookStatus = rs.getString("BookStatus");
+ 						table_cell = new PdfPCell(new Phrase(BookStatus));
+ 						PDFTable.addCell(table_cell);
+ 						String transaction_date = rs.getString("transaction_date");
+ 						table_cell = new PdfPCell(new Phrase(transaction_date));
+ 						PDFTable.addCell(table_cell);
+ 						String return_date = rs.getString("return_date");
+ 						table_cell = new PdfPCell(new Phrase(return_date));
+ 						PDFTable.addCell(table_cell);
+ 						String Borrower = rs.getString("Borrower");
+ 						table_cell = new PdfPCell(new Phrase(Borrower));
+ 						PDFTable.addCell(table_cell);
+ 						String user_id = rs.getString("user_id");
+ 						table_cell = new PdfPCell(new Phrase(user_id));
+ 						PDFTable.addCell(table_cell);
+ 						
+ 						
+ 						totalStudents++;
+ 					}
+ 					
+ 											
+ 				
+ 					PDFReport.add(PDFTable);
+ 					// Add total number of books
+ 					Paragraph line = new Paragraph("\n");
+ 					line.setAlignment(Element.ALIGN_RIGHT);
+ 					PDFReport.add(line);
+ 					
+ 					// Add total number of books
+ 					Paragraph totalBooksParagraph = new Paragraph("Total No. of Transactions: " + totalStudents, customFont2);
+ 					totalBooksParagraph.setAlignment(Element.ALIGN_LEFT);
+ 					totalBooksParagraph.setIndentationLeft(125);
+ 					PDFReport.add(totalBooksParagraph);
+
+ 					// Add who generated the report
+ 					String userType = MainMenuFrame.getUser();
+ 					if ("Librarian".equalsIgnoreCase(userType)) {
+ 					    preparedBy = "Librarian";
+ 					} else if ("Admin".equalsIgnoreCase(userType)) {
+ 					    preparedBy = "Admin";
+ 					}
+ 					
+ 					// Add who generated the report
+ 					Paragraph generatedByParagraph = new Paragraph("Prepared by: " + preparedBy, customFont2);
+ 					generatedByParagraph.setAlignment(Element.ALIGN_LEFT);
+ 					generatedByParagraph.setIndentationLeft(125);
+ 					PDFReport.add(generatedByParagraph);
+ 					
+ 					// Get the current date and time
+ 				    LocalDateTime currentTime = LocalDateTime.now();
+
+ 				    // Format the date and time using the desired pattern
+ 				    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy hh:mma");
+ 				    String formattedDateTime = currentTime.format(formatter);
+ 				    
+ 					// Add who generated the report
+ 					Paragraph reportGenerated = new Paragraph("Report Generated: " + formattedDateTime, customFont2);
+ 					reportGenerated.setAlignment(Element.ALIGN_LEFT);
+ 					reportGenerated.setIndentationLeft(125);
+ 					PDFReport.add(reportGenerated);
+ 					
+ 					// Add who generated the report with underlined name
+ 					Paragraph principal = new Paragraph();
+ 					Chunk nameChunk = new Chunk("Elaine B. Santos, Ed.D.", customFont2);
+ 					nameChunk.setUnderline(1.5f, -1);  // Adjust the values for underline thickness and position
+ 					principal.add(nameChunk);
+ 					principal.add(Chunk.NEWLINE);
+ 					
+ 					// Add indentation for "Principal"
+ 					Paragraph principalRole = new Paragraph("Principal", customFont2);
+ 					principalRole.setIndentationLeft(50);  // Adjust the indentation as needed
+ 					principal.add(principalRole);
+ 					principal.setIndentationLeft(800);
+ 					PDFReport.add(principal);
+ 					PDFReport.close();
+ 				} catch (FileNotFoundException | DocumentException e) {
+ 					// TODO Auto-generated catch block
+ 					e.printStackTrace();
+ 				}
+ 			} catch (SQLException e) {
+ 				// TODO Auto-generated catch block
+ 				e.printStackTrace();
+ 			}
+
+ 		}
 
 	public void export() {
 	    // Create a format for the date in the file name
@@ -582,6 +824,27 @@ public class TransactionFrame extends JPanel {
 
     private String userId;
     private JTextField txtStatus;
+    
+ // Method to check if the current day is a weekend
+    private boolean isWeekend() {
+        LocalDate currentDate = LocalDate.now();
+        DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+        return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
+    }
+
+    // Method to show a message
+    private void showMessage(String message) {
+        Font customFont = new Font("Arial", Font.PLAIN, 16);
+        UIManager.put("OptionPane.messageFont", customFont);
+        UIManager.put("OptionPane.buttonFont", customFont);
+
+        JOptionPane.showMessageDialog(getRootPane(), message, "Note", JOptionPane.INFORMATION_MESSAGE);
+
+        // Reset UIManager properties to default
+        UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+        UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+    }
+
     public void update() {
         try {
             // Load the JDBC driver (version 4.0 or later)
@@ -602,6 +865,11 @@ public class TransactionFrame extends JPanel {
             
             String userType = getUserType(borrId);
             
+            // Check if it's the weekend
+            if (isWeekend()) {
+                showMessage("Cannot make transactions on a weekend.");
+                return; // Exit the method without proceeding with the transaction
+            }
 	                
             // check if the user has inserted a book title
             if(tl.isEmpty() && bn.isEmpty() && obAcc == null) {
@@ -674,7 +942,18 @@ public class TransactionFrame extends JPanel {
             			    // Display a confirmation dialog before proceeding
             			    int confirmResult = showConfirmDialog(borrowerName, gradeLevel, section, tl, acc);
                             if (confirmResult == JOptionPane.YES_OPTION) {
-                                insertTransaction(bn, tl, acc, borrowerName);
+                            	Book selectedBook = new Book(bn, tl, acc, borrowerName, borrId, userType);
+                                selectedBooks.add(selectedBook);
+                                Font customFont = new Font("Arial", Font.PLAIN, 16);
+            	                UIManager.put("OptionPane.messageFont", customFont);
+            	                UIManager.put("OptionPane.buttonFont", customFont);
+            	                		
+            	                JOptionPane.showMessageDialog(getRootPane(), "Book Registered!",
+            	                        "Note", JOptionPane.INFORMATION_MESSAGE);
+
+            	                // Reset UIManager properties to default
+            	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+            	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
                             }          			
             			}
             			else {
@@ -708,7 +987,18 @@ public class TransactionFrame extends JPanel {
             						", " + borrowerNameResult.getString("FirstName") +
             						" " + borrowerNameResult.getString("MiddleName");
             				
-            				insertTransaction(bn, tl, acc, borrowerName);
+            				Book selectedBook = new Book(bn, tl, acc, borrowerName, borrId, userType);
+                            selectedBooks.add(selectedBook);
+                            Font customFont = new Font("Arial", Font.PLAIN, 16);
+        	                UIManager.put("OptionPane.messageFont", customFont);
+        	                UIManager.put("OptionPane.buttonFont", customFont);
+        	                		
+        	                JOptionPane.showMessageDialog(getRootPane(), "Book Registered!",
+        	                        "Note", JOptionPane.INFORMATION_MESSAGE);
+
+        	                // Reset UIManager properties to default
+        	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+        	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
             				
             			}
             			
@@ -749,6 +1039,17 @@ public class TransactionFrame extends JPanel {
         }
     }
     
+    public void checkout() {
+        // Iterate through the ArrayList and insert records into the database
+        for (Book selectedBook : selectedBooks) {
+        	
+            insertTransaction(selectedBook.getBookNum(), selectedBook.getTitle(), selectedBook.getAccessionNum(), selectedBook.getBorrowerName(), selectedBook.getUserID(), selectedBook.getUserID());
+        }
+
+        // Clear the ArrayList after checking out
+        selectedBooks.clear();
+    }
+
     private int showConfirmDialog(String borrowerName, String gradeLevel, String section, String title, int accessionNum) {
         String message = "Confirm borrowing:\n\n"
         		+ "Title: " + title + "\n"
@@ -773,7 +1074,7 @@ public class TransactionFrame extends JPanel {
     }
     
 
-    private void insertTransaction(String bn, String tl, int acc, String borrowerName) {
+    private void insertTransaction(String bn, String tl, int acc, String borrowerName, String id, String userTypee) {
         String checkId = userId;
 
         try {
@@ -803,7 +1104,7 @@ public class TransactionFrame extends JPanel {
             		int rowAffected = updateBookStatusStmt.executeUpdate();
             		String borrId = txtBorrID.getText();
             		
-            		String userType = getUserType(borrId);
+            		String userType = getUserType(id);
             		
     		        
     		        // Print or use the formattedDate as needed
@@ -818,7 +1119,7 @@ public class TransactionFrame extends JPanel {
             				pstmt.setString(2, tl);
             				pstmt.setInt(3, acc);
             				pstmt.setString(4, borrowerName);         				
-            				pstmt.setString(5, userId);
+            				pstmt.setString(5, id);
             				pstmt.setString(6, userType);
             				
             				
@@ -851,7 +1152,7 @@ public class TransactionFrame extends JPanel {
             				pstmt.setString(2, tl);
             				pstmt.setInt(3, acc);
             				pstmt.setString(4, borrowerName);
-            				pstmt.setString(5, userId);
+            				pstmt.setString(5, id);
             				pstmt.setString(6, userType);
             				
             				// Execute the update
@@ -910,8 +1211,7 @@ public class TransactionFrame extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }   
-    
+    }  
     //check if the user is blocked from borrowing
     private boolean blockedFromBorrwing(String userId) {
         boolean alreadyBorrowed = false;

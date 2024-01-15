@@ -16,6 +16,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -26,7 +28,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,6 +43,21 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import GradientBackground.gradientBackground;
 import color.AlternateColorRender;
@@ -85,7 +104,7 @@ public class RegisterStudent extends JPanel {
 		setBounds(100, 100, 1425, 980);
 		
 		panel = new gradientBackground();
-        panel.setBounds(10, -11, 1425, 980);
+        panel.setBounds(0, 0, 1425, 980);
         add(panel);
         panel.setLayout(null);
 		
@@ -288,10 +307,10 @@ public class RegisterStudent extends JPanel {
 		btnUpdate.setBounds(247, 633, 150, 40);
 		panel.add(btnUpdate);
 		
-		JButton btnExport = new JButton("Export to CSV");
+		JButton btnExport = new JButton("Export to PDF");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				export();
+				testPdf();
 			}
 		});
 		btnExport.setForeground(Color.WHITE);
@@ -383,6 +402,189 @@ public class RegisterStudent extends JPanel {
 		        ex.printStackTrace();
 		    }
 		}
+		
+		// check if file already exissts
+		private String getUniqueFileName(String baseFileName) {
+		    File file = new File(baseFileName);
+		    if (!file.exists()) {
+		        return baseFileName;  // File doesn't exist, return the original name
+		    }
+
+		    int counter = 1;
+		    String fileName;
+		    do {
+		        fileName = baseFileName.replaceFirst("[.][^.]+$", "(" + counter + ").$0");
+		        file = new File(fileName);
+		        counter++;
+		    } while (file.exists());
+
+		    return fileName;
+		}
+
+		
+		public void testPdf() {
+			// Fetch data from the database
+	        try {
+				pst = conn.prepareStatement("SELECT * FROM Students");
+				rs = pst.executeQuery();
+				
+				Document PDFReport = new Document();
+				    
+			    
+				try {
+					// Set the page size to landscape
+		            PDFReport.setPageSize(PageSize.A3.rotate());
+		         // Inside testPdf and testPdfBySub methods
+		            String outputFileName = getUniqueFileName("C:\\Users\\LINDELL\\Desktop\\StudentReport.pdf");
+		            PdfWriter.getInstance(PDFReport, new FileOutputStream(outputFileName));
+
+					PDFReport.open();
+					
+					com.itextpdf.text.Font customFont = FontFactory.getFont(FontFactory.HELVETICA, 18, Font.BOLD, BaseColor.BLACK);
+					com.itextpdf.text.Font customFont2 = FontFactory.getFont(FontFactory.HELVETICA, 15, Font.BOLD, BaseColor.BLACK);
+					// Add table header
+					com.itextpdf.text.Font headerFont = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD, BaseColor.BLACK);
+					// Add image
+		            try {
+		                Image logo = Image.getInstance("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\logo1.png");  // Replace with the actual path to your image
+		                logo.setAlignment(Element.ALIGN_MIDDLE); // Adjust the alignment as needed
+		                PDFReport.add(logo);
+		                
+		            } catch (BadElementException | IOException e) {
+		                e.printStackTrace();
+		            }
+		            
+		            Font boldFont = new Font(FontFactory.HELVETICA, 16, Font.BOLD);
+		            // Define a custom font
+		            
+		         // Add title
+		            Paragraph title1 = new Paragraph(" Santa Rosa Educational Institute", customFont);
+		            title1.setAlignment(Element.ALIGN_CENTER);
+		            PDFReport.add(title1);
+		            
+					// Add title
+		            Paragraph title2 = new Paragraph("List of All Registered Students");
+		            title2.setAlignment(Element.ALIGN_CENTER);
+		            PDFReport.add(title2);
+
+		            // Add academic year
+		            AcademicYear ya = AcademicYear.now(ZoneId.systemDefault());
+		            String formattedAcadYear = ya.format(FormatStyle.FULL);
+		            Paragraph acadYear = new Paragraph("Academic Year: " + formattedAcadYear);
+		            acadYear.setAlignment(Element.ALIGN_CENTER);
+		            PDFReport.add(acadYear);
+		         
+		            // Add space (empty line) between academic year and table header
+		            PDFReport.add(new Paragraph("\n"));
+		            
+					PdfPTable PDFTable = new PdfPTable(6);
+					
+					 // Add table header
+		            String[] headers = {"Student Number", "Last Name", "First Name", "Middle Name", "Grade Level", "Section"};
+		            
+		            
+		            int totalStudents = 0;
+		            String preparedBy = ""; // Initialize with an empty string
+		            
+		            for (String header : headers) {
+		            	PdfPCell headerCell = new PdfPCell(new Phrase(header, headerFont));
+		                headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+		                headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+		                headerCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+		                PDFTable.addCell(headerCell);
+		            }
+		            
+					PdfPCell table_cell;
+					
+					while(rs.next()) {
+						String studNum = rs.getString("StudentNo");
+						table_cell = new PdfPCell(new Phrase(studNum));
+						PDFTable.addCell(table_cell);
+						String lastName = rs.getString("LastName");
+						table_cell = new PdfPCell(new Phrase(lastName));
+						PDFTable.addCell(table_cell);
+						String firstName = rs.getString("FirstName");
+						table_cell = new PdfPCell(new Phrase(firstName));
+						PDFTable.addCell(table_cell);
+						String middleName = rs.getString("MiddleName");
+						table_cell = new PdfPCell(new Phrase(middleName));
+						PDFTable.addCell(table_cell);
+						String level = rs.getString("GradeLevel");
+						table_cell = new PdfPCell(new Phrase(level));
+						PDFTable.addCell(table_cell);
+						String section = rs.getString("Section");
+						table_cell = new PdfPCell(new Phrase(section));
+						PDFTable.addCell(table_cell);						
+						
+						totalStudents++;
+					}
+					
+											
+				
+					PDFReport.add(PDFTable);
+					// Add total number of books
+					Paragraph line = new Paragraph("\n");
+					line.setAlignment(Element.ALIGN_RIGHT);
+					PDFReport.add(line);
+					
+					// Add total number of books
+					Paragraph totalBooksParagraph = new Paragraph("Total No. of Students Registered: " + totalStudents, customFont2);
+					totalBooksParagraph.setAlignment(Element.ALIGN_LEFT);
+					totalBooksParagraph.setIndentationLeft(125);
+					PDFReport.add(totalBooksParagraph);
+
+					// Add who generated the report
+					String userType = MainMenuFrame.getUser();
+					if ("Librarian".equalsIgnoreCase(userType)) {
+					    preparedBy = "Librarian";
+					} else if ("Admin".equalsIgnoreCase(userType)) {
+					    preparedBy = "Admin";
+					}
+					
+					// Add who generated the report
+					Paragraph generatedByParagraph = new Paragraph("Prepared by: " + preparedBy, customFont2);
+					generatedByParagraph.setAlignment(Element.ALIGN_LEFT);
+					generatedByParagraph.setIndentationLeft(125);
+					PDFReport.add(generatedByParagraph);
+					
+					// Get the current date and time
+				    LocalDateTime currentTime = LocalDateTime.now();
+
+				    // Format the date and time using the desired pattern
+				    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy hh:mma");
+				    String formattedDateTime = currentTime.format(formatter);
+				    
+					// Add who generated the report
+					Paragraph reportGenerated = new Paragraph("Report Generated: " + formattedDateTime, customFont2);
+					reportGenerated.setAlignment(Element.ALIGN_LEFT);
+					reportGenerated.setIndentationLeft(125);
+					PDFReport.add(reportGenerated);
+					
+					// Add who generated the report with underlined name
+					Paragraph principal = new Paragraph();
+					Chunk nameChunk = new Chunk("Elaine B. Santos, Ed.D.", customFont2);
+					nameChunk.setUnderline(1.5f, -1);  // Adjust the values for underline thickness and position
+					principal.add(nameChunk);
+					principal.add(Chunk.NEWLINE);
+					
+					// Add indentation for "Principal"
+					Paragraph principalRole = new Paragraph("Principal", customFont2);
+					principalRole.setIndentationLeft(50);  // Adjust the indentation as needed
+					principal.add(principalRole);
+					principal.setIndentationLeft(800);
+					PDFReport.add(principal);
+					PDFReport.close();
+				} catch (FileNotFoundException | DocumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}	
+		
 		
 	public void export() {
 	    // Create a format for the date in the file name

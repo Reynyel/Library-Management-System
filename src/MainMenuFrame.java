@@ -166,7 +166,7 @@ public class MainMenuFrame extends JFrame {
 		
 		contentPanel = new gradientBackground();
 		contentPanel.setBorder(null);
-		contentPanel.setBounds(478, 246, 1425, 980);
+		contentPanel.setBounds(239, 49, 1425, 980);
 		contentPane.add(contentPanel);
 		
 		lblPageTitle = new JLabel("Dashboard");

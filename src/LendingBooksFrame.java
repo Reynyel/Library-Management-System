@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -41,6 +42,21 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import GradientBackground.gradientBackground;
 import color.AlternateColorRender;
 import color.BlockedColorRender;
@@ -49,6 +65,8 @@ import tablemodel.NonEditTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -90,7 +108,7 @@ public class LendingBooksFrame extends JPanel {
 		setBounds(100, 100, 1425, 980);
 		
 		ButtonGroup radioGroup = new ButtonGroup();
-		
+			
 		panel = new gradientBackground();
 		panel.setBackground(new Color(0, 153, 255));
         panel.setBounds(0, 0, 1425, 980);
@@ -327,7 +345,7 @@ public class LendingBooksFrame extends JPanel {
 		JButton btnExport = new JButton("Export to CSV");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				export();
+				testPdf();
 				exportPaid();
 			}
 		});
@@ -435,6 +453,200 @@ public class LendingBooksFrame extends JPanel {
 		}
 	}
 	
+	// check if file already exissts
+			private String getUniqueFileName(String baseFileName) {
+			    File file = new File(baseFileName);
+			    if (!file.exists()) {
+			        return baseFileName;  // File doesn't exist, return the original name
+			    }
+
+			    int counter = 1;
+			    String fileName;
+			    do {
+			        fileName = baseFileName.replaceFirst("[.][^.]+$", "(" + counter + ").$0");
+			        file = new File(fileName);
+			        counter++;
+			    } while (file.exists());
+
+			    return fileName;
+			}
+
+			
+			public void testPdf() {
+				// Fetch data from the database
+		        try {
+					pst = conn.prepareStatement("SELECT * FROM Returned");
+					rs = pst.executeQuery();
+					
+					Document PDFReport = new Document();
+					    
+				    
+					try {
+						// Set the page size to landscape
+			            PDFReport.setPageSize(PageSize.A3.rotate());
+			         // Inside testPdf and testPdfBySub methods
+			            String outputFileName = getUniqueFileName("C:\\Users\\LINDELL\\Desktop\\ReturnedReport.pdf");
+			            PdfWriter.getInstance(PDFReport, new FileOutputStream(outputFileName));
+
+						PDFReport.open();
+						
+						com.itextpdf.text.Font customFont = FontFactory.getFont(FontFactory.HELVETICA, 18, Font.BOLD, BaseColor.BLACK);
+						com.itextpdf.text.Font customFont2 = FontFactory.getFont(FontFactory.HELVETICA, 15, Font.BOLD, BaseColor.BLACK);
+						// Add table header
+						com.itextpdf.text.Font headerFont = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD, BaseColor.BLACK);
+						// Add image
+			            try {
+			                Image logo = Image.getInstance("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\logo1.png");  // Replace with the actual path to your image
+			                logo.setAlignment(Element.ALIGN_MIDDLE); // Adjust the alignment as needed
+			                PDFReport.add(logo);
+			                
+			            } catch (BadElementException | IOException e) {
+			                e.printStackTrace();
+			            }
+			            
+			            Font boldFont = new Font(FontFactory.HELVETICA, 16, Font.BOLD);
+			            // Define a custom font
+			            
+			         // Add title
+			            Paragraph title1 = new Paragraph(" Santa Rosa Educational Institute", customFont);
+			            title1.setAlignment(Element.ALIGN_CENTER);
+			            PDFReport.add(title1);
+			            
+						// Add title
+			            Paragraph title2 = new Paragraph("List of All Returned Books");
+			            title2.setAlignment(Element.ALIGN_CENTER);
+			            PDFReport.add(title2);
+
+			            // Add academic year
+			            AcademicYear ya = AcademicYear.now(ZoneId.systemDefault());
+			            String formattedAcadYear = ya.format(FormatStyle.FULL);
+			            Paragraph acadYear = new Paragraph("Academic Year: " + formattedAcadYear);
+			            acadYear.setAlignment(Element.ALIGN_CENTER);
+			            PDFReport.add(acadYear);
+			         
+			            // Add space (empty line) between academic year and table header
+			            PDFReport.add(new Paragraph("\n"));
+			            
+						PdfPTable PDFTable = new PdfPTable(10);
+						
+						 // Add table header
+			            String[] headers = {"Transaction ID", "Book No", "Title", "Accession", "Status", "Due Date", 
+			            		"Date Returned", "Borrower", "ID", "Penalty Fee"};
+			            
+			            
+			            int totalStudents = 0;
+			            String preparedBy = ""; // Initialize with an empty string
+			            
+			            for (String header : headers) {
+			            	PdfPCell headerCell = new PdfPCell(new Phrase(header, headerFont));
+			                headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			                headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			                headerCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			                PDFTable.addCell(headerCell);
+			            }
+			            
+						PdfPCell table_cell;
+						
+						while(rs.next()) {
+							String transaction_id = rs.getString("transaction_id");
+							table_cell = new PdfPCell(new Phrase(transaction_id));
+							PDFTable.addCell(table_cell);
+							String book_num = rs.getString("book_num");
+							table_cell = new PdfPCell(new Phrase(book_num));
+							PDFTable.addCell(table_cell);
+							String title = rs.getString("title");
+							table_cell = new PdfPCell(new Phrase(title));
+							PDFTable.addCell(table_cell);
+							String accession = rs.getString("accession");
+							table_cell = new PdfPCell(new Phrase(accession));
+							PDFTable.addCell(table_cell);
+							String status = rs.getString("status");
+							table_cell = new PdfPCell(new Phrase(status));
+							PDFTable.addCell(table_cell);
+							String due_date = rs.getString("due_date");
+							table_cell = new PdfPCell(new Phrase(due_date));
+							PDFTable.addCell(table_cell);	
+							String date_returned = rs.getString("date_returned");
+							table_cell = new PdfPCell(new Phrase(date_returned));
+							PDFTable.addCell(table_cell);
+							String borrower = rs.getString("borrower");
+							table_cell = new PdfPCell(new Phrase(borrower));
+							PDFTable.addCell(table_cell);
+							String id = rs.getString("id");
+							table_cell = new PdfPCell(new Phrase(id));
+							PDFTable.addCell(table_cell);
+							String penalty_fee = rs.getString("penalty_fee");
+							table_cell = new PdfPCell(new Phrase(penalty_fee));
+							PDFTable.addCell(table_cell);
+							totalStudents++;
+						}
+						
+												
+					
+						PDFReport.add(PDFTable);
+						// Add total number of books
+						Paragraph line = new Paragraph("\n");
+						line.setAlignment(Element.ALIGN_RIGHT);
+						PDFReport.add(line);
+						
+						// Add total number of books
+						Paragraph totalBooksParagraph = new Paragraph("Total No. Returned Books: " + totalStudents, customFont2);
+						totalBooksParagraph.setAlignment(Element.ALIGN_LEFT);
+						totalBooksParagraph.setIndentationLeft(125);
+						PDFReport.add(totalBooksParagraph);
+
+						// Add who generated the report
+						String userType = MainMenuFrame.getUser();
+						if ("Librarian".equalsIgnoreCase(userType)) {
+						    preparedBy = "Librarian";
+						} else if ("Admin".equalsIgnoreCase(userType)) {
+						    preparedBy = "Admin";
+						}
+						
+						// Add who generated the report
+						Paragraph generatedByParagraph = new Paragraph("Prepared by: " + preparedBy, customFont2);
+						generatedByParagraph.setAlignment(Element.ALIGN_LEFT);
+						generatedByParagraph.setIndentationLeft(125);
+						PDFReport.add(generatedByParagraph);
+						
+						// Get the current date and time
+					    LocalDateTime currentTime = LocalDateTime.now();
+
+					    // Format the date and time using the desired pattern
+					    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy hh:mma");
+					    String formattedDateTime = currentTime.format(formatter);
+					    
+						// Add who generated the report
+						Paragraph reportGenerated = new Paragraph("Report Generated: " + formattedDateTime, customFont2);
+						reportGenerated.setAlignment(Element.ALIGN_LEFT);
+						reportGenerated.setIndentationLeft(125);
+						PDFReport.add(reportGenerated);
+						
+						// Add who generated the report with underlined name
+						Paragraph principal = new Paragraph();
+						Chunk nameChunk = new Chunk("Elaine B. Santos, Ed.D.", customFont2);
+						nameChunk.setUnderline(1.5f, -1);  // Adjust the values for underline thickness and position
+						principal.add(nameChunk);
+						principal.add(Chunk.NEWLINE);
+						
+						// Add indentation for "Principal"
+						Paragraph principalRole = new Paragraph("Principal", customFont2);
+						principalRole.setIndentationLeft(50);  // Adjust the indentation as needed
+						principal.add(principalRole);
+						principal.setIndentationLeft(800);
+						PDFReport.add(principal);
+						PDFReport.close();
+					} catch (FileNotFoundException | DocumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}	
+			
 	private boolean isValidReturnDate(String returnDate) {
 	    try {
 	        // Parse the return date string into a Date object
