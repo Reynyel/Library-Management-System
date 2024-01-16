@@ -20,6 +20,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.Currency;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,6 +54,7 @@ import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -346,7 +348,7 @@ public class LendingBooksFrame extends JPanel {
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				testPdf();
-				exportPaid();
+				testPdfPaid();
 			}
 		});
 		btnExport.setForeground(Color.WHITE);
@@ -616,6 +618,174 @@ public class LendingBooksFrame extends JPanel {
 					    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy hh:mma");
 					    String formattedDateTime = currentTime.format(formatter);
 					    
+					    com.itextpdf.text.Font customFont3 = FontFactory.getFont("Noto Sans", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 15, Font.BOLD, BaseColor.BLACK);
+						// Add who generated the report
+						Paragraph reportGenerated = new Paragraph("Report Generated: " + formattedDateTime, customFont3);
+						reportGenerated.setAlignment(Element.ALIGN_LEFT);
+						reportGenerated.setIndentationLeft(125);
+						PDFReport.add(reportGenerated);
+						
+						// Add who generated the report with underlined name
+						Paragraph principal = new Paragraph();
+						Chunk nameChunk = new Chunk("Elaine B. Santos, Ed.D.", customFont2);
+						nameChunk.setUnderline(1.5f, -1);  // Adjust the values for underline thickness and position
+						principal.add(nameChunk);
+						principal.add(Chunk.NEWLINE);
+						
+						// Add indentation for "Principal"
+						Paragraph principalRole = new Paragraph("Principal", customFont2);
+						principalRole.setIndentationLeft(50);  // Adjust the indentation as needed
+						principal.add(principalRole);
+						principal.setIndentationLeft(800);
+						PDFReport.add(principal);
+						PDFReport.close();
+					} catch (FileNotFoundException | DocumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}	
+		
+			public void testPdfPaid() {
+				// Fetch data from the database
+		        try {
+					pst = conn.prepareStatement("SELECT * FROM Paid");
+					rs = pst.executeQuery();
+					
+					Document PDFReport = new Document();
+					    
+				    
+					try {
+						// Set the page size to landscape
+			            PDFReport.setPageSize(PageSize.A3.rotate());
+			         // Inside testPdf and testPdfBySub methods
+			            String outputFileName = getUniqueFileName("C:\\Users\\LINDELL\\Desktop\\PaidReport.pdf");
+			            PdfWriter.getInstance(PDFReport, new FileOutputStream(outputFileName));
+
+						PDFReport.open();
+						
+						com.itextpdf.text.Font customFont = FontFactory.getFont(FontFactory.HELVETICA, 18, Font.BOLD, BaseColor.BLACK);
+						com.itextpdf.text.Font customFont2 = FontFactory.getFont(FontFactory.HELVETICA, 15, Font.BOLD, BaseColor.BLACK);
+						// Add table header
+						com.itextpdf.text.Font headerFont = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD, BaseColor.BLACK);
+						// Add image
+			            try {
+			                Image logo = Image.getInstance("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\logo1.png");  // Replace with the actual path to your image
+			                logo.setAlignment(Element.ALIGN_MIDDLE); // Adjust the alignment as needed
+			                PDFReport.add(logo);
+			                
+			            } catch (BadElementException | IOException e) {
+			                e.printStackTrace();
+			            }
+			            
+			            Font boldFont = new Font(FontFactory.HELVETICA, 16, Font.BOLD);
+			            // Define a custom font
+			            
+			         // Add title
+			            Paragraph title1 = new Paragraph(" Santa Rosa Educational Institute", customFont);
+			            title1.setAlignment(Element.ALIGN_CENTER);
+			            PDFReport.add(title1);
+			            
+						// Add title
+			            Paragraph title2 = new Paragraph("List of All Confirmed Payments");
+			            title2.setAlignment(Element.ALIGN_CENTER);
+			            PDFReport.add(title2);
+
+			            // Add academic year
+			            AcademicYear ya = AcademicYear.now(ZoneId.systemDefault());
+			            String formattedAcadYear = ya.format(FormatStyle.FULL);
+			            Paragraph acadYear = new Paragraph("Academic Year: " + formattedAcadYear);
+			            acadYear.setAlignment(Element.ALIGN_CENTER);
+			            PDFReport.add(acadYear);
+			         
+			            // Add space (empty line) between academic year and table header
+			            PDFReport.add(new Paragraph("\n"));
+			            
+						PdfPTable PDFTable = new PdfPTable(4);
+						
+						 // Add table header
+			            String[] headers = {"OR Code", "Borrower Name", "ID", "Amount Paid"};
+			            
+			            
+			            int totalStudents = 0;
+			            String preparedBy = ""; // Initialize with an empty string
+			            
+			            for (String header : headers) {
+			            	PdfPCell headerCell = new PdfPCell(new Phrase(header, headerFont));
+			                headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+			                headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+			                headerCell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+			                PDFTable.addCell(headerCell);
+			            }
+			            
+						PdfPCell table_cell;
+						double totalAmountPaid = 0.0;
+
+						while(rs.next()) {
+							String orCode = rs.getString("or_code");
+							table_cell = new PdfPCell(new Phrase(orCode));
+							PDFTable.addCell(table_cell);
+							String name = rs.getString("borrower_name");
+							table_cell = new PdfPCell(new Phrase(name));
+							PDFTable.addCell(table_cell);
+							String id = rs.getString("user_id");
+							table_cell = new PdfPCell(new Phrase(id));
+							PDFTable.addCell(table_cell);
+							String amountPaid = rs.getString("amount_paid");
+							table_cell = new PdfPCell(new Phrase(amountPaid));
+							PDFTable.addCell(table_cell);
+							
+							totalAmountPaid += Double.parseDouble(amountPaid);
+							totalStudents++;
+						}
+						
+						
+					
+						PDFReport.add(PDFTable);
+						// Add total number of books
+						Paragraph line = new Paragraph("\n");
+						line.setAlignment(Element.ALIGN_RIGHT);
+						PDFReport.add(line);
+						
+						// Add total number of books
+						Paragraph totalBooksParagraph = new Paragraph("Total No. Confirmed Payments: "  + totalStudents, customFont2);
+						totalBooksParagraph.setAlignment(Element.ALIGN_LEFT);
+						totalBooksParagraph.setIndentationLeft(125);
+						PDFReport.add(totalBooksParagraph);
+						
+						com.itextpdf.text.Font customFont3 = FontFactory.getFont("Noto Sans", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 15, Font.BOLD, BaseColor.BLACK);
+						System.out.println("\u20b1");  
+						Paragraph totalAmountPaidParagraph = new Paragraph("Total Amount Paid: " + "PHP" + totalAmountPaid, customFont3);
+						totalAmountPaidParagraph.setAlignment(Element.ALIGN_LEFT);
+						totalAmountPaidParagraph.setIndentationLeft(125);
+						PDFReport.add(totalAmountPaidParagraph);
+						
+						// Add who generated the report
+						String userType = MainMenuFrame.getUser();
+						if ("Librarian".equalsIgnoreCase(userType)) {
+						    preparedBy = "Librarian";
+						} else if ("Admin".equalsIgnoreCase(userType)) {
+						    preparedBy = "Admin";
+						}
+						
+						
+						// Add who generated the report
+						Paragraph generatedByParagraph = new Paragraph("Prepared by: " + preparedBy, customFont2);
+						generatedByParagraph.setAlignment(Element.ALIGN_LEFT);
+						generatedByParagraph.setIndentationLeft(125);
+						PDFReport.add(generatedByParagraph);
+						
+						// Get the current date and time
+					    LocalDateTime currentTime = LocalDateTime.now();
+
+					    // Format the date and time using the desired pattern
+					    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy hh:mma");
+					    String formattedDateTime = currentTime.format(formatter);
+					    
 						// Add who generated the report
 						Paragraph reportGenerated = new Paragraph("Report Generated: " + formattedDateTime, customFont2);
 						reportGenerated.setAlignment(Element.ALIGN_LEFT);
@@ -645,8 +815,7 @@ public class LendingBooksFrame extends JPanel {
 					e.printStackTrace();
 				}
 
-			}	
-			
+			}
 	private boolean isValidReturnDate(String returnDate) {
 	    try {
 	        // Parse the return date string into a Date object
@@ -1199,7 +1368,12 @@ public class LendingBooksFrame extends JPanel {
 
                         while (tempDate.isBefore(currentDate) || tempDate.isEqual(currentDate)) {
                             DayOfWeek dayOfWeek = tempDate.getDayOfWeek();
-
+                            
+                         // Print statements for debugging
+                            System.out.println("Temp Date: " + tempDate);
+                            System.out.println("Current Date: " + currentDate);
+                            System.out.println("Overdue Days: " + overdueDays);
+                            
                             // Skip weekends (Saturday and Sunday)
                             if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
                                 overdueDays++;
@@ -1209,7 +1383,7 @@ public class LendingBooksFrame extends JPanel {
                         }
 
                         penaltyFee = overdueDays * 10.0;
-
+                        System.out.println("Penalty fee: " + penaltyFee);
                     } else {
                         System.out.println("Book returned on time or early.");
                     }
@@ -1369,9 +1543,10 @@ public class LendingBooksFrame extends JPanel {
                                     
                                     // Check if the user entered a valid O.R. code
                                     if (orCode != null && !orCode.isEmpty()) {
-                                    	
+                                    		
+                                    	System.out.println(orCode + " " + id + " " + name + " " + penaltyFee);
                                         // Record the O.R. code into the database table of paid users
-                                        recordPaidUser(orCode, id, name);
+                                        recordPaidUser(orCode, id, name, penaltyFee);
                                         
                                         // Remove student from blocklist after payment confirmation
                                         removeFromBlocklistPenalty(id, name);
@@ -1677,14 +1852,14 @@ public class LendingBooksFrame extends JPanel {
 
     
     // Method to record a paid user with the provided O.R. code
-    private void recordPaidUser(String orCode, String id, String name) {
-        String insertSql = "INSERT INTO Paid (or_code, borrower_name, user_id) VALUES (?, ?, ?)";
+    private void recordPaidUser(String orCode, String id, String name, double penaltyFee) {
+        String insertSql = "INSERT INTO Paid (or_code, borrower_name, user_id, amount_paid) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
             // Set parameters for the prepared statement
             pstmt.setString(1, orCode);
-            pstmt.setString(2, id);
+            pstmt.setString(2, name);
             pstmt.setString(3, id);
-
+            pstmt.setDouble(4, penaltyFee);
             // Execute the update
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

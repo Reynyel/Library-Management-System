@@ -150,7 +150,7 @@ public class TransactionFrame extends JPanel {
 		Set<Integer> editableColumns = new HashSet<>();
 		
 		tblTransac = new JTable();
-		tblTransac.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tblTransac.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		scrollPane.setViewportView(tblTransac);
 		tblTransac.setBorder(new LineBorder(new Color(0, 0, 0)));
 		tblTransac.setColumnSelectionAllowed(true);

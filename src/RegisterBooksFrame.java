@@ -289,7 +289,7 @@ public class RegisterBooksFrame extends JPanel {
 		panel.add(scrollPane);
 		
 		table = new JTable();
-		table.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		table.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		table.setShowVerticalLines(false);
 		table.setShowHorizontalLines(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
