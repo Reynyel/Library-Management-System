@@ -92,6 +92,12 @@ public class TransactionFrame extends JPanel {
 	private JTextField txtBorrID;
 	private JComboBox cbAccession;
 	private List<Book> selectedBooks = new ArrayList<>();
+	 // Set to store selected titles for each user
+    private Set<String> selectedTl = new HashSet<>();
+	private List<Name> selectedName = new ArrayList<>();
+	// Declare a variable to store the current active user ID
+    private String activeUserId = null;
+    
 	/**
 	 * Launch the application.
 	 */
@@ -130,18 +136,10 @@ public class TransactionFrame extends JPanel {
         panel.setBounds(0, 0, 1425, 980);
         add(panel);
         panel.setLayout(null);
-		/*TODO:
-		 * Change the table to books table when you press search
-		 * Change the table to transaction table after pressing update
-		 * Set a limit to how many books/titles a user can borrow - 3
-		 * The user cannot also borrow the same titles twice
-		 * add a date and time in the dashboard
-		 * add a notification feature
-		 * set a color for books that have already reached their due date*/
 		
 		AlternateColorRender alternate = new AlternateColorRender();
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 480, 1405, 447);
+		scrollPane.setBounds(10, 455, 1405, 447);
 		panel.add(scrollPane);
 				
 		Object[][] data = {null, null, null, null, null, null, null, null, null, null};
@@ -201,7 +199,7 @@ public class TransactionFrame extends JPanel {
 				displayTransactionHistory();
 			}
 		});
-		radioTransaction.setBounds(1121, 443, 173, 30);
+		radioTransaction.setBounds(1121, 418, 173, 30);
 		panel.add(radioTransaction);
 		
 		JRadioButton radioBooks = new JRadioButton("View Books");
@@ -216,7 +214,7 @@ public class TransactionFrame extends JPanel {
 				viewBooks();
 			}
 		});	
-		radioBooks.setBounds(1296, 443, 119, 30);
+		radioBooks.setBounds(1296, 418, 119, 30);
 		panel.add(radioBooks);
 		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -231,7 +229,7 @@ public class TransactionFrame extends JPanel {
 		String title = "Borrow Book";
 		Border border = BorderFactory.createTitledBorder(title);
 		
-		JButton btnExport = new JButton("Export to CSV");
+		JButton btnExport = new JButton("Export to PDF");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				testPdf();
@@ -241,7 +239,7 @@ public class TransactionFrame extends JPanel {
 		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnExport.setBorderPainted(false);
 		btnExport.setBackground(new Color(0, 128, 0));
-		btnExport.setBounds(1165, 944, 250, 25);
+		btnExport.setBounds(1165, 919, 250, 25);
 		panel.add(btnExport);
 		
 		txtBookNum = new JTextField();
@@ -338,8 +336,26 @@ public class TransactionFrame extends JPanel {
 		JButton btnCheckout = new JButton("Checkout");
 		btnCheckout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				displaySelectedBooksDetails(selectedBooks);
-				checkout();
+				if (selectedBooks.isEmpty()) {
+		    		Font customFont = new Font("Arial", Font.PLAIN, 16);
+		            UIManager.put("OptionPane.messageFont", customFont);
+		            UIManager.put("OptionPane.buttonFont", customFont);
+		            
+		            JOptionPane.showMessageDialog(getRootPane(), "Select a book first",
+		                    "Checkout Error", JOptionPane.ERROR_MESSAGE);
+
+		            // Reset UIManager properties to default
+		            UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+		            UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+		            return; // Do not proceed with the transaction
+		        }
+				
+				if(displaySelectedBooksDetails(selectedBooks) == false) {
+					return;
+				}
+				else {			
+					checkout();					
+				}
 			}
 		});
 		btnCheckout.setForeground(Color.WHITE);
@@ -363,20 +379,25 @@ public class TransactionFrame extends JPanel {
 	PreparedStatement pst;
 	ResultSet rs;
 	
-	// Method to display details of selected books in a pop-up message
-    private void displaySelectedBooksDetails(List<Book> selectedBooks) {
-        // Build the message for the pop-up dialog
-        StringBuilder message = new StringBuilder("Books to be borrowed:\n\n");
-        for (Book book : selectedBooks) {
-            message.append("Book Number: ").append(book.getBookNum()).append("\n");
-            message.append("Title: ").append(book.getTitle()).append("\n");
-            message.append("Accession Number: ").append(book.getAccessionNum()).append("\n");
-            message.append("Borrower: ").append(book.getBorrowerName()).append("\n\n");
-        }
+	private boolean displaySelectedBooksDetails(List<Book> selectedBooks) {
+	    // Build the message for the pop-up dialog
+	    StringBuilder message = new StringBuilder("Books to be borrowed:\n\n");
+	 // Retrieve the borrower name (assuming it's the same for all selected books)
+	    String borrowerName = selectedBooks.isEmpty() ? "" : selectedBooks.get(0).getBorrowerName();
+	    for (Book book : selectedBooks) {
+	        message.append("Book Number: ").append(book.getBookNum()).append("\n");
+	        message.append("Title: ").append(book.getTitle()).append("\n");
+	        message.append("Accession Number: ").append(book.getAccessionNum()).append("\n\n");
+	    }
+	    message.append("Borrower: ").append(borrowerName).append("\n\n");
 
-        // Display the details in a pop-up message
-        JOptionPane.showMessageDialog(getRootPane(), message.toString(), "Selected Books Details", JOptionPane.INFORMATION_MESSAGE);
-    }
+	    // Display a confirmation dialog with "Yes" and "No" options
+	    int dialogResult = JOptionPane.showConfirmDialog(getRootPane(), message.toString(), "Selected Books Details", JOptionPane.YES_NO_OPTION);
+
+	    // Return true if the user clicked "Yes," otherwise return false
+	    return dialogResult == JOptionPane.YES_OPTION;
+	}
+
     
  // check if file already exissts
  		private String getUniqueFileName(String baseFileName) {
@@ -790,7 +811,7 @@ public class TransactionFrame extends JPanel {
             System.out.println("Connected");
 
             // Fetch data from Transactions table
-            String selectTransactionsSql = "SELECT * FROM Books WHERE book_status = 'Available'";
+            String selectTransactionsSql = "SELECT * FROM Books WHERE book_status = 'Available' AND Subject != 'Others'";
             try (PreparedStatement selectTransactionsStmt = conn.prepareStatement(selectTransactionsSql)) {
                 ResultSet rs = selectTransactionsStmt.executeQuery();
 
@@ -805,7 +826,7 @@ public class TransactionFrame extends JPanel {
     				String publisher = rs.getString("Publisher");
     				String language = rs.getString("Language");
     				String subject = rs.getString("Subject");
-    				String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+    				String dewey = rs.getString("Dewey_Decimal");
     				String accession = String.valueOf(rs.getInt("Accession_Num"));
     				String status = rs.getString("book_status");
     				
@@ -876,6 +897,13 @@ public class TransactionFrame extends JPanel {
             	JOptionPane.showMessageDialog(getRootPane(), "Please search for the book first");       
             }
             
+         // Check if there is an ongoing transaction
+            if (activeUserId != null && !activeUserId.equals(userId)) {
+                JOptionPane.showMessageDialog(getRootPane(), "Another transaction is already in progress. Please wait.",
+                        "Note", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            
             else {
             	int acc = Integer.parseInt(cbAccession.getSelectedItem().toString());
             	// Check if the user is a student or faculty/school staff based on ID number
@@ -933,27 +961,82 @@ public class TransactionFrame extends JPanel {
             		    
             		    //else proceed
             			if(borrowerNameResult.next()) {
+            				
+            				if (selectedTl.contains(tl)) {
+                                Font customFont = new Font("Arial", Font.PLAIN, 16);
+                                UIManager.put("OptionPane.messageFont", customFont);
+                                UIManager.put("OptionPane.buttonFont", customFont);
+
+                                JOptionPane.showMessageDialog(getRootPane(), "Students cannot borrow the same title twice.",
+                                        "Note", JOptionPane.INFORMATION_MESSAGE);
+                                txtTitle.setText("");
+                				txtBookNum.setText("");
+                				txtAuthor.setText("");
+                				txtTitle.setText("");
+                				cbAccession.removeAllItems();
+                				txtStatus.setText("");
+                                // Reset UIManager properties to default
+                                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+                                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+                                return; // Exit the method without proceeding with the transaction
+                            }
+            				
             				String borrowerName = borrowerNameResult.getString("LastName") + 
             						", " + borrowerNameResult.getString("FirstName") +
             						" " + borrowerNameResult.getString("MiddleName");
             				String gradeLevel = borrowerNameResult.getString("GradeLevel");
             			    String section = borrowerNameResult.getString("Section");
             			    
+            			    
             			    // Display a confirmation dialog before proceeding
             			    int confirmResult = showConfirmDialog(borrowerName, gradeLevel, section, tl, acc);
                             if (confirmResult == JOptionPane.YES_OPTION) {
                             	Book selectedBook = new Book(bn, tl, acc, borrowerName, borrId, userType);
-                                selectedBooks.add(selectedBook);
-                                Font customFont = new Font("Arial", Font.PLAIN, 16);
-            	                UIManager.put("OptionPane.messageFont", customFont);
-            	                UIManager.put("OptionPane.buttonFont", customFont);
-            	                		
-            	                JOptionPane.showMessageDialog(getRootPane(), "Book Registered!",
-            	                        "Note", JOptionPane.INFORMATION_MESSAGE);
-
-            	                // Reset UIManager properties to default
-            	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
-            	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+                            	Book selectedTitle = new Book(tl);
+                            	Name name = new Name(borrId);
+                        		selectedName.add(name);                       		                      		
+                        		
+                                // Set the current user as the active user
+                                activeUserId = userId;                                                              
+                                
+                                //checks if the user has already put more than 3 books in the list
+                            	if(selectedBooks.size() >= 3) {
+                            		Font customFont = new Font("Arial", Font.PLAIN, 16);
+                	                UIManager.put("OptionPane.messageFont", customFont);
+                	                UIManager.put("OptionPane.buttonFont", customFont);
+                	                		
+                	                JOptionPane.showMessageDialog(getRootPane(), "Cannot add more books!",
+                	                        "Note", JOptionPane.INFORMATION_MESSAGE);
+                	                txtTitle.setText("");
+                    				txtBookNum.setText("");
+                    				txtAuthor.setText("");
+                    				txtTitle.setText("");
+                    				cbAccession.removeAllItems();
+                    				txtStatus.setText(""); 
+                	                // Reset UIManager properties to default
+                	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+                	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+                	                return;
+                            	}
+                            	else {
+                            		selectedBooks.add(selectedBook);
+                            		selectedTl.add(tl);
+                            		Font customFont = new Font("Arial", Font.PLAIN, 16);
+                            		UIManager.put("OptionPane.messageFont", customFont);
+                            		UIManager.put("OptionPane.buttonFont", customFont);
+                            		
+                            		JOptionPane.showMessageDialog(getRootPane(), "Book Added!",
+                            				"Note", JOptionPane.INFORMATION_MESSAGE);
+                            		txtTitle.setText("");
+                            		txtBookNum.setText("");
+                            		txtAuthor.setText("");
+                            		txtTitle.setText("");
+                            		cbAccession.removeAllItems();
+                            		txtStatus.setText(""); 
+                            		// Reset UIManager properties to default
+                            		UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+                            		UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+                            	}
                             }          			
             			}
             			else {
@@ -967,7 +1050,9 @@ public class TransactionFrame extends JPanel {
             		try(PreparedStatement borrowerNameStmt = conn.prepareStatement(borrowerNameSql)){
             			borrowerNameStmt.setString(1, borrId);
             			ResultSet borrowerNameResult = borrowerNameStmt.executeQuery();
-            			
+      
+            			// Set the current user as the active user
+                        activeUserId = userId; 
             			if(blockedFromBorrwing(userId)) {
             				Font customFont = new Font("Arial", Font.PLAIN, 16);
         	                UIManager.put("OptionPane.messageFont", customFont);
@@ -1040,12 +1125,26 @@ public class TransactionFrame extends JPanel {
     }
     
     public void checkout() {
+    	if (selectedBooks.isEmpty()) {
+    		Font customFont = new Font("Arial", Font.PLAIN, 16);
+            UIManager.put("OptionPane.messageFont", customFont);
+            UIManager.put("OptionPane.buttonFont", customFont);
+            
+            JOptionPane.showMessageDialog(getRootPane(), "Select a book first",
+                    "Checkout Error", JOptionPane.ERROR_MESSAGE);
+
+            // Reset UIManager properties to default
+            UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+            UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
+            return; // Do not proceed with the transaction
+        }
         // Iterate through the ArrayList and insert records into the database
         for (Book selectedBook : selectedBooks) {
         	
             insertTransaction(selectedBook.getBookNum(), selectedBook.getTitle(), selectedBook.getAccessionNum(), selectedBook.getBorrowerName(), selectedBook.getUserID(), selectedBook.getUserID());
         }
 
+        activeUserId = null;
         // Clear the ArrayList after checking out
         selectedBooks.clear();
     }
@@ -1061,9 +1160,7 @@ public class TransactionFrame extends JPanel {
         Font customFont = new Font("Arial", Font.PLAIN, 16);
         UIManager.put("OptionPane.messageFont", customFont);
         UIManager.put("OptionPane.buttonFont", customFont);
-        
-        
-
+                
         // Reset UIManager properties to default
         UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
         UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
@@ -1184,7 +1281,7 @@ public class TransactionFrame extends JPanel {
             		                String formattedReturnDate = returnDate.format(formatter);
             		                JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!\nReturn Date: " + formattedReturnDate,
             		                        "Success", JOptionPane.INFORMATION_MESSAGE);
-
+            		                
             		                // Reset UIManager properties to default
             		                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
             		                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
@@ -1328,7 +1425,7 @@ public class TransactionFrame extends JPanel {
 	            System.out.println("Connected");
 
 	            String partialTitle = txtTitle.getText();
-	            String sql = "SELECT * FROM Books WHERE Title LIKE ? AND book_status = 'Available'";
+	            String sql = "SELECT * FROM Books WHERE Title LIKE ? AND book_status = 'Available' AND Subject != 'Others'";
 	            PreparedStatement pstmt = conn.prepareStatement(sql);
 	            
 	            // Use % as a wildcard for partial matches
@@ -1341,7 +1438,16 @@ public class TransactionFrame extends JPanel {
 	            DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
 
 	            if (!rs.isBeforeFirst()) {
-	                JOptionPane.showMessageDialog(this, "No matching books found.");
+	            	Font customFont = new Font("Arial", Font.PLAIN, 16);
+	                UIManager.put("OptionPane.messageFont", customFont);
+	                UIManager.put("OptionPane.buttonFont", customFont);
+	                
+	                JOptionPane.showMessageDialog(getRootPane(), "No matching books found. ",
+	                        "Note", JOptionPane.INFORMATION_MESSAGE);
+	                	
+	                // Reset UIManager properties to default
+	                UIManager.put("OptionPane.messageFont", UIManager.getDefaults().getFont("OptionPane.messageFont"));
+	                UIManager.put("OptionPane.buttonFont", UIManager.getDefaults().getFont("OptionPane.buttonFont"));
 	                txtBookNum.setText("");
 	                txtTitle.setText("");
 	                txtAuthor.setText("");
@@ -1359,7 +1465,7 @@ public class TransactionFrame extends JPanel {
 	                    String language = rs.getString("Language");
 	                    String subject = rs.getString("Subject");
 	                    String quantity = String.valueOf(rs.getInt("Quantity"));
-	                    String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+	                    String dewey = rs.getString("Dewey_Decimal");
 	                    String accession = String.valueOf(rs.getInt("Accession_Num"));
 	                    String status = rs.getString("book_status");
 	                    String dateRegistered = rs.getString("date_registered");
@@ -1476,7 +1582,7 @@ public class TransactionFrame extends JPanel {
             System.out.println("Connected");
 
             // Fetch data from Transactions table
-            String selectTransactionsSql = "SELECT * FROM Books WHERE book_status = 'Available'";
+            String selectTransactionsSql = "SELECT * FROM Books WHERE book_status = 'Available' AND Subject != 'Others'";
             try (PreparedStatement selectTransactionsStmt = conn.prepareStatement(selectTransactionsSql)) {
                 ResultSet rs = selectTransactionsStmt.executeQuery();
 
@@ -1502,7 +1608,7 @@ public class TransactionFrame extends JPanel {
     				String publisher = rs.getString("Publisher");
     				String language = rs.getString("Language");
     				String subject = rs.getString("Subject");
-    				String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+    				String dewey = rs.getString("Dewey_Decimal");
     				String accession = String.valueOf(rs.getInt("Accession_Num"));
     				String status = rs.getString("book_status");
     				String dateRegistered = rs.getString("date_registered");
@@ -1510,7 +1616,7 @@ public class TransactionFrame extends JPanel {
     				//array to store data into jtable
     				String tbData[] = {bookNum, title, author, isbn, publisher,
     						language, subject, dewey, accession, status, dateRegistered};
-
+    				
                     // add string array data to jtable
                     tblModel.addRow(tbData);
                     

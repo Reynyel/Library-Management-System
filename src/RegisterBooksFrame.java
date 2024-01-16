@@ -273,7 +273,7 @@ public class RegisterBooksFrame extends JPanel {
 		
 		String[] subjects = {"", "General Information", "Philosophy & Psychology", "Religion",
 				"Social Sciences", "Language", "Science", "Technology", "Arts & Recreation",
-				"Literature", "History & Geography"};
+				"Literature", "History & Geography", "Others"};
 		
 		for(String s : subjects) {
 			comboBoxSubject.addItem(s);
@@ -1993,7 +1993,7 @@ public class RegisterBooksFrame extends JPanel {
 				String publisher = rs.getString("Publisher");
 				String language = rs.getString("Language");
 				String subject = rs.getString("Subject");
-				String dewey = String.valueOf(rs.getDouble("Dewey_Decimal"));
+				String dewey = rs.getString("Dewey_Decimal");
 				String accession = String.valueOf(rs.getInt("Accession_Num"));
 				String status = rs.getString("book_status");
 				String dateRegistered = rs.getString("date_registered");
@@ -2172,7 +2172,7 @@ public class RegisterBooksFrame extends JPanel {
 	                    String language = rs.getString("Language");
 	                    String subject = rs.getString("Subject");
 	                    String quantity = String.valueOf(rs.getInt("Quantity"));
-	                    String dewey = String.valueOf(rs.getString("Dewey_Decimal"));
+	                    String dewey = rs.getString("Dewey_Decimal");
 	                    String accession = String.valueOf(rs.getInt("Accession_Num"));
 	                    String status = rs.getString("book_status");
 	                    String dateRegistered = rs.getString("date_registered");

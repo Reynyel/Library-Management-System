@@ -30,6 +30,14 @@ public class Book {
         this.userID  = userID;
         this.userType = userType;
     }
+    
+    public Book(String title) {
+    	this.title = title;
+    }
+    
+    public Book() {
+    	
+    }
 
     // Getters and Setters
 

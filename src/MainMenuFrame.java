@@ -195,7 +195,7 @@ public class MainMenuFrame extends JFrame {
 		
 		JButton btnBackupRecords = new JButton(" Backup & Import");
 		btnBackupRecords.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\backup.png"));
-		btnBackupRecords.setBounds(14, 481, 220, 40);
+		btnBackupRecords.setBounds(14, 537, 220, 40);
 		panel.add(btnBackupRecords);						
 		
 		btnBackupRecords.addActionListener(new ActionListener() {
@@ -391,8 +391,30 @@ public class MainMenuFrame extends JFrame {
 		btnLogs.setFont(new Font("Verdana", Font.BOLD, 15));
 		btnLogs.setBorderPainted(false);
 		btnLogs.setBackground(new Color(0, 51, 102));
-		btnLogs.setBounds(14, 542, 220, 40);
+		btnLogs.setBounds(12, 585, 220, 40);
 		panel.add(btnLogs);
+		
+		JButton btnGenerateReports = new JButton("Generate Reports");
+		btnGenerateReports.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ReportModule reports = new ReportModule();
+				reports.setBounds(0, 0, 1256, 686);
+				reports.setLayout(null);  // Set layout to null
+	            contentPanel.removeAll();  // Remove existing components
+	            contentPanel.add(reports);
+	            contentPanel.revalidate();  // Revalidate the panel to reflect changes
+	            contentPanel.repaint();  // Repaint the panel
+	            lblPageTitle.setText("Reports");
+			}
+		});
+		btnGenerateReports.setHorizontalAlignment(SwingConstants.LEFT);
+		btnGenerateReports.setIcon(new ImageIcon("C:\\Users\\LINDELL\\Projects\\Library-Management-System\\res\\management.png"));
+		btnGenerateReports.setForeground(Color.WHITE);
+		btnGenerateReports.setFont(new Font("Verdana", Font.BOLD, 15));
+		btnGenerateReports.setBorderPainted(false);
+		btnGenerateReports.setBackground(new Color(0, 51, 102));
+		btnGenerateReports.setBounds(14, 481, 220, 40);
+		panel.add(btnGenerateReports);
         contentPanel.removeAll();  // Remove existing components
         contentPanel.setLayout(null);
         contentPanel.revalidate();  // Revalidate the panel to reflect changes

@@ -210,7 +210,7 @@ public class LendingBooksFrame extends JPanel {
 		radioReturned.setForeground(new Color(255, 255, 255));
 		radioReturned.setBackground(new Color(0, 0, 51));
 		radioReturned.setFont(new Font("Verdana", Font.BOLD, 17));
-		radioReturned.setBounds(1214, 469, 189, 23);
+		radioReturned.setBounds(1205, 448, 189, 23);
 		radioReturned.setOpaque(false);
         radioReturned.setContentAreaFilled(false);
         radioReturned.setBorderPainted(false);
@@ -316,7 +316,7 @@ public class LendingBooksFrame extends JPanel {
 		
 		JScrollPane js = new JScrollPane(tblTransac);
 		js.setVisible(true);
-		js.setBounds(9, 499, 1405, 435); // Adjust the bounds to match the table
+		js.setBounds(10, 478, 1405, 435); // Adjust the bounds to match the table
 		panel.add(js);
 		
 		
@@ -331,7 +331,7 @@ public class LendingBooksFrame extends JPanel {
 		radioBorrowed.setForeground(new Color(255, 255, 255));
 		radioBorrowed.setBackground(new Color(0, 0, 51));
 		radioBorrowed.setFont(new Font("Verdana", Font.BOLD, 17));
-		radioBorrowed.setBounds(1013, 469, 199, 23);
+		radioBorrowed.setBounds(1004, 448, 199, 23);
 		radioBorrowed.setOpaque(false);
         radioBorrowed.setContentAreaFilled(false);
         radioBorrowed.setBorderPainted(false);
@@ -344,7 +344,7 @@ public class LendingBooksFrame extends JPanel {
 		});
 		radioGroup.add(radioBorrowed);
 		
-		JButton btnExport = new JButton("Export to CSV");
+		JButton btnExport = new JButton("Export to PDF");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				testPdf();
@@ -355,7 +355,7 @@ public class LendingBooksFrame extends JPanel {
 		btnExport.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnExport.setBorderPainted(false);
 		btnExport.setBackground(new Color(0, 128, 0));
-		btnExport.setBounds(1214, 944, 200, 25);
+		btnExport.setBounds(1205, 923, 200, 25);
 		panel.add(btnExport);
 		
 		txtReturnDate = new JTextField();

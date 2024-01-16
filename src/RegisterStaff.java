@@ -326,7 +326,7 @@ public class RegisterStaff extends JPanel {
 		btnUpdate.setBounds(255, 699, 150, 40);
 		panel.add(btnUpdate);
 			
-		JButton btnExport = new JButton("Export to CSV");
+		JButton btnExport = new JButton("Export to PDF");
 		btnExport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				testPdf();
