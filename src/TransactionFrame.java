@@ -1288,14 +1288,19 @@ public class TransactionFrame extends JPanel {
             		            } else {
             		                // Handle the case where the return date couldn't be fetched
             		                JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded! Return Date: N/A");
+            		                
             		            }
             		        }
+            		        
+            		        
             				   
             			} catch (SQLException e) {
             				e.printStackTrace();
             			}
             			
             		}
+            		
+            		
    	        		       
             		
             	}
@@ -1307,6 +1312,47 @@ public class TransactionFrame extends JPanel {
             
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        
+     // Fetch data from Transactions table
+        String fetchTransactionDataSql = "SELECT transaction_id, return_date FROM Transactions WHERE BooNum = ? AND AccessionNum = ?";
+        try (PreparedStatement fetchTransactionDataStmt = conn.prepareStatement(fetchTransactionDataSql)) {
+            fetchTransactionDataStmt.setString(1, bn);
+            fetchTransactionDataStmt.setInt(2, acc);
+
+            try (ResultSet transactionDataResult = fetchTransactionDataStmt.executeQuery()) {
+                if (transactionDataResult.next()) {
+                    String transactionId = String.valueOf(transactionDataResult.getInt("transaction_id"));
+                    String returnDate = transactionDataResult.getString("return_date");
+
+                    // Insert into Borrowed table
+                    String insertBorrowedSql = "INSERT INTO Borrowed (transaction_id, book_num, title, accession, date_borrowed, due_date, borrower_name, user_id) " +
+                            "VALUES (?, ?, ?, ?, CURRENT_DATE(), ?, ?, ?)";
+
+                    try (PreparedStatement insertBorrowedStmt = conn.prepareStatement(insertBorrowedSql)) {
+                        insertBorrowedStmt.setString(1, transactionId);
+                        insertBorrowedStmt.setString(2, bn);
+                        insertBorrowedStmt.setString(3, tl);
+                        insertBorrowedStmt.setInt(4, acc);
+                        insertBorrowedStmt.setString(5, returnDate);
+                        insertBorrowedStmt.setString(6, borrowerName);
+                        insertBorrowedStmt.setString(7, id);
+
+                        // Execute the update
+                        int borrowedRowsAffected = insertBorrowedStmt.executeUpdate();
+                        JOptionPane.showMessageDialog(getRootPane(), "Borrow Recorded!");
+                        // Your existing code...
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }	
+                } else {
+                    JOptionPane.showMessageDialog(getRootPane(), "Transaction data not found for the book");
+                }
+            }
+        }
+     catch (SQLException e) {
+        e.printStackTrace();
+    
         }
     }  
     //check if the user is blocked from borrowing
