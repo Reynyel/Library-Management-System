@@ -931,7 +931,7 @@ public class TransactionFrame extends JPanel {
                         txtAuthor.setText(author);
                         txtBookNum.setText(bookNum);
                         cbAccession.setModel(comboBoxModel);
-
+                        txtStatus.setText(status);
                         // Update the table with search results
                         String tbData[] = {bookNum, searchTitle, author, isbn, publisher,
 	        					language, subject, dewey, accession, status};

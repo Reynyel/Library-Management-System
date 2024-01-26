@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -138,7 +139,13 @@ public class LendingBooksFrame extends JPanel {
 						txtAccession.setText(acc); //FIX THIS						
 						txtBorrDate.setText(transacDate);
 						txtReturnDate.setText(returnDate);
-						comboBoxStatus.setSelectedItem(status);
+						if("Borrowed".equals(status)) {
+							String good = "Good";
+							comboBoxStatus.setSelectedItem(good);
+						}
+						else {
+							comboBoxStatus.setSelectedItem(status);							
+						}
 						//if Student display penalty fee, if there is a fee to be paid. If staff, only display 0
 						
 						// Display penalty fee based on user type
@@ -153,7 +160,7 @@ public class LendingBooksFrame extends JPanel {
 					}
 				}
 			}
-		});
+		});		
 		tblTransac.setBounds(0, 20, 89, 144);
 		
 		AlternateColorRender alternate = new AlternateColorRender();
@@ -306,6 +313,7 @@ public class LendingBooksFrame extends JPanel {
 		radioBorrowed.setOpaque(false);
         radioBorrowed.setContentAreaFilled(false);
         radioBorrowed.setBorderPainted(false);
+        radioBorrowed.setSelected(true);
 		panel.add(radioBorrowed);
 		radioBorrowed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -356,6 +364,7 @@ public class LendingBooksFrame extends JPanel {
 		panel.add(btnUpdateReturnDate);
 		
 		fetchAndDisplayData();
+//		displayTransactionHistory();
 	}
 	Connection conn;
 	PreparedStatement pst;
@@ -644,6 +653,8 @@ public class LendingBooksFrame extends JPanel {
             // Get the selected row from the table
             int selectedRow = tblTransac.getSelectedRow();
 
+//            int selectStatus = tblTransac.getSelectedRow(4);
+            
             // Check if a row is selected
             if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(getRootPane(), "Please select a book from the table for return.");
@@ -743,7 +754,7 @@ public class LendingBooksFrame extends JPanel {
 
     
     public double calculateFee() {
-    	double penaltyFee = 0.0;
+        double penaltyFee = 0.0;
 
         int selectedRow = tblTransac.getSelectedRow();
 
@@ -760,14 +771,26 @@ public class LendingBooksFrame extends JPanel {
 
                     // Get the current date
                     LocalDate currentDate = LocalDate.now();
+                    LocalDate returnLocalDate = returnDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                     // Calculate the penalty fee only if the book is returned late
-                    if (returnDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(currentDate)) {
-                        // Calculate the penalty fee based on the number of overdue days
-                        long overdueMillis = currentDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() - returnDate.getTime();
-                        long overdueDays = TimeUnit.MILLISECONDS.toDays(overdueMillis);
+                    if (returnLocalDate.isBefore(currentDate)) {
+                        long overdueDays = 0;
+                        LocalDate tempDate = returnLocalDate.plusDays(1); // Start from the day after the return date
+
+                        while (tempDate.isBefore(currentDate) || tempDate.isEqual(currentDate)) {
+                            DayOfWeek dayOfWeek = tempDate.getDayOfWeek();
+
+                            // Skip weekends (Saturday and Sunday)
+                            if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
+                                overdueDays++;
+                            }
+
+                            tempDate = tempDate.plusDays(1);
+                        }
+
                         penaltyFee = overdueDays * 10.0;
-                      
+
                     } else {
                         System.out.println("Book returned on time or early.");
                     }
@@ -782,6 +805,7 @@ public class LendingBooksFrame extends JPanel {
         }
         return penaltyFee;
     }
+
 
     
     //Get user type from both Employees and Students table
@@ -864,144 +888,159 @@ public class LendingBooksFrame extends JPanel {
         	String name = tblTransac.getValueAt(selectedRow, 7).toString();
         	String bookNum = tblTransac.getValueAt(selectedRow, 1).toString();
         	String acc = tblTransac.getValueAt(selectedRow, 3).toString();
+        	int confirmResult = JOptionPane.showConfirmDialog(
+                    getRootPane(),
+                    "Are you sure you want to return this book?",
+                    "Confirmation",
+                    JOptionPane.YES_NO_OPTION
+            );
         	
-            // Use a switch statement to handle different statuses
-            switch (status) {
-                case "Good":
-                	// Check if a row is selected
-                    if (selectedRow == -1) {
-                        JOptionPane.showMessageDialog(getRootPane(), "Please select a book from the table for return.");
-                        return;
-                    }
+        	if (confirmResult == JOptionPane.YES_OPTION) {
+        		// Use a switch statement to handle different statuses
+                switch (status) {
+                    case "Good":
+                    	// Check if a row is selected
+                        if (selectedRow == -1) {
+                            JOptionPane.showMessageDialog(getRootPane(), "Please select a book from the table for return.");
+                            return;
+                        }
 
-                    // Get the transaction ID from the selected row
-                    String transacId = tblTransac.getValueAt(selectedRow, 0).toString();
-                    
-                    String userType = getUserType(transacId);
-                    
-                    
-                    // Update the book and transaction status
-                    String updateBookStatusSql = "UPDATE Books SET book_status = 'Available' WHERE Book_Num = (SELECT BooNum FROM Transactions WHERE transaction_id = ?)";
-                    String updateTransactionStatusSql = "UPDATE Transactions SET BookStatus = 'Returned' WHERE transaction_id = ?";
-                    //String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = '10' WHERE transaction_id = ?";
-                    
-                    if ("Student".equals(userType)) {
-                    	double penaltyFee = Double.parseDouble(txtPenalty.getText());
+                        // Get the transaction ID from the selected row
+                        String transacId = tblTransac.getValueAt(selectedRow, 0).toString();
+                        
+                        String userType = getUserType(transacId);
+                        
+                        
+                        
+                        
+                        // Update the book and transaction status
+                        String updateBookStatusSql = "UPDATE Books SET book_status = 'Available' WHERE Book_Num = (SELECT BooNum FROM Transactions WHERE transaction_id = ?)";
+                        String updateTransactionStatusSql = "UPDATE Transactions SET BookStatus = 'Returned' WHERE transaction_id = ?";
+                        //String updatePenaltyFeeSql = "UPDATE Returned SET penalty_fee = '10' WHERE transaction_id = ?";
+                        
+                        if ("Student".equals(userType)) {
+                        	double penaltyFee = Double.parseDouble(txtPenalty.getText());
 
-                        // Check if penalty fee is greater than 0
-                        if (penaltyFee > 0) {
-                            int confirmResult = JOptionPane.showConfirmDialog(
-                                    getRootPane(),
-                                    "This student has a penalty fee of: PHP" + penaltyFee + ". Is this paid already or not?",
-                                    "Confirmation",
-                                    JOptionPane.YES_NO_OPTION
-                            );
-                            
-                            if (confirmResult == JOptionPane.YES_OPTION) {
-                                // User clicked "Yes"
-                                String orCode = JOptionPane.showInputDialog(getRootPane(), "Please enter the O.R. code:");
+                            // Check if penalty fee is greater than 0
+                            if (penaltyFee > 0) {
+                                int confirmResult1 = JOptionPane.showConfirmDialog(
+                                        getRootPane(),
+                                        "This student has a penalty fee of: PHP" + penaltyFee + ". Is this paid already or not?",
+                                        "Confirmation",
+                                        JOptionPane.YES_NO_OPTION
+                                );
                                 
-                                // Check if the user entered a valid O.R. code
-                                if (orCode != null && !orCode.isEmpty()) {
-                                	
-                                    // Record the O.R. code into the database table of paid users
-                                    recordPaidUser(orCode, id, name);
+                                if (confirmResult1 == JOptionPane.YES_OPTION) {
+                                    // User clicked "Yes"
+                                    String orCode = JOptionPane.showInputDialog(getRootPane(), "Please enter the O.R. code:");
                                     
-                                    // Remove student from blocklist after payment confirmation
-                                    removeFromBlocklistPenalty(id, name);
-                                } else {
-                                    // Handle the case where the user canceled the input or entered an empty O.R. code
-                                    JOptionPane.showMessageDialog(getRootPane(), "Invalid or empty O.R. code. Payment not recorded.");
+                                    // Check if the user entered a valid O.R. code
+                                    if (orCode != null && !orCode.isEmpty()) {
+                                    	
+                                        // Record the O.R. code into the database table of paid users
+                                        recordPaidUser(orCode, id, name);
+                                        
+                                        // Remove student from blocklist after payment confirmation
+                                        removeFromBlocklistPenalty(id, name);
+                                    } else {
+                                        // Handle the case where the user canceled the input or entered an empty O.R. code
+                                        JOptionPane.showMessageDialog(getRootPane(), "Invalid or empty O.R. code. Payment not recorded.");
+                                    }
                                 }
+     
+                                
+                                if (confirmResult != JOptionPane.YES_OPTION) {
+                                    // User chose not to proceed
+                                    JOptionPane.showMessageDialog(getRootPane(), "Return canceled.\n" + "This user won't be able to borrow new titles\n" + "until they have settled their fee.");
+                                    addToBlocklist(transacId);
+
+                                    return;
+                                }
+                            } else {
+                            	
+                                // No penalty fee, proceed without showing the confirmation dialog
+                            	
+                            	/*Will check if the user is on the blocklist or not
+                            	 * if the user is on the blocklist and the book has been replaced or fee paid
+                            	 * unblock the user*/
+                            	unblockUser(id, name);
+                            	
                             }
- 
+                        }
                             
-                            if (confirmResult != JOptionPane.YES_OPTION) {
-                                // User chose not to proceed
-                                JOptionPane.showMessageDialog(getRootPane(), "Return canceled.\n" + "This user won't be able to borrow new titles\n" + "until they have settled their fee.");
-                                addToBlocklist(transacId);
+                        try (PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql);
+                             PreparedStatement updateTransactionStatusStmt = conn.prepareStatement(updateTransactionStatusSql)
+                             ) {
 
-                                return;
+                            // Set parameters for updateBookStatusStmt
+                            updateBookStatusStmt.setString(1, transacId);
+
+                            // Set parameters for updateTransactionStatusStmt
+                            updateTransactionStatusStmt.setString(1, transacId);
+
+                            // Set parameters for updatePenaltyFeeStmt
+                            //updatePenaltyFeeStmt.setString(1, transacId);
+
+                            // Execute queries
+                            int rowsAffectedBook = updateBookStatusStmt.executeUpdate();
+                            int rowsAffectedTransaction = updateTransactionStatusStmt.executeUpdate();
+                            //int rowsAffectedPenalty = updatePenaltyFeeStmt.executeUpdate();
+                            
+                            if (rowsAffectedBook > 0 && rowsAffectedTransaction > 0) {
+                            	resetFieldsAndSelection();
+                                JOptionPane.showMessageDialog(getRootPane(), "Book returned successfully.");
+                            } else {
+                                JOptionPane.showMessageDialog(getRootPane(), "Error updating book and transaction status with penalty fee.");
                             }
-                        } else {
-                        	
-                            // No penalty fee, proceed without showing the confirmation dialog
-                        	
-                        	/*Will check if the user is on the blocklist or not
-                        	 * if the user is on the blocklist and the book has been replaced or fee paid
-                        	 * unblock the user*/
-                        	unblockUser(id, name);
-                        	
+                            
+                            
+                        } catch (SQLException e) {
+                            e.printStackTrace();
                         }
-                    }
+
+                        // Record the returned book in Returned table
+                        recordReturnedBook(transacId);
+                        // Remove the borrowed book from Transactions table
+                        removeBorrowedBook(transacId);
                         
-                    try (PreparedStatement updateBookStatusStmt = conn.prepareStatement(updateBookStatusSql);
-                         PreparedStatement updateTransactionStatusStmt = conn.prepareStatement(updateTransactionStatusSql)
-                         ) {
-
-                        // Set parameters for updateBookStatusStmt
-                        updateBookStatusStmt.setString(1, transacId);
-
-                        // Set parameters for updateTransactionStatusStmt
-                        updateTransactionStatusStmt.setString(1, transacId);
-
-                        // Set parameters for updatePenaltyFeeStmt
-                        //updatePenaltyFeeStmt.setString(1, transacId);
-
-                        // Execute queries
-                        int rowsAffectedBook = updateBookStatusStmt.executeUpdate();
-                        int rowsAffectedTransaction = updateTransactionStatusStmt.executeUpdate();
-                        //int rowsAffectedPenalty = updatePenaltyFeeStmt.executeUpdate();
-                        
-                        if (rowsAffectedBook > 0 && rowsAffectedTransaction > 0) {
-                        	resetFieldsAndSelection();
-                            JOptionPane.showMessageDialog(getRootPane(), "Book returned successfully.");
-                        } else {
-                            JOptionPane.showMessageDialog(getRootPane(), "Error updating book and transaction status with penalty fee.");
+                        if ("Student".equals(userType)) {
+                        	updatePenaltyStudent(transacId);            	
                         }
                         
+                        else if("Faculty".equals(userType) || "Staff".equals(userType)) {
+                        	//to call penalty fee
+                        	updatePenaltyEmployee(transacId);      	
+                        }
+                        break;
+                    case "Damaged":
+                        // Handle "Damaged" case
+                        JOptionPane.showMessageDialog(getRootPane(), "Damaged books must be replaced.");
+                        recordBlockedUser(id, name);
+                        JOptionPane.showMessageDialog(getRootPane(), "The user is currently blocked from borrowing new books.\n" + "until the damaged book has been replaced.");
+                        // Update the book status to "Damaged" in the Books table
+                        updateBookStatus(bookNum, "Damaged", acc);
+                        updateTransactionStatus(bookNum, "Damaged", acc);
+                        return;
+                    case "Lost":
+                        // Handle "Lost" case
+                        JOptionPane.showMessageDialog(getRootPane(), "Lost books must be replaced.");
+                        recordBlockedUser(id, name);
+                        JOptionPane.showMessageDialog(getRootPane(), "The user is currently blocked from borrowing new books.\n" + "until the lost book has been replaced.");
+                        updateBookStatus(bookNum, "Lost", acc);
+                        updateTransactionStatus(bookNum, "Lost", acc);
+                        return;
+                    default:
+                        // Handle unexpected status
+                        JOptionPane.showMessageDialog(getRootPane(), "Invalid book status selected.");
+                        return;
                         
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-
-                    // Record the returned book in Returned table
-                    recordReturnedBook(transacId);
-                    // Remove the borrowed book from Transactions table
-                    removeBorrowedBook(transacId);
-                    
-                    if ("Student".equals(userType)) {
-                    	updatePenaltyStudent(transacId);            	
-                    }
-                    
-                    else if("Faculty".equals(userType) || "Staff".equals(userType)) {
-                    	//to call penalty fee
-                    	updatePenaltyEmployee(transacId);      	
-                    }
-                    break;
-                case "Damaged":
-                    // Handle "Damaged" case
-                    JOptionPane.showMessageDialog(getRootPane(), "Damaged books must be replaced.");
-                    recordBlockedUser(id, name);
-                    JOptionPane.showMessageDialog(getRootPane(), "The user is currently blocked from borrowing new books.\n" + "until the damaged book has been replaced.");
-                    // Update the book status to "Damaged" in the Books table
-                    updateBookStatus(bookNum, "Damaged", acc);
-                    updateTransactionStatus(bookNum, "Damaged", acc);
-                    return;
-                case "Lost":
-                    // Handle "Lost" case
-                    JOptionPane.showMessageDialog(getRootPane(), "Lost books must be replaced.");
-                    recordBlockedUser(id, name);
-                    JOptionPane.showMessageDialog(getRootPane(), "The user is currently blocked from borrowing new books.\n" + "until the lost book has been replaced.");
-                    updateBookStatus(bookNum, "Lost", acc);
-                    updateTransactionStatus(bookNum, "Lost", acc);
-                    return;
-                default:
-                    // Handle unexpected status
-                    JOptionPane.showMessageDialog(getRootPane(), "Invalid book status selected.");
-                    return;
-                    
-            }                                                            
+                }
+            } else {
+                // User chose not to proceed
+                JOptionPane.showMessageDialog(getRootPane(), "Return canceled.");
+            }
+        	
+                                                                        
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1230,7 +1269,8 @@ public class LendingBooksFrame extends JPanel {
 
 	            // Set new column names
 	            tblModel.setColumnIdentifiers(newColumnNames);
-	            
+	            int statusColumnIndex = 4;
+	    		tblTransac.getColumnModel().getColumn(statusColumnIndex).setCellRenderer(new BlockedColorRender());
 	            
 	            // Fetch and add new data
 	            while (rs.next()) {

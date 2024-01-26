@@ -268,7 +268,7 @@ public class Dashboard extends JPanel {
 	            long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(today, returnDate);
 
 	            // Display the days as a string in the overdue column
-	            String overdue = (daysBetween < 0) ?  Math.abs(daysBetween) + " days" : "On time";
+	            String overdue = (daysBetween < 0) ?  Math.abs(daysBetween + 2) + " days" : "On time";
 
 	            // array to store data into jtable
 	            String tbData[] = {id, name, title, acc, overdue, returnDateStr};

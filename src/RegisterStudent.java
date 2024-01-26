@@ -297,6 +297,36 @@ public class RegisterStudent extends JPanel {
 		btnExport.setBounds(62, 497, 419, 30);
 		panel.add(btnExport);
 		
+		JLabel lblStudentNo_1 = new JLabel("*");
+		lblStudentNo_1.setForeground(new Color(255, 0, 0));
+		lblStudentNo_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1.setBounds(183, 132, 23, 30);
+		panel.add(lblStudentNo_1);
+		
+		JLabel lblStudentNo_1_1 = new JLabel("*");
+		lblStudentNo_1_1.setForeground(Color.RED);
+		lblStudentNo_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_1.setBounds(137, 227, 23, 30);
+		panel.add(lblStudentNo_1_1);
+		
+		JLabel lblStudentNo_1_2 = new JLabel("*");
+		lblStudentNo_1_2.setForeground(Color.RED);
+		lblStudentNo_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2.setBounds(276, 227, 23, 30);
+		panel.add(lblStudentNo_1_2);
+		
+		JLabel lblStudentNo_1_2_1 = new JLabel("*");
+		lblStudentNo_1_2_1.setForeground(Color.RED);
+		lblStudentNo_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2_1.setBounds(62, 550, 23, 30);
+		panel.add(lblStudentNo_1_2_1);
+		
+		JLabel lblImportantFields = new JLabel("- Important fields");
+		lblImportantFields.setForeground(Color.WHITE);
+		lblImportantFields.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblImportantFields.setBounds(73, 551, 133, 30);
+		panel.add(lblImportantFields);
+		
 		displayData();
 	}
 	

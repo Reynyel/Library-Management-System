@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
+import java.util.prefs.Preferences;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Component;
@@ -30,8 +31,14 @@ public class LogInFrame extends JFrame {
 	private int loginAttempts = 0;
     private long lastLoginAttemptTime = 0;
 	private static final int MAX_LOGIN_ATTEMPTS = 5;
-    private static final long COOLDOWN_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
-
+    private static long COOLDOWN_TIME = 5 * 60 * 1000; // 5 minutes in milliseconds
+    
+    private static final String PREFS_NODE_NAME = "com.example.LoginApp";
+    private static final String PREFS_LAST_LOGIN_ATTEMPT_TIME = "lastLoginAttemptTime";
+    private static final String PREFS_REMAINING_COOLDOWN = "remainingCooldown";
+    
+    private Preferences prefs;
+    
 	/**
 	 * Launch the application.
 	 */
@@ -62,6 +69,11 @@ public class LogInFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		// Load preferences
+		prefs = Preferences.userRoot().node(PREFS_NODE_NAME);
+        loadCooldownInfo();
+        
+        
 		JLabel userLabel = new JLabel("Username");
 		userLabel.setBackground(new Color(0, 0, 0));
 		userLabel.setForeground(new Color(0, 0, 0));
@@ -88,40 +100,45 @@ public class LogInFrame extends JFrame {
 			 * Creates and shows the MainMenuFrame while
 			 * disposing the LogInFrame*/
 			public void actionPerformed(ActionEvent e) {
-				String enteredUsername = usernameTxt.getText();
-				char[] enteredPasswordChars = passwordTxt.getPassword();
-		        String enteredPassword = new String(enteredPasswordChars);
-		        String userType = "";
-		        
-		        boolean isValidUser = false;
-		        for (int i = 0; i < username.length; i++) {
-		            if (enteredUsername.equals(username[i]) && enteredPassword.equals(password[i])) {
-		                isValidUser = true;
-		                userType = username[i];
-		                break;
-		            }
-		        }
-		        
-		        if (isValidUser) {
-		            // Reset login attempts upon successful login
-		        	resetLoginAttempts();
+				if (isLoginCooldown()) {
+			        JOptionPane.showMessageDialog(getRootPane(), "Too many failed login attempts. Please try again later.");
+			        return;
+			    }
 
-		            MainMenuFrame mainFrame = new MainMenuFrame(userType);
-		            mainFrame.setVisible(true);
-		            dispose();
-		        } else {
-		            incrementAttempts();
+			    String enteredUsername = usernameTxt.getText();
+			    char[] enteredPasswordChars = passwordTxt.getPassword();
+			    String enteredPassword = new String(enteredPasswordChars);
+			    String userType = "";
 
-		            // Check if the user has exceeded the maximum login attempts
-		            if (loginAttempts >= 5) {
-		            	lastLoginAttemptTime = System.currentTimeMillis();
-		                JOptionPane.showMessageDialog(getRootPane(), "Too many failed login attempts. Please try again later.");
-		            } else {
-		                JOptionPane.showMessageDialog(getRootPane(), "Invalid username or password. \n" + " Log in attempt: " + loginAttempts);
-		            }
-		        }
-		        
-		        passwordTxt.setText("");
+			    boolean isValidUser = false;
+			    for (int i = 0; i < username.length; i++) {
+			        if (enteredUsername.equals(username[i]) && enteredPassword.equals(password[i])) {
+			            isValidUser = true;
+			            userType = username[i];
+			            break;
+			        }
+			    }
+
+			    if (isValidUser) {
+			        // Reset login attempts upon successful login
+			        resetLoginAttempts();
+
+			        MainMenuFrame mainFrame = new MainMenuFrame(userType);
+			        mainFrame.setVisible(true);
+			        dispose();
+			    } else {
+			        incrementAttempts();
+
+			        // Check if the user has exceeded the maximum login attempts
+			        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+			            lastLoginAttemptTime = System.currentTimeMillis();
+			            JOptionPane.showMessageDialog(getRootPane(), "Too many failed login attempts. Please try again in 5 minutes.");
+			        } else {
+			            JOptionPane.showMessageDialog(getRootPane(), "Invalid username or password. \n" + " Log in attempt: " + loginAttempts +"/5");
+			        }
+			    }
+
+			    passwordTxt.setText("");
 			}
 		});
 		logBtn.setFont(new Font("Verdana", Font.PLAIN, 16));
@@ -172,6 +189,32 @@ public class LogInFrame extends JFrame {
 
 		
 	}
+	private void loadCooldownInfo() {
+        lastLoginAttemptTime = prefs.getLong(PREFS_LAST_LOGIN_ATTEMPT_TIME, 0);
+        long remainingCooldown = prefs.getLong(PREFS_REMAINING_COOLDOWN, 0);
+
+        // If there is remaining cooldown, set it
+        if (remainingCooldown > 0) {
+            long currentTime = System.currentTimeMillis();
+            long elapsedCooldown = currentTime - lastLoginAttemptTime;
+            if (elapsedCooldown < remainingCooldown) {
+                COOLDOWN_TIME = remainingCooldown - elapsedCooldown;
+            }
+        }
+    }
+
+	
+	private void saveCooldownInfo() {
+        prefs.putLong(PREFS_LAST_LOGIN_ATTEMPT_TIME, lastLoginAttemptTime);
+        prefs.putLong(PREFS_REMAINING_COOLDOWN, COOLDOWN_TIME);
+    }
+	
+	private void resetLoginAttempts() {
+        loginAttempts = 0;
+        lastLoginAttemptTime = 0;
+        COOLDOWN_TIME = 5 * 60 * 1000; // Reset cooldown time to default
+        saveCooldownInfo();
+    }
 	
 	 private boolean isLoginCooldown() {
         if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
@@ -182,9 +225,7 @@ public class LogInFrame extends JFrame {
     }
 	private void incrementAttempts() {
 		loginAttempts++;
+		saveCooldownInfo();
 	}
-    private void resetLoginAttempts() {
-        loginAttempts = 0;
-        lastLoginAttemptTime = 0;
-    }
+
 }

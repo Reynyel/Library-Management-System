@@ -312,6 +312,48 @@ public class RegisterStaff extends JPanel {
 		btnExport.setBounds(204, 581, 314, 30);
 		panel.add(btnExport);
 		
+		lblImportantFields = new JLabel("- Important fields");
+		lblImportantFields.setForeground(Color.WHITE);
+		lblImportantFields.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblImportantFields.setBounds(51, 534, 133, 30);
+		panel.add(lblImportantFields);
+		
+		lblStudentNo_1_2 = new JLabel("*");
+		lblStudentNo_1_2.setForeground(Color.RED);
+		lblStudentNo_1_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_2.setBounds(40, 533, 23, 30);
+		panel.add(lblStudentNo_1_2);
+		
+		lblStudentNo_1 = new JLabel("*");
+		lblStudentNo_1.setForeground(Color.RED);
+		lblStudentNo_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1.setBounds(130, 91, 23, 30);
+		panel.add(lblStudentNo_1);
+		
+		lblStudentNo_1_1 = new JLabel("*");
+		lblStudentNo_1_1.setForeground(Color.RED);
+		lblStudentNo_1_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_1.setBounds(151, 161, 23, 30);
+		panel.add(lblStudentNo_1_1);
+		
+		lblStudentNo_1_3 = new JLabel("*");
+		lblStudentNo_1_3.setForeground(Color.RED);
+		lblStudentNo_1_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_3.setBounds(115, 241, 23, 30);
+		panel.add(lblStudentNo_1_3);
+		
+		lblStudentNo_1_4 = new JLabel("*");
+		lblStudentNo_1_4.setForeground(Color.RED);
+		lblStudentNo_1_4.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_4.setBounds(278, 241, 23, 30);
+		panel.add(lblStudentNo_1_4);
+		
+		lblStudentNo_1_5 = new JLabel("*");
+		lblStudentNo_1_5.setForeground(Color.RED);
+		lblStudentNo_1_5.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStudentNo_1_5.setBounds(129, 332, 23, 30);
+		panel.add(lblStudentNo_1_5);
+		
 		displayData();
 	}
 	
@@ -437,6 +479,13 @@ private boolean fileExists(String fileName) {
 	
 	private JButton btnUpdate;
 	private JScrollPane scrollPane;
+	private JLabel lblImportantFields;
+	private JLabel lblStudentNo_1_2;
+	private JLabel lblStudentNo_1;
+	private JLabel lblStudentNo_1_1;
+	private JLabel lblStudentNo_1_3;
+	private JLabel lblStudentNo_1_4;
+	private JLabel lblStudentNo_1_5;
 	
 	public void updateUserData() {
 		String lastName = txtLastName.getText();
