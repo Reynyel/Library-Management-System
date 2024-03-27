@@ -174,7 +174,7 @@ public class RegisterBooksFrame extends JPanel {
         
         JLabel lblPublisher = new JLabel("Publisher");
         lblPublisher.setForeground(new Color(255, 255, 255));
-        lblPublisher.setBounds(78, 535, 72, 30);
+        lblPublisher.setBounds(78, 503, 72, 30);
         lblPublisher.setFont(new Font("Tahoma", Font.PLAIN, 15));
         panel.add(lblPublisher);
         
@@ -930,7 +930,7 @@ public class RegisterBooksFrame extends JPanel {
 	                ResultSet existingBookResult = checkExistingBookStmt.executeQuery();
 
 	                int usedBookNum;
-	                int latestAccessionNum = 0;
+	                int latestAccessionNum = -1;
 
 	                if (existingBookResult.next()) {
 	                    // Book with the same title already exists
@@ -945,7 +945,7 @@ public class RegisterBooksFrame extends JPanel {
 
 	                for (int i = 0; i < quantity; i++) {
 	                    // Increment accessionNum for each new book
-	                    int accessionNum = latestAccessionNum + i + 1;
+	                    int accessionNum = latestAccessionNum + 1 + i;
 
 	                    String sql = "INSERT INTO Books (Title, Author, ISBN, Publisher, Language, Subject, Quantity, Book_Num, Dewey_Decimal, Accession_Num, book_status, date_registered)" +
 	                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_DATE())";

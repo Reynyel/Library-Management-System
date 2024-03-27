@@ -62,7 +62,6 @@ public class TransactionFrame extends JPanel {
 	private JTable tblTransac;
 	private JTextField txtBorrID;
 	private JComboBox cbAccession;
-	private JDateChooser dateChooser;
 	/**
 	 * Launch the application.
 	 */
@@ -117,25 +116,6 @@ public class TransactionFrame extends JPanel {
 		lblReturnDate.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblReturnDate.setBounds(548, 131, 93, 30);
 		panel.add(lblReturnDate);
-		
-		dateChooser = new JDateChooser();
-		dateChooser.setBounds(651, 134, 131, 27);
-		panel.add(dateChooser);
-		
-		// Add ActionListener to capture the chosen date
-		dateChooser.getDateEditor().addPropertyChangeListener(e -> {
-		    if ("date".equals(e.getPropertyName())) {
-		        // Date has been chosen
-		        Date chosenDate = dateChooser.getDate();
-		        
-		        // Now you can use the chosenDate as needed, for example:
-		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		        String formattedDate = dateFormat.format(chosenDate);
-		        
-		        // Print or use the formattedDate as needed
-		        System.out.println("Chosen Date: " + formattedDate);
-		    }
-		});
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 226, 1236, 413);
 		panel.add(scrollPane);
@@ -541,17 +521,14 @@ public class TransactionFrame extends JPanel {
             Object obAcc = cbAccession.getSelectedItem();
             
             String userType = getUserType(borrId);
-            // Date has been chosen
-	        Date chosenDate = dateChooser.getDate();
+            
 	        
 	        
             // check if the user has inserted a book title
             if(tl.isEmpty() && bn.isEmpty() && obAcc == null) {
             	JOptionPane.showMessageDialog(getRootPane(), "Please search for the book first");       
             }
-            else if(chosenDate == null) {
-	        	JOptionPane.showMessageDialog(getRootPane(), "Please choose a return date.");
-	        }
+            
             else {
             	int acc = Integer.parseInt(cbAccession.getSelectedItem().toString());
             	// Check if the user is a student or faculty/school staff based on ID number
@@ -652,14 +629,9 @@ public class TransactionFrame extends JPanel {
             		
             		String userType = getUserType(borrId);
             		
-            		// Date has been chosen
-    		        Date chosenDate = dateChooser.getDate();
-		        	// Now you can use the chosenDate as needed, for example:
-    		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    		        String formattedDate = dateFormat.format(chosenDate);
     		        
     		        // Print or use the formattedDate as needed
-    		        System.out.println("Chosen Date: " + formattedDate);
+    		        //System.out.println("Chosen Date: " + formattedDate);
     		        
             		if ("Faculty".equals(userType) || "Staff".equals(userType)) {                  
             			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id, user_type) " +
@@ -685,19 +657,17 @@ public class TransactionFrame extends JPanel {
             				txtStatus.setText("");
             				txtBorrID.setText("");
             				JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!");
-            				//will cause console stuff
-            				dateChooser.setCalendar(null);    
+            				
             				
             			} catch (SQLException e) {
             				e.printStackTrace();
             			}
             			
             			
-            		} else {
-            			        			
+            		} else {            			        			
             			// If user ID does not start with "1", set return date to three days from the transaction date
             			String insertSql = "INSERT INTO Transactions (BooNum, Title, AccessionNum, Borrower, BookStatus, transaction_date, return_date, user_id, user_type) " +
-            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(),?, ?, ?)";
+            					"VALUES (?, ?, ?, ?, 'Borrowed', CURRENT_DATE(), ShiftHolidayToWorkday(DATE_ADD(CURDATE(), INTERVAL 3 DAY)), ?, ?)";
             			
             			
             			try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
@@ -705,9 +675,8 @@ public class TransactionFrame extends JPanel {
             				pstmt.setString(2, tl);
             				pstmt.setInt(3, acc);
             				pstmt.setString(4, borrowerName);
-            				pstmt.setString(5, formattedDate);
-            				pstmt.setString(6, userId);
-            				pstmt.setString(7, userType);
+            				pstmt.setString(5, userId);
+            				pstmt.setString(6, userType);
             				
             				// Execute the update
             				int rowsAffected = pstmt.executeUpdate();
@@ -720,7 +689,7 @@ public class TransactionFrame extends JPanel {
             				txtStatus.setText("");
             				txtBorrID.setText("");           				       				
             				JOptionPane.showMessageDialog(getRootPane(), "Transaction Recorded!");
-            				dateChooser.setCalendar(null);    
+            				   
             			} catch (SQLException e) {
             				e.printStackTrace();
             			}
